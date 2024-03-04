@@ -1,0 +1,37 @@
+﻿@page
+@model VisionaryVentures.Pages.PrintReportModel
+@{
+}
+<div class="report-container">
+    <h1><strong>Collaboration Report</strong></h1>
+    <h2><strong>@Model.Collaboration.Title - @DateTime.Now.ToString("yyyy-MM-dd")</strong></h2>
+    <hr />
+    <section class="plan-contents">
+        <h3><strong>Plan Details</strong></h3>
+            @foreach (var planContent in Model.PlanContents)
+            {
+                <p><strong>@planContent.PlanStep:</strong> @planContent.ContentDescription</p>  
+            }
+    </section>
+    <hr />
+    <section class="knowledge-items">
+        <h3><strong>Knowledge Items</strong></h3>
+        <ul>
+            @foreach (var item in Model.KnowledgeItems)
+            {
+                <li>@item.Title: @item.Information</li>
+            }
+        </ul>
+    </section>
+    <hr />
+    <section class="users">
+        <h3><strong>Collaborators</strong></h3>
+        <ul>
+            @foreach (var user in Model.users)
+            {
+                <li>@user.FirstName @user.LastName</li>
+            }
+        </ul>
+    </section>
+</div>
+

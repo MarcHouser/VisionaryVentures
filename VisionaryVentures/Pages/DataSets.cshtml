@@ -1,0 +1,86 @@
+﻿@page
+@model VisionaryVentures.Pages.DataSetsModel
+@{
+    ViewData["Title"] = "Data Sets";
+}
+@{
+    if (HttpContext.Session.GetString("username") != null)
+    {
+        Page();
+    }
+    else
+    {
+        Response.Redirect("/Login");
+        return;
+    }
+}
+<div class="side-bar">
+    <div class="d-flex flex-column flex-shrink-0 p-3 align-items-center">
+        <p>@HttpContext.Session.GetString("username")</p>
+        <hr />
+        <hr />
+        <div class="input-group">
+            <input type="search" class="form-control rounded" id="sidebar-search" placeholder="Search datasets..." aria-label="Search">
+            <button type="button" class="btn btn-primary" onclick="filterDatasetButtons()">Search</button>
+        </div>
+        <div class="nav nav-pills flex-column mb-auto">
+            @foreach (var fileName in Model.DataSetFiles)
+            {
+                <a asp-page-handler="ReadCsv" asp-route-filename="@fileName"
+                   class="btn dataset-btn @(Model.SelectedFileName == fileName ? "btn-selected" : "btn-primary") my-1"
+                   id="data-btn">
+                    @fileName
+                </a>
+                <hr />
+            }
+        </div>
+        <div class="side-bar-lower mb-3">
+            <form method="post" enctype="multipart/form-data" asp-action="DataSets">
+                <input asp-for="files" type="file" class="form-control" multiple />
+                <br />
+                <input type="submit" value="Upload" />
+            </form>
+        </div>
+    </div>
+</div>
+<div class="main-body">
+    <div class="container">
+        <!-- Data display table -->
+        <div class="card data-set">
+            <div class="card-header">Data</div>
+            <div class="input-group">
+                <input type="search" class="form-control rounded" id="data-search" placeholder="Search within dataset..." aria-label="Search" onkeyup="filterTableRows()">
+            </div>
+
+            <div class="card-body table-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            @if (Model.Headers != null)
+                            {
+                                foreach (var header in Model.Headers)
+                                {
+                                    <th>@header</th>
+                                }
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Records != null)
+                        {
+                            foreach (var record in Model.Records)
+                            {
+                                <tr>
+                                    @foreach (var field in record)
+                                    {
+                                        <td>@field</td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

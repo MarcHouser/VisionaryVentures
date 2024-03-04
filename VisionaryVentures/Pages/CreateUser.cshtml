@@ -1,0 +1,50 @@
+﻿@page
+@model VisionaryVentures.Pages.CreateUserModel
+@{
+}
+
+<form asp-page="CreateHashedLogin">
+    <label>Enter New Username:</label>
+    <input asp-for="Username" class="form-control" placeholder="Enter Username" required />
+    <br />
+    <label>Enter New Password:</label>
+    <input asp-for="Password" class="form-control" type="password" required />
+    <br />
+    <label>Enter First Name:</label>
+    <input asp-for="FirstName" class="form-control" placeholder="Enter First Name" required id="FirstName"/>
+    <br />
+    <label>Enter Last Name:</label>
+    <input asp-for="LastName" class="form-control" placeholder="Enter Last Name" required id="LastName"/>
+    <br />
+    <label>Enter Email:</label>
+    <input asp-for="EmailAddress" class="form-control" placeholder="Enter Email" required id="EmailAddress"/>
+    <br />
+    <label>Enter Phone Number:</label>
+    <input asp-for="PhoneNumber" class="form-control" placeholder="Enter Phone Number" required id="PhoneNumber"/>
+    <br />
+    <label>Enter Street Address:</label>
+    <input asp-for="StreetAddress" class="form-control" placeholder="Enter Street Address" required id="StreetAddress"/>
+    <br />
+    <label>Enter City:</label>
+    <input asp-for="City" class="form-control" placeholder="Enter City" required id="City"/>
+    <br />
+    <label>Enter State:</label>
+    <input asp-for="State" class="form-control" placeholder="Enter State" required id="State"/>
+    <br />
+    <label>Enter Postal Code:</label>
+    <input asp-for="PostalCode" class="form-control" placeholder="Enter Postal Code" required id="PostalCode"/>
+    <br />
+    <label>Enter Country:</label>
+    <input asp-for="Country" class="form-control" placeholder="Enter Country" required itemid="Country"/>
+    <br />
+    <input type="submit" class="btn btn-primary" />
+    <button type="button" class="btn btn-primary" onclick="populateUserFields()">Populate Fields</button>
+    <button type="button" class="btn btn-secondary" onclick="clearUserFields()">Clear Fields</button>
+</form>
+@{
+    if (ViewData["UserCreate"] != null)
+    {
+        <p class="text-success">@ViewData["UserCreate"]</p>
+    }
+
+}
