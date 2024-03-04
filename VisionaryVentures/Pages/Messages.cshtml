@@ -1,0 +1,85 @@
+﻿@page
+@using Microsoft.AspNetCore.Http
+@model VisionaryVentures.Pages.MessagesModel
+
+@{
+    ViewData["Title"] = "Collaboration";
+}
+@{
+    if (HttpContext.Session.GetString("username") != null)
+    {
+        Page();
+    }
+    else
+    {
+        Response.Redirect("/Login");
+        return;
+    }
+}
+<div class="side-bar">
+    <div class="d-flex flex-column flex-shrink-0 p-3 align-items-center">
+        <p>@HttpContext.Session.GetString("username")</p>
+        <hr />
+        <hr />
+
+        <form method="get" id="search-form">
+            <div class="input-group">
+                <input type="search" class="form-control rounded" id="collaboration-search" placeholder="Search collaborations..." aria-label="Search">
+                <button type="button" class="btn btn-primary" onclick="filterCollaborations()">Search</button>
+            </div>
+        </form>
+        <div class="nav nav-pills flex-column mb-auto">
+            <h2>Collaborations</h2>
+            @if (Model.Collaborations != null && Model.Collaborations.Any())
+            {
+                @foreach (var group in Model.Collaborations.GroupBy(item => item.CollaborationID).Select(g => g.First()))
+                {
+                    <form method="get">
+                        <div>
+                            <button type="submit" name="SelectedCollaborationID" value="@group.CollaborationID"
+                                    class="btn @((HttpContext.Session.GetInt32("collaborationid") == group.CollaborationID) ? "btn-success" : "btn-primary")">
+                                @group.Title
+                            </button>
+                        </div>
+                        <hr />
+                    </form>
+                }
+            }
+            else
+            {
+                <p>No Collaborations Found.</p>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="main-body">
+        <div class="card chat-container">
+            <div class="card-header">
+                Chat Box
+            </div>
+            <div class="card-body chat-box">
+                @if (Model.Messages != null && Model.Messages.Any())
+                {
+                    foreach (var message in Model.Messages)
+                    {
+                        <p><strong>@message.FullName</strong>: @message.MessageContent</p>
+                    }
+                }
+                else
+                {
+                    <p>No messages yet.</p>
+                }
+            </div>
+            <div class="card-footer">
+                <form asp-page-handler="SendMessage" id="sendMessageForm" method="post">
+                    <div class="input-group">
+                        <input asp-for="MessageContent" class="form-control" id="messageInput" placeholder="Enter message" autocomplete="off">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+</div>
