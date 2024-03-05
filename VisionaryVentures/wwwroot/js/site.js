@@ -2,7 +2,9 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
-$('.chat-box').scrollTop($('.chat-box')[0].scrollHeight);
+if ($('.chat-box').length) {
+    $('.chat-box').scrollTop($('.chat-box')[0].scrollHeight);
+}
 
 function populateFields() {
         // Sample data for populating the form
@@ -154,3 +156,21 @@ function clearUserFields() {
     document.getElementById('PostalCode').value = '';
     document.getElementById('Country').value = '';
 }
+function filterPlans() {
+    var searchValue = document.getElementById('plan-search').value.toLowerCase();
+    var planButtons = document.querySelectorAll('.nav-pills .btn');
+
+    planButtons.forEach(function (button) {
+        var buttonText = button.textContent.toLowerCase();
+        if (buttonText.includes(searchValue)) {
+            button.style.display = '';
+        } else {
+            button.style.display = 'none';
+        }
+    });
+}
+
+document.getElementById('search-form').addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent the default form submission
+    filterPlans();
+});

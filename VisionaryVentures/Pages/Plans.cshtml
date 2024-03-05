@@ -21,39 +21,38 @@
             <p>@HttpContext.Session.GetString("username")</p>
             <hr />
             <div>
-                <form method="get">
-                    <div class="input-group" id="search-form">
-                        <input type="search" class="form-control rounded" name="SearchTerm" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                        <button type="submit" class="btn btn-primary search-button">Search</button>
+                <form method="get" id="search-form">
+                    <div class="input-group">
+                        <input type="search" class="form-control rounded" id="plan-search" placeholder="Search plans..." aria-label="Search">
+                        <button type="button" class="btn btn-primary search-button" onclick="filterPlans()">Search</button>
                     </div>
+                </form>
 
-                    <div>
-                        <h2>Plans</h2>
-                        <button type="submit" name="SelectedPlanID" value="" class="btn btn-secondary">Exit Plan</button>
-                    </div>
-                    <hr />
+
+                <div class="nav nav-pills flex-column mb-auto mt-3">
+                    <h2 class="mb-4">Plans</h2>
                     @if (Model.plans != null && Model.plans.Any())
                     {
-                        @foreach (var plan in Model.plans)
+                        foreach (var plan in Model.plans)
                         {
-                            <form>
-                                <div>
-                                    <input type="hidden" name="SelectedPlanID" value="@plan.PlanID" />
-                                    <button type="submit" class="btn btn-primary">@plan.PlanName</button>
-                                </div>
+                            <form method="get">
+                                <input type="hidden" name="SelectedPlanID" value="@plan.PlanID" />
+                                <button type="submit" class="btn btn-block btn-primary @(Request.Query["SelectedPlanID"] == plan.PlanID.ToString() ? "active" : "")">@plan.PlanName</button>
+                                <hr />
                             </form>
-                            <hr />
+
                         }
                     }
                     else
                     {
                         <p>No Plans Found.</p>
                     }
-                </form>
+                </div>
             </div>
         </nav>
     </div>
 </div>
+
 
 
 <div class="main-body">
