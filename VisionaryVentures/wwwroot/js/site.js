@@ -174,3 +174,16 @@ document.getElementById('search-form').addEventListener('submit', function (even
     event.preventDefault(); // Prevent the default form submission
     filterPlans();
 });
+function filterKnowledgeItems() {
+    var searchValue = document.getElementById('knowledge-search').value.toLowerCase();
+    var knowledgeButtons = document.querySelectorAll('.nav-pills .btn');
+
+    knowledgeButtons.forEach(function (button) {
+        var buttonText = button.textContent.toLowerCase();
+        if (buttonText.includes(searchValue)) {
+            button.style.display = '';
+        } else {
+            button.style.display = 'none';
+        }
+    });
+}

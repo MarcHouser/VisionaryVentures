@@ -16,41 +16,46 @@
         return; 
     }
 }
-<!--Used for the side bar-->
+
 <div class="side-bar">
     <div class="row">
-         <nav class="col-md-3 d-flex flex-column flex-shrink-0 p-3 side-bar">
+        <nav class="col-md-3 d-flex flex-column flex-shrink-0 p-3 side-bar">
             <p>@HttpContext.Session.GetString("username")</p>
             <hr>
-            <form method="get">
-                <div class="input-group" id="search-form">
-                    <input type="search" class="form-control rounded" name="SearchTerm" placeholder="Search" aria-label="Search" aria-describedby="search-addon">
-                    <button type="submit" class="btn btn-primary search-button">Search</button>
+            <form method="get" id="search-form">
+                <div class="input-group">
+                    <input type="search" class="form-control rounded" id="knowledge-search" placeholder="Search knowledge items..." aria-label="Search">
+                    <button type="button" class="btn btn-primary search-button" onclick="filterKnowledgeItems()">Search</button>
                 </div>
+            </form>
 
-                <div>
-                    <h2>Categories</h2>
+            <div class="nav nav-pills flex-column mb-auto mt-3">
+                <h2 class="mb-4">Categories</h2>
+                <form method="get">
                     <button type="submit" name="selectedCategory" value="" class="btn btn-secondary">Exit Category</button>
-                </div>
+                </form>
                 <hr>
                 @if (Model.knowledgeItems != null && Model.knowledgeItems.Any())
                 {
                     @foreach (var group in Model.knowledgeItems.GroupBy(item => item.Category).Select(g => g.First()))
                     {
-                        <div>
-                            <button type="submit" name="selectedCategory" value="@group.Category" class="btn btn-primary">@group.Category</button>
-                        </div>
+                        <form method="get">
+                            <div>
+                                <button type="submit" name="selectedCategory" value="@group.Category" class="btn btn-primary">@group.Category</button>
+                            </div>
+                        </form>
                         <hr>
                     }
                 }
                 else
                 {
-                    <p>No knowledge items found.</p>
+                    <p>No Categories Found.</p>
                 }
-            </form>
+            </div>
         </nav>
     </div>
 </div>
+
 
 
 <!--Used for interacting with the KnowledgeLibrary Body-->
