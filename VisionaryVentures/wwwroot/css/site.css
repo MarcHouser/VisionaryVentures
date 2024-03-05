@@ -66,6 +66,9 @@ body {
     padding-top: 16px;
     overflow-y: auto; /* Add overflow-y for vertical scrolling */
 }
+.side-bar button {
+    width: 100%;
+}
 
 .side-bar a.active,
 .side-bar button.active {
@@ -85,6 +88,9 @@ body {
         height: 35%;
         flex-direction: row;
         z-index:1;
+    }
+    .side-bar button {
+        width: 65%;
     }
     #search-form{
         width:65%;
@@ -107,7 +113,7 @@ body {
         margin-right:7em;
     }
     .chat-container {
-        height: 30em;
+        height: 20em;
         width: 75%;
         overflow-y: auto;
         border: 2px solid black;

@@ -54,32 +54,32 @@
 
 
 <div class="main-body">
-        <div class="card chat-container">
-            <div class="card-header">
-                Chat Box
-            </div>
-            <div class="card-body chat-box">
-                @if (Model.Messages != null && Model.Messages.Any())
-                {
-                    foreach (var message in Model.Messages)
-                    {
-                        <p><strong>@message.FullName</strong>: @message.MessageContent</p>
-                    }
-                }
-                else
-                {
-                    <p>No messages yet.</p>
-                }
-            </div>
-            <div class="card-footer">
-                <form asp-page-handler="SendMessage" id="sendMessageForm" method="post">
-                    <div class="input-group">
-                        <input asp-for="MessageContent" class="form-control" id="messageInput" placeholder="Enter message" autocomplete="off">
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-primary">Send</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+    <div class="card chat-container">
+        <div class="card-header">
+            Chat Box
         </div>
+        <div class="card-body chat-box">
+            @if (Model.Messages != null && Model.Messages.Any())
+            {
+                foreach (var message in Model.Messages)
+                {
+                    <p><strong>@message.FullName</strong>: @message.MessageContent</p>
+                }
+            }
+            else
+            {
+                <p>No messages yet.</p>
+            }
+        </div>
+        <div class="card-footer">
+            <form asp-page-handler="SendMessage" id="sendMessageForm" method="post">
+                <div class="input-group">
+                    <input asp-for="MessageContent" class="form-control" id="messageInput" placeholder="Enter message" autocomplete="off">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
