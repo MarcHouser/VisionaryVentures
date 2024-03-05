@@ -69,7 +69,9 @@ body {
 .side-bar button {
     width: 100%;
 }
-
+.side-bar .search-button {
+    width: auto; /* Resetting width for the search button */
+}
 .side-bar a.active,
 .side-bar button.active {
     background-color: #04AA6D; /* Original active background color */
