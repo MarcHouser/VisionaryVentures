@@ -187,3 +187,8 @@ function filterKnowledgeItems() {
         }
     });
 }
+document.getElementById('knowledge-search').addEventListener('keypress', function (event) {
+    if (event.key === 'Enter') {
+        filterKnowledgeItems();
+    }
+});
