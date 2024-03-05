@@ -16,42 +16,42 @@
         return;
     }
 }
-<div class="side-bar">
-    <div class="d-flex flex-column flex-shrink-0 p-3 align-items-center">
-        <p>@HttpContext.Session.GetString("username")</p>
-        <hr />
-        <hr />
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-3 d-flex flex-column flex-shrink-0 p-3 side-bar">
+            <p>@HttpContext.Session.GetString("username")</p>
+            <hr>
 
-        <form method="get" id="search-form">
-            <div class="input-group">
-                <input type="search" class="form-control rounded" id="collaboration-search" placeholder="Search collaborations..." aria-label="Search">
-                <button type="button" class="btn btn-primary" onclick="filterCollaborations()">Search</button>
-            </div>
-        </form>
-        <div class="nav nav-pills flex-column mb-auto">
-            <h2>Collaborations</h2>
-            @if (Model.Collaborations != null && Model.Collaborations.Any())
-            {
-                @foreach (var group in Model.Collaborations.GroupBy(item => item.CollaborationID).Select(g => g.First()))
+            <form method="get" id="search-form">
+                <div class="input-group">
+                    <input type="search" class="form-control rounded" id="collaboration-search" placeholder="Search collaborations..." aria-label="Search">
+                    <button type="button" class="btn btn-primary" onclick="filterCollaborations()">Search</button>
+                </div>
+            </form>
+
+            <div class="nav nav-pills flex-column mb-auto mt-3">
+                <h2 class="mb-4">Collaborations</h2>
+                @if (Model.Collaborations != null && Model.Collaborations.Any())
                 {
-                    <form method="get">
-                        <div>
+                    @foreach (var group in Model.Collaborations.GroupBy(item => item.CollaborationID).Select(g => g.First()))
+                    {
+                        <form method="get">
                             <button type="submit" name="SelectedCollaborationID" value="@group.CollaborationID"
-                                    class="btn @((HttpContext.Session.GetInt32("collaborationid") == group.CollaborationID) ? "btn-success" : "btn-primary")">
+                                    class="btn btn-block @((HttpContext.Session.GetInt32("collaborationid") == group.CollaborationID) ? "btn-success" : "btn-primary") mb-2">
                                 @group.Title
                             </button>
-                        </div>
-                        <hr />
-                    </form>
+                        </form>
+                    }
                 }
-            }
-            else
-            {
-                <p>No Collaborations Found.</p>
-            }
-        </div>
+                else
+                {
+                    <p>No Collaborations Found.</p>
+                }
+            </div>
+        </nav>
     </div>
 </div>
+
 
 <div class="main-body">
         <div class="card chat-container">

@@ -18,38 +18,41 @@
 }
 <!--Used for the side bar-->
 <div class="side-bar">
-    <div class="d-flex flex-column flex-shrink-0 p-3 align-items-center">
-        <p>@HttpContext.Session.GetString("username")</p>
-        <hr />
-        <hr />
-        <form method="get">
-            <div class="input-group">
-                <input type="search" class="form-control rounded" name="SearchTerm" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                <button type="submit" class="btn btn-primary">Search</button>
-            </div>
-            
-            <div>
-                <h2>Categories</h2>
-                <button type="submit" name="selectedCategory" value="" class="btn btn-secondary">Exit Category</button>
-            </div>
-            <hr />
-            @if (Model.knowledgeItems != null && Model.knowledgeItems.Any())
-            {
-                @foreach (var group in Model.knowledgeItems.GroupBy(item => item.Category).Select(g => g.First()))
+    <div class="row">
+         <nav class="col-md-3 d-flex flex-column flex-shrink-0 p-3 side-bar">
+            <p>@HttpContext.Session.GetString("username")</p>
+            <hr>
+            <form method="get">
+                <div class="input-group" id="search-form">
+                    <input type="search" class="form-control rounded" name="SearchTerm" placeholder="Search" aria-label="Search" aria-describedby="search-addon">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+
+                <div>
+                    <h2>Categories</h2>
+                    <button type="submit" name="selectedCategory" value="" class="btn btn-secondary">Exit Category</button>
+                </div>
+                <hr>
+                @if (Model.knowledgeItems != null && Model.knowledgeItems.Any())
                 {
-                    <div>
-                        <button type="submit" name="selectedCategory" value="@group.Category" class="btn btn-primary">@group.Category </button>
-                    </div>
-                    <hr />
+                    @foreach (var group in Model.knowledgeItems.GroupBy(item => item.Category).Select(g => g.First()))
+                    {
+                        <div>
+                            <button type="submit" name="selectedCategory" value="@group.Category" class="btn btn-primary">@group.Category</button>
+                        </div>
+                        <hr>
+                    }
                 }
-            }
-            else
-            {
-                <p>No knowledge items found.</p>
-            }
-        </form>
+                else
+                {
+                    <p>No knowledge items found.</p>
+                }
+            </form>
+        </nav>
     </div>
 </div>
+
+
 <!--Used for interacting with the KnowledgeLibrary Body-->
 <div class="main-body">
     <!--Used to display Adding-->

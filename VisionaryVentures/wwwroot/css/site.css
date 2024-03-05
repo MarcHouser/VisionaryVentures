@@ -86,6 +86,9 @@ body {
         flex-direction: row;
         z-index:1;
     }
+    #search-form{
+        width:65%;
+    }
     .main-body{
         margin-top:50%;
         margin-left:-22%;
@@ -110,6 +113,9 @@ body {
         border: 2px solid black;
         margin-left: 2.5%;
         margin-top: 10%;
+    }
+    .side-bar-lower{
+        width:60%;
     }
 }
 
@@ -217,9 +223,9 @@ body {
 }
 
 .data-set {
-    margin-left: 15%;
+    margin-left: 22%;
     margin-top:1%;
-    width: 95%;
+    width: 80%;
     height: 20%;
     overflow-y: auto;
 }

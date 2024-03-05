@@ -16,46 +16,45 @@
     }
 }
 <div class="side-bar">
-    <!-- Sidebar -->
-    <div class="d-flex flex-column flex-shrink-0 p-3 align-items-center">
-        <p>@HttpContext.Session.GetString("username")</p>
-        <hr />
-        <hr />
-        <div>
-            <form method="get">
-                <div class="input-group">
-                    <input type="search" class="form-control rounded" name="SearchTerm" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </div>
+    <div class="row">
+        <nav class="col-md-3 d-flex flex-column flex-shrink-0 p-3 side-bar">
+            <p>@HttpContext.Session.GetString("username")</p>
+            <hr />
+            <div>
+                <form method="get">
+                    <div class="input-group" id="search-form">
+                        <input type="search" class="form-control rounded" name="SearchTerm" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
 
-                <div>
-                    <h2>Plans</h2>
-                    <button type="submit" name="SelectedPlanID" value="" class="btn btn-secondary">Exit Plan</button>
-                </div>
-                <hr />
-                @if (Model.plans != null && Model.plans.Any())
-                {
-                    @foreach (var plan in Model.plans)
+                    <div>
+                        <h2>Plans</h2>
+                        <button type="submit" name="SelectedPlanID" value="" class="btn btn-secondary">Exit Plan</button>
+                    </div>
+                    <hr />
+                    @if (Model.plans != null && Model.plans.Any())
                     {
-
-                        <form>
-                            <div>
-                                <input type="hidden" name="SelectedPlanID" value="@plan.PlanID" />
-                                <button type="submit" class="btn btn-primary">@plan.PlanName</button>
-                            </div>
-                        </form>
-
-                        <hr />
+                        @foreach (var plan in Model.plans)
+                        {
+                            <form>
+                                <div>
+                                    <input type="hidden" name="SelectedPlanID" value="@plan.PlanID" />
+                                    <button type="submit" class="btn btn-primary">@plan.PlanName</button>
+                                </div>
+                            </form>
+                            <hr />
+                        }
                     }
-                }
-                else
-                {
-                    <p>No Plans Found.</p>
-                }
-            </form>
-        </div>
+                    else
+                    {
+                        <p>No Plans Found.</p>
+                    }
+                </form>
+            </div>
+        </nav>
     </div>
 </div>
+
 
 <div class="main-body">
     <!--Used to display Adding-->
