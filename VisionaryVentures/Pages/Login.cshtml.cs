@@ -41,7 +41,7 @@ namespace VisionaryVentures.Pages
 
                     ViewData["LoginMessage"] = "Login Successful!";
                     DBClassReaders.LabOneDBConnection.Close();
-                    return RedirectToPage("/Collaboration");
+                    return RedirectToPage("/CollabHub");
                 }
                 else
                 {

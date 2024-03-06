@@ -354,5 +354,38 @@ namespace VisionaryVentures.Pages.DB
                 }
             }
         }
+
+        public static string GetFirstNameByUsername(string username)
+        {
+            string firstName = "";
+            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
+            {
+                string sqlQuery = "SELECT FirstName FROM User WHERE Username = @Username";
+                SqlCommand command = new SqlCommand(sqlQuery, connection);
+                command.Parameters.AddWithValue("@Username", username);
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        firstName = reader["FirstName"].ToString();
+                    }
+                }
+            }
+            return firstName;
+        }
+
+        public static SqlDataReader GeneralReaderQuery(string sqlQuery)
+        {
+            SqlCommand cmdProductRead = new SqlCommand();
+            cmdProductRead.Connection = LabOneDBConnection;
+            cmdProductRead.Connection.ConnectionString =
+            LabOneDBConnectionString;
+            cmdProductRead.CommandText = sqlQuery;
+            cmdProductRead.Connection.Open();
+            SqlDataReader tempReader = cmdProductRead.ExecuteReader();
+            return tempReader;
+        }
+
     }
 }
