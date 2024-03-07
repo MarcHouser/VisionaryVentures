@@ -27,36 +27,6 @@
         </form>
     </div>
 
-    <form class="collab-Associations" method="post">
-        <label for="selectedPlan">Select a Plan:</label>
-        <select id="selectedPlan" name="SelectedPlanId">
-            <option value="">None Selected</option>
-            @foreach (var plan in Model.AllPlans)
-            {
-                <option value="@plan.PlanID">@plan.PlanName</option>
-            }
-        </select>
-
-        <label for="selectedKnowledgeItem">Select a Knowledge Item:</label>
-        <select id="selectedKnowledgeItem" name="SelectedKnowledgeItemId">
-            <option value="">None Selected</option>
-            @foreach (var item in Model.AllKnowledgeItems)
-            {
-                <option value="@item.KnowledgeItemID">@item.Title</option>
-            }
-        </select>
-
-        <label for="selectedDataset">Select a Dataset:</label>
-        <select id="selectedDataset" name="SelectedDatasetId">
-            <option value="">None Selected</option>
-            @foreach (var dataset in Model.AllDatasets)
-            {
-                <option value="@dataset.DatasetID">@dataset.FileName</option>
-            }
-        </select>
-        <button class="btn btn-primary" type="submit" asp-page-handler="AssociateItems">Associate Selected Items</button>
-    </form>
-
     <!-- Knowledge Item & Plans -->
     <div class="container task-container">
         <div class="row">
@@ -132,29 +102,41 @@
             <div class="col-md-6">
                 <div class="card plan-container">
                     <div class="card-header">
-                        Chat Box
+                        Associate Items
                     </div>
                     <div class="card-body  task-box">
-                        @if (Model.Messages != null && Model.Messages.Any())
-                        {
-                            foreach (var message in Model.Messages)
-                            {
-                                <p><strong>@message.FullName</strong>: @message.MessageContent</p>
-                            }
-                        }
-                        else
-                        {
-                            <p>No messages yet.</p>
-                        }
-                    </div>
-                    <div class="card-footer">
-                        <form asp-page-handler="SendMessage" id="sendMessageForm" method="post">
-                            <div class="input-group">
-                                <input asp-for="MessageContent" class="form-control" id="messageInput" placeholder="Enter message" autocomplete="off">
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-primary">Send</button>
-                                </div>
-                            </div>
+                        <form class="collab-Associations" method="post">
+                            <label for="selectedPlan">Select a Plan:</label>
+                            <select id="selectedPlan" name="SelectedPlanId">
+                                <option value="">None Selected</option>
+                                @foreach (var plan in Model.AllPlans)
+                                {
+                                    <option value="@plan.PlanID">@plan.PlanName</option>
+                                }
+                            </select>
+                            <br />
+
+                            <label for="selectedKnowledgeItem">Select a Knowledge Item:</label>
+                            <select id="selectedKnowledgeItem" name="SelectedKnowledgeItemId">
+                                <option value="">None Selected</option>
+                                @foreach (var item in Model.AllKnowledgeItems)
+                                {
+                                    <option value="@item.KnowledgeItemID">@item.Title</option>
+                                }
+                            </select>
+                            <br />
+
+                            <label for="selectedDataset">Select a Dataset:</label>
+                            <select id="selectedDataset" name="SelectedDatasetId">
+                                <option value="">None Selected</option>
+                                @foreach (var dataset in Model.AllDatasets)
+                                {
+                                    <option value="@dataset.DatasetID">@dataset.FileName</option>
+                                }
+                            </select>
+                            <br />
+                            <br />
+                            <button class="btn btn-primary" type="submit" asp-page-handler="AssociateItems">Associate Selected Items</button>
                         </form>
                     </div>
                 </div>
