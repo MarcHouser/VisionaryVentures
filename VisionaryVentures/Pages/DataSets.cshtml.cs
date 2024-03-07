@@ -148,7 +148,7 @@ namespace VisionaryVentures.Pages
 
         private async Task ExecuteSqlNonQuery(string sqlCommandText)
         {
-            using (var connection = new SqlConnection("Server=localhost;Database=Lab3;Trusted_Connection=True"))
+            using (var connection = new SqlConnection("Server=localhost;Database=Lab4;Trusted_Connection=True"))
             {
                 await connection.OpenAsync();
                 using (var command = new SqlCommand(sqlCommandText, connection))
