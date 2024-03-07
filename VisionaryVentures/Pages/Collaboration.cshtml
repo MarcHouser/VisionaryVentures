@@ -20,35 +20,6 @@
 
 
 <div class="collab-body">
-     @if (!Model.ShowAddForm)
-    {
-        <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn2">
-            <form method="post" class="form-inline">
-                <button asp-page-handler="AddCollab" type="submit" name="action" value="ShowAddCollab" class="btn btn-primary mb-3">Add Collaboration</button>
-            </form>
-        </div>
-    }
-    else
-    {
-        <div class="card" id="btn-card">
-            <div class="card-header">Add New Collaboration</div>
-            <div class="card-body">
-                <form asp-page-handler="AddCollab" method="post">
-                    <input type="hidden" name="action" value="AddCollab" />
-                    <div class="form-group">
-                        <label for="Title">Title</label>
-                        <input asp-for="Title" type="text" class="form-control" id="title" name="Title" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="Description">Description</label>
-                        <input asp-for="Description" type="text" class="form-control" id="description" name="Description" required>
-                    </div>
-                    <button type="submit" class="btn btn-success">Submit</button>
-                    <button type="button" onclick="location.href='@Url.Page("/Collaboration")'" class="btn btn-secondary">Cancel</button>
-                </form>
-            </div>
-        </div>
-    }
 
     <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn2">
         <form method="post" class="form-inline">
