@@ -293,6 +293,11 @@ body {
     display: inline-block;
     text-align: left;
 }
+.report-container p{
+    text-align:left;
+    display:block;
+    margin-left:37%;
+}
 .report-container h1 {
     display: inline-block; 
     border: 2px solid black;
