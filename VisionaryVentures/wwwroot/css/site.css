@@ -125,6 +125,9 @@ body {
     .side-bar-lower{
         width:60%;
     }
+    .collab-body{
+        margin-left:-55%;
+    }
 }
 
 /* Add max-height for the sidebar to enable scrolling */
@@ -308,4 +311,8 @@ body {
 @page {
     size: auto;
     margin: 0;
+}
+.collab-body {
+
+    margin-left: -27%;
 }
