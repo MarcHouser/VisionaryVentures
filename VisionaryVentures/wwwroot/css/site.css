@@ -322,3 +322,9 @@ body {
     position:relative;
     margin-left:-27%;
 }
+#logo {
+    display: block;
+    margin-top:3%;
+    margin-left: auto;
+    margin-right: auto;
+}

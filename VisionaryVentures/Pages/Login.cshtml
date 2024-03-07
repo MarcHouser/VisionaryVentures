@@ -2,8 +2,8 @@
 @model VisionaryVentures.Pages.LoginModel
 @{
 }
+<img id="logo" src="~/img/VisionaryVentersTempLogo.png" />
 
-<p>Created by Elliott Tulchinsky, Marc Houser, Hoang Le, Maddie West, Bryce Irvin, Eric Chindgren, Ben Eidelkind</p>
 
 @if (TempData["LogoutMessage"] != null)
 {
@@ -14,7 +14,7 @@
     {
         <p class="text-success">@ViewData["LoginMessage"]</p>
     }
-   
+
 
 <div class="login-container">
 @{
@@ -64,5 +64,12 @@
         <br />
     }
 
+
 }
 </div>
+<footer>
+    <br />
+    <br/>
+    <hr />
+    <p>Created by Elliott Tulchinsky, Marc Houser, Hoang Le, Maddie West, Bryce Irvin, Eric Chindgren, Ben Eidelkind</p>
+</footer>
