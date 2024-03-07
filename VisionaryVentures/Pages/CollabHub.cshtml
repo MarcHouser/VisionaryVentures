@@ -2,6 +2,7 @@
 @model VisionaryVentures.Pages.CollabHubModel
 @{
     ViewData["Title"] = "Collaboration";
+    ViewData["username"] = HttpContext.Session.GetString("username");
 }
 @{
     if (HttpContext.Session.GetString("username") != null)
@@ -28,7 +29,7 @@
     <div style="display: flex; align-items: center; justify-content: space-between;">
         <div style="display: flex; flex-direction: column;">
             <h4>
-                Welcome to Collaborations
+                Welcome to Collaborations @HttpContext.Session.GetString("username")!
             </h4>
             <h6>
                 Your Collaborations
