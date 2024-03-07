@@ -128,6 +128,9 @@ body {
     .collab-body{
         margin-left:-55%;
     }
+    a{
+        width:63%;
+    }
 }
 
 /* Add max-height for the sidebar to enable scrolling */
