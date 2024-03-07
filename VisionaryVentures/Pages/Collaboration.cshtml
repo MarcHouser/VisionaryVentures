@@ -4,6 +4,7 @@
 
 @{
     ViewData["Title"] = "Collaboration";
+    ViewData["collabid"] = HttpContext.Session.GetInt32("collaborationid");
 }
 @{
     if (HttpContext.Session.GetString("username") != null)
