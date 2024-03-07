@@ -11,7 +11,7 @@ namespace VisionaryVentures.Pages.DB
 
         // Instantiate connection string
         private static readonly String? LabOneDBConnectionString =
-            "Server=localhost;Database=Lab3;Trusted_Connection=True";
+            "Server=localhost;Database=Lab4;Trusted_Connection=True";
         private static readonly String? AuthConnString =
             "Server=localhost;Database=AUTH;Trusted_Connection=True";
 
