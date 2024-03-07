@@ -49,27 +49,10 @@ button.accept-policy {
     line-height: 60px;
 }
 
-.nav-item2 {
-    text-align: center;
-    position: absolute;
-    top: 8px;
-    right: 10%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.nav-item3 {
-    text-align: center;
-    position: absolute;
-    top: 8px;
-    right: 0%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 header {
     background: darkgray;
     width: 100%;
     top: auto;
-    padding-left: 40%;
+    position:relative;
 }
+

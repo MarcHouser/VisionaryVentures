@@ -131,6 +131,11 @@ body {
     a{
         width:63%;
     }
+    #logout {
+        display: block;
+        position: relative;
+    }
+
 }
 
 /* Add max-height for the sidebar to enable scrolling */
@@ -259,12 +264,10 @@ body {
     margin-left: 22%;
     margin-top: 2%;
 }
-.navbar-nav{
-    width:auto;
 
-}
-#logout{
-    position:relative;
+#logout {
+    position: relative; /* Change from fixed to relative */
+    margin-right: 1%;
 }
 .file {
     color: black !important;
@@ -336,4 +339,17 @@ body {
     margin-left: auto;
     margin-right: auto;
     border:solid;
+}
+#top-logo {
+    position:fixed;
+    width: 100px;
+    height: auto;
+    display: inline-block;
+    left:0;
+    margin-left:1%;
+    border: solid black;
+}
+.navbar-nav {
+    display: flex;
+    justify-content: center;
 }
