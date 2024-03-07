@@ -266,7 +266,7 @@ body {
 }
 
 #logout {
-    position: relative; /* Change from fixed to relative */
+    position: relative;
     margin-right: 1%;
 }
 .file {
