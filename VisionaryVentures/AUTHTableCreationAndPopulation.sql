@@ -4,7 +4,7 @@ CREATE TABLE HashedCredentials (
 	PasswordHash NVARCHAR(255)
 );
 
-INSERT INTO [Lab3].[dbo].[Users]
+INSERT INTO [Lab4].[dbo].[Users]
            ([FirstName]
            ,[LastName]
            ,[EmailAddress]

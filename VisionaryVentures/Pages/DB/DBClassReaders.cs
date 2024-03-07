@@ -294,7 +294,7 @@ namespace VisionaryVentures.Pages.DB
             cmdSPLogin.Connection.ConnectionString = AuthConnString;
             cmdSPLogin.CommandType = System.Data.CommandType.StoredProcedure;
             cmdSPLogin.Parameters.AddWithValue("@Username", Username);
-            cmdSPLogin.CommandText = "sp_Lab3Login";
+            cmdSPLogin.CommandText = "sp_Lab4Login";
             cmdSPLogin.Connection.Open();
             if (((int)cmdSPLogin.ExecuteScalar()) > 0)
             {

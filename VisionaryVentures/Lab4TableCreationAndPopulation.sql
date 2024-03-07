@@ -110,7 +110,6 @@ CREATE TABLE SwotAnalyses (
     Threats TEXT,
     FOREIGN KEY (KnowledgeItemID) REFERENCES KnowledgeItems(KnowledgeItemID)
 );
-INSERT INTO Users VALUES ('admin', 'password', 'admin.user@gmail.com', '70364628319', '323 Main st', 'Richmond', 'va', 23233, 'United States');
 
 INSERT INTO Collaborations (Title, Description) VALUES ('JMU COB Network Analysis', 'Analyzing the As-Is Model of Hartman Hall and Zane Showker Hall.');
 INSERT INTO Collaborations (Title, Description) VALUES ('Precision Analytica', 'Focused on finding solutions derived from analytical research.');
