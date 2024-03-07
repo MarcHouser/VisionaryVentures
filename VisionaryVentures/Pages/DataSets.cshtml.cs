@@ -155,6 +155,7 @@ namespace VisionaryVentures.Pages
                 {
                     await command.ExecuteNonQueryAsync();
                 }
+            connection.Close();
             }
         }
 
