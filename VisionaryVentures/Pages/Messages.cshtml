@@ -24,8 +24,8 @@
 
             <form method="get" id="search-form">
                 <div class="input-group">
-                    <input type="search" class="form-control rounded" id="collaboration-search" placeholder="Search collaborations..." aria-label="Search">
-                    <button type="button" class="btn btn-primary search-button" onclick="filterCollaborations()">Search</button>
+                    <input type="search" class="form-control rounded" id="search" placeholder="Search collaboration chats..." aria-label="Search">
+                    <button id="search-btn" type="button" class="btn btn-primary search-button" onclick="filterItems('search');">Search</button>
                 </div>
             </form>
 
@@ -51,8 +51,6 @@
         </nav>
     </div>
 </div>
-
-
 <div class="main-body">
     <div class="card chat-container">
         <div class="card-header">

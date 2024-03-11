@@ -20,8 +20,8 @@
         <hr>
 
         <div class="input-group" id="search-form">
-            <input type="search" class="form-control rounded" id="sidebar-search" placeholder="Search datasets..." aria-label="Search">
-            <button type="button" class="btn btn-primary search-button" onclick="filterDatasetButtons()">Search</button>
+            <input type="search" class="form-control rounded" id="search" placeholder="Search datasets..." aria-label="Search">
+            <button id="search-btn" type="button" class="btn btn-primary search-button" onclick="filterItems('search');">Search</button>
         </div>
 
         <div class="nav nav-pills flex-column mb-auto">
@@ -45,9 +45,6 @@
         </div>
     </div>
 </div>
-
-
-
 <div class="main-body">
     <div class="container">
         <!-- Data display table -->

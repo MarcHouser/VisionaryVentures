@@ -96,7 +96,6 @@ function toggleFormVisibility() {
         form.style.display = form.style.display === 'none' ? 'block' : 'none';
     });
 }
-
 document.addEventListener('DOMContentLoaded', toggleFormVisibility);
 
 function filterTableRows() {
@@ -118,20 +117,6 @@ function filterDatasetButtons() {
         button.style.display = buttonText.includes(searchValue) ? '' : 'none';
     });
 }
-
-function filterCollaborations() {
-    var searchValue = document.getElementById('collaboration-search').value.toLowerCase();
-    var collaborationButtons = document.querySelectorAll('.nav-pills .btn'); // Adjust the selector as needed
-
-    collaborationButtons.forEach(function (button) {
-        var buttonText = button.textContent.toLowerCase();
-        button.style.display = buttonText.includes(searchValue) ? '' : 'none';
-    });
-}
-document.getElementById('search-form').addEventListener('submit', function (event) {
-    event.preventDefault(); // Prevent the default form submission
-    filterCollaborations();
-});
 
 function populateUserFields() {
     document.getElementById('FirstName').value = 'John';
@@ -156,11 +141,23 @@ function clearUserFields() {
     document.getElementById('PostalCode').value = '';
     document.getElementById('Country').value = '';
 }
-function filterPlans() {
-    var searchValue = document.getElementById('plan-search').value.toLowerCase();
-    var planButtons = document.querySelectorAll('.nav-pills .btn');
 
-    planButtons.forEach(function (button) {
+document.addEventListener("DOMContentLoaded", function () {
+    var searchInput = document.getElementById("search");
+    searchInput.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            document.getElementById("search-btn").click();
+        }
+    });
+});
+
+function filterItems(elementId) {
+    var searchInput = document.getElementById(elementId);
+    var searchValue = searchInput.value.toLowerCase();
+    var buttons = document.querySelectorAll('.nav-pills .btn');
+
+    buttons.forEach(function (button) {
         var buttonText = button.textContent.toLowerCase();
         if (buttonText.includes(searchValue)) {
             button.style.display = '';
@@ -169,26 +166,3 @@ function filterPlans() {
         }
     });
 }
-
-document.getElementById('search-form').addEventListener('submit', function (event) {
-    event.preventDefault(); // Prevent the default form submission
-    filterPlans();
-});
-function filterKnowledgeItems() {
-    var searchValue = document.getElementById('knowledge-search').value.toLowerCase();
-    var knowledgeButtons = document.querySelectorAll('.nav-pills .btn');
-
-    knowledgeButtons.forEach(function (button) {
-        var buttonText = button.textContent.toLowerCase();
-        if (buttonText.includes(searchValue)) {
-            button.style.display = '';
-        } else {
-            button.style.display = 'none';
-        }
-    });
-}
-document.getElementById('knowledge-search').addEventListener('keypress', function (event) {
-    if (event.key === 'Enter') {
-        filterKnowledgeItems();
-    }
-});

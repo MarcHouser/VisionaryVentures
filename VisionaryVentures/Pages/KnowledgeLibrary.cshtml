@@ -24,8 +24,8 @@
             <hr>
             <form method="get" id="search-form">
                 <div class="input-group">
-                    <input type="search" class="form-control rounded" id="knowledge-search" placeholder="Search knowledge category..." aria-label="Search">
-                    <button type="button" class="btn btn-primary search-button" onclick="filterKnowledgeItems()">Search</button>
+                    <input type="search" class="form-control rounded" id="search" placeholder="Search knowledge category..." aria-label="Search">
+                    <button id="search-btn" type="button" class="btn btn-primary search-button" onclick="filterItems('search');">Search</button>
                 </div>
             </form>
 
@@ -55,9 +55,6 @@
         </nav>
     </div>
 </div>
-
-
-
 <!--Used for interacting with the KnowledgeLibrary Body-->
 <div class="main-body">
     <!--Used to display Adding-->
@@ -134,7 +131,6 @@
             </div>
         </div>
     }
-
     <!--Used to display SWOT-->
     @if (!Model.ShowAddSWOTForm)
     {
@@ -185,7 +181,6 @@
             </div>
         </div>
     }
-
     <!--Used to display information on a selected item-->
     <div class="container knowledge-container">
         <div class="card mt-3">
