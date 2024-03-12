@@ -103,6 +103,9 @@ namespace VisionaryVentures.Pages
 
         private async Task ProcessCSVAndCreateTable(string filePath, string fileName)
         {
+            // Infer data types here
+            var columnDataTypes = InferColumnDataTypes(filePath);
+
             using var reader = new StreamReader(filePath);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
@@ -110,14 +113,12 @@ namespace VisionaryVentures.Pages
             csv.ReadHeader();
             var headers = csv.HeaderRecord;
 
-            // Generate a sanitized table name based on the file name
             string tableName = SanitizeFileNameForTableName(fileName);
 
-            // Create the table
-            string createTableSql = BuildCreateTableSql(tableName, headers);
+            // Pass columnDataTypes to BuildCreateTableSql
+            string createTableSql = BuildCreateTableSql(tableName, headers, columnDataTypes);
             await ExecuteSqlNonQuery(createTableSql);
 
-            // Insert data into the table
             while (csv.Read())
             {
                 string insertSql = BuildInsertSql(tableName, headers, csv);
@@ -133,11 +134,12 @@ namespace VisionaryVentures.Pages
             return $"Dataset_{sanitized}";
         }
 
-        private string BuildCreateTableSql(string tableName, string[] headers)
+        private string BuildCreateTableSql(string tableName, string[] headers, Dictionary<string, string> columnTypes)
         {
-            var columns = headers.Select(header => $"[{header}] NVARCHAR(MAX)").ToArray();
+            var columns = headers.Select(header => $"[{header}] {columnTypes[header]}").ToArray();
             return $"CREATE TABLE [{tableName}] ({string.Join(", ", columns)});";
         }
+
 
         private string BuildInsertSql(string tableName, string[] headers, IReaderRow csv)
         {
@@ -171,6 +173,46 @@ namespace VisionaryVentures.Pages
             {
                 DataSetFiles.Add(file.Name);
             }
+        }
+
+        private Dictionary<string, string> InferColumnDataTypes(string filePath)
+        {
+            using var reader = new StreamReader(filePath);
+            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+            csv.Read();
+            csv.ReadHeader();
+            var headers = csv.HeaderRecord;
+            var columnTypes = new Dictionary<string, string>(headers.Length);
+
+            foreach (var header in headers)
+            {
+                columnTypes[header] = "INT"; // Assume INT initially for all
+            }
+
+            int rowCount = 0;
+            while (csv.Read() && rowCount < 100) // Scan up to 100 rows for type inference
+            {
+                foreach (var header in headers)
+                {
+                    var field = csv.GetField(header);
+                    if (columnTypes[header] == "INT" && !int.TryParse(field, out _))
+                    {
+                        // If not INT, downgrade to FLOAT
+                        columnTypes[header] = "FLOAT";
+                    }
+                    if (columnTypes[header] == "FLOAT" && !float.TryParse(field, System.Globalization.NumberStyles.Any, CultureInfo.InvariantCulture, out _))
+                    {
+                        // If not FLOAT, downgrade to NVARCHAR
+                        columnTypes[header] = "NVARCHAR(MAX)";
+                    }
+                }
+                rowCount++;
+            }
+
+            // Reassess types after the full scan. If a column has been marked as NVARCHAR(MAX) due to mixed data, but mostly contains integer values, you might adjust its type based on your specific criteria or keep it as is for safety.
+
+            return columnTypes;
         }
     }
 }
