@@ -18,14 +18,13 @@
                 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-darkgray align-items-center">
 
                 <div class="container" id="nav-bar">
-                    <img id="top-logo" src="~/img/VisionaryVentersTempLogo.png" />
                         <a class="navbar-brand" asp-area="" asp-page="/Index"></a>
-
+                    <img class="img-fluid navbar-brand-img" id="top-logo" src="~/img/VisionaryVentersTempLogo.png" />
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-                        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between align-items-center">
                             <ul class="navbar-nav flex-grow-1">
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-page="/CollabHub">Collaborations</a>
@@ -43,7 +42,7 @@
                                     <a class="nav-link text-dark" asp-area="" asp-page="/Messages">Messages</a>
                                 </li>
                             </ul>
-                            <form asp-page="Login" asp-page-handler="LogoutHandler" id="logout">
+                            <form asp-page="Login" asp-page-handler="LogoutHandler" id="logout" class="ml-auto">
                                 <input type="submit" class="btn btn-danger" value="Logout">
                             </form>
                         </div>

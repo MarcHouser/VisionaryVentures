@@ -57,14 +57,15 @@ body {
 .side-bar {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    width: 20%; /* Initially set width to 20% */
-    position: fixed;
-    top: 0;
-    left: 0; /* Set left to 0 */
-    background-color: darkgray;
-    padding-top: 16px;
-    overflow-y: auto; /* Add overflow-y for vertical scrolling */
+    height: 100%; /* Use viewport height to cover the full height of the viewport */
+    width: 20%; /* Set the width to 20% */
+    position: fixed; /* Position the sidebar fixed to the left */
+    top:0;
+    left: 0; /* Position the sidebar at the left */
+    overflow-y: auto; /* Enable vertical scrolling if the content overflows */
+    background-color: darkgray; /* Keep the same background color */
+}
+.sidbar,p {
 }
 .side-bar button {
     width: 100%;
@@ -98,16 +99,23 @@ body {
         width:65%;
     }
     .main-body{
-        margin-top:50%;
-        margin-left:-22%;
+       height:80%;
     }
-    .navbar{
-        margin-left:-100%;
-        z-index:3;
-        
+    .navbar {
+        z-index: 3;
+        padding: 1rem 23rem; /* Adjust these values for small devices */
     }
-    .navbar-collapse{
-        margin-left:75%;
+    .navbar-toggler{
+        margin-left:3rem;
+        margin-top:-1rem;
+    }
+
+    .navbar-brand-img {
+        position: relative; 
+        top: 0;
+        margin-top:.5em;
+        left: 0;
+        padding: 0; 
     }
     .btn-group{
         display:inline-block;
@@ -128,22 +136,15 @@ body {
     .collab-body{
         margin-left:-55%;
     }
-    a{
-        width:63%;
+    a {
+        width: 63%;
     }
     #logout {
         display: block;
         position: relative;
     }
-
 }
 
-/* Add max-height for the sidebar to enable scrolling */
-@media screen and (max-height: 600px) {
-    .side-bar {
-        max-height: 80%; /* Set maximum height */
-    }
-}
 
 .side-bar-lower form {
     display: flex;
@@ -169,9 +170,9 @@ body {
     margin-left: 2.5%;
     margin-top: 2%;
     margin-bottom: 2%;
-
 }
 .chat-container {
+    height: calc(100% - 100px);
     margin-left: 22%;
     margin-top: 3%;
 }
@@ -341,15 +342,19 @@ body {
     border:solid;
 }
 #top-logo {
-    position:fixed;
-    width: 100px;
+    width: 7em;
     height: auto;
     display: inline-block;
     left:0;
-    margin-left:1%;
-    border: solid black;
 }
 .navbar-nav {
     display: flex;
+    width:100%;
     justify-content: center;
+}
+.navbar-brand-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0.4rem .5rem ; /* Adjust these values to match the navbar padding */
 }
