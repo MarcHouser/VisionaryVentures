@@ -101,6 +101,12 @@ namespace VisionaryVentures.Pages
             return RedirectToPage();
         }
 
+        public IActionResult OnPostAnalyzeDataset(string fileName)
+        {
+            // Redirect to the Analyze page with the fileName as a parameter
+            return RedirectToPage("./Analyze", new { fileName });
+        }
+
         private async Task ProcessCSVAndCreateTable(string filePath, string fileName)
         {
             // Infer data types here
