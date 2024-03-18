@@ -216,8 +216,6 @@ namespace VisionaryVentures.Pages
                 rowCount++;
             }
 
-            // Reassess types after the full scan. If a column has been marked as NVARCHAR(MAX) due to mixed data, but mostly contains integer values, you might adjust its type based on your specific criteria or keep it as is for safety.
-
             return columnTypes;
         }
     }

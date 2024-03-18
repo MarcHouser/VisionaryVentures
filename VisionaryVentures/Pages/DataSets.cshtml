@@ -32,9 +32,12 @@
                    id="data-btn">
                     @fileName
                 </a>
-                <form method="post" asp-page-handler="AnalyzeDataset" asp-route-filename="@fileName" class="d-inline">
-                    <button type="submit" class="btn btn-info btn-sm">Analyze</button>
-                </form>
+                @if (Model.SelectedFileName == fileName)
+                {
+                    <form method="get" asp-page="TensorFlowAnalysis" asp-route-fileName="@fileName" class="d-inline">
+                        <button type="submit" class="btn btn-success btn-sm ml-2">Analyze with TensorFlow</button>
+                    </form>
+                }
                 <hr>
             }
         </div>
