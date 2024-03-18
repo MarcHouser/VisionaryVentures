@@ -38,7 +38,7 @@ namespace VisionaryVentures.Pages
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", fileName);
 
             // Load the data
-            IDataView dataView = _mlContext.Data.LoadFromTextFile(filePath, hasHeader: true, separatorChar: ',');
+            IDataView dataView = _mlContext.Data.LoadFromTextFile<IDataView>(filePath);
 
             // Switch between different types of analyses based on user input
             switch (analysisType.ToLower())
