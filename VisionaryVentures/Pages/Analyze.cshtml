@@ -20,7 +20,7 @@
     <button type="submit" asp-page-handler="PerformAnalysis">Analyze</button>
 </form>
 
-@if (Model.Statistics != null && Model.Statistics.Count > 0)
+@* @if (Model.Statistics != null && Model.Statistics.Count > 0)
 {
     <!-- Display results as before -->
 }
@@ -28,3 +28,4 @@ else if (!string.IsNullOrEmpty(ViewData["ErrorMessage"]?.ToString()))
 {
     <p>@ViewData["ErrorMessage"]</p>
 }
+ *@
