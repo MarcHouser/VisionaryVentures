@@ -134,7 +134,6 @@ namespace VisionaryVentures.Pages
 
         private string SanitizeFileNameForTableName(string fileName)
         {
-            // Simple example; adapt as needed for robustness
             string sanitized = Path.GetFileNameWithoutExtension(fileName);
             sanitized = Regex.Replace(sanitized, "[^a-zA-Z0-9_]", "");
             return $"Dataset_{sanitized}";
@@ -145,7 +144,6 @@ namespace VisionaryVentures.Pages
             var columns = headers.Select(header => $"[{header}] {columnTypes[header]}").ToArray();
             return $"CREATE TABLE [{tableName}] ({string.Join(", ", columns)});";
         }
-
 
         private string BuildInsertSql(string tableName, string[] headers, IReaderRow csv)
         {
