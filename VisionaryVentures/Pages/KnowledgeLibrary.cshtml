@@ -57,17 +57,28 @@
 </div>
 <!--Used for interacting with the KnowledgeLibrary Body-->
 <div class="main-body">
-    <!--Used to display Adding-->
-    @if (!Model.ShowAddForm)
-    {
-        <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn2">
-            <form method="post" class="form-inline">
-                <button type="submit" name="action" value="ShowAdd" class="btn btn-primary mb-3">Add Item</button>
-            </form>
-        </div>
-    }
-    else
-    {
+
+    <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn2">
+        <form method="post" class="form-inline">
+            <button type="submit" asp-page-handler="AddItem" name="action" value="ShowAdd" class="btn btn-primary mb-3">Add Item</button>
+        </form>
+    </div>
+
+
+    <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn1">
+        <form method="post" class="form-inline">
+            <button asp-page-handler="EditItem" type="submit" name="action" value="ShowEdit" class="btn btn-primary mb-3">Edit Item</button>
+        </form>
+    </div>
+
+    <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn2">
+        <form method="post" asp-page-handler="AddSWOT" asp-route-action="ShowAddSWOT">
+            <button type="submit" class="btn btn-primary mb-3">Add SWOT</button>
+        </form>
+    </div>
+
+    @if (Model.ShowAddForm)
+    {   
         <div class="card" id="btn-card">
             <div class="card-header">Add New Knowledge Item</div>
             <div class="card-body">
@@ -94,16 +105,8 @@
             </div>
         </div>
     }
-    <!--Used to display Editing-->
-    @if (!Model.ShowEditForm)
-    {
-        <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn1">
-            <form method="post" class="form-inline">
-                <button asp-page-handler="EditItem" type="submit" name="action" value="ShowEdit" class="btn btn-primary mb-3">Edit Item</button>
-            </form>
-        </div>
-    }
-    else 
+
+    @if (Model.ShowEditForm)
     {
         <div class="card" id="btn-card">
             <div class="card-header">Edit Knowledge Item</div>
@@ -131,16 +134,8 @@
             </div>
         </div>
     }
-    <!--Used to display SWOT-->
-    @if (!Model.ShowAddSWOTForm)
-    {
-        <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn2">
-            <form method="post" asp-page-handler="AddSWOT" asp-route-action="ShowAddSWOT">
-                <button type="submit" class="btn btn-primary mb-3">Add SWOT</button>
-            </form>
-        </div>
-    }
-    else
+
+    @if (Model.ShowAddSWOTForm)
     {
         <div class="card" id="btn-card">
             <div class="card-header">Add SWOT Analyses</div>
@@ -181,6 +176,7 @@
             </div>
         </div>
     }
+
     <!--Used to display information on a selected item-->
     <div class="container knowledge-container">
         <div class="card mt-3">
