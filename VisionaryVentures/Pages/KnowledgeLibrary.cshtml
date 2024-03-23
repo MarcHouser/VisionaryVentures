@@ -35,16 +35,14 @@
                     <button type="submit" name="selectedCategory" value="" class="btn btn-secondary">Exit Category</button>
                 </form>
                 <hr>
-                @if (Model.knowledgeItems != null && Model.knowledgeItems.Any())
+                @if (Model.AllCategories != null && Model.AllCategories.Any())
                 {
-                    @foreach (var group in Model.knowledgeItems.GroupBy(item => item.Category).Select(g => g.First()))
+                    @foreach (var category in Model.AllCategories)
                     {
                         <form method="get">
-                            <div>
-                                <button type="submit" name="selectedCategory" value="@group.Category" class="btn btn-primary">@group.Category</button>
-                            </div>
+                            <button type="submit" name="selectedCategory" value="@category" class="btn btn-block @(HttpContext.Request.Query["selectedCategory"] == category ? "btn-success" : "btn-primary")">@category</button>
+                            <hr>
                         </form>
-                        <hr>
                     }
                 }
                 else
@@ -52,9 +50,11 @@
                     <p>No Categories Found.</p>
                 }
             </div>
+
         </nav>
     </div>
 </div>
+
 <!--Used for interacting with the KnowledgeLibrary Body-->
 <div class="main-body">
     <!--Used to display Adding-->
