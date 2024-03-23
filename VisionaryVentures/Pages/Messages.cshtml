@@ -16,6 +16,15 @@
         return;
     }
 }
+@{
+    // Default title if no collaboration is selected
+    var chatBoxTitle = "Chat Box";
+    if (!string.IsNullOrEmpty(Model.SelectedCollaborationTitle))
+    {
+        chatBoxTitle = Model.SelectedCollaborationTitle; // Use the selected collaboration title if available
+    }
+}
+
 <div class="container-fluid">
     <div class="row">
         <nav id="sidebar" class="col-md-3 d-flex flex-column flex-shrink-0 p-3 side-bar">
@@ -54,7 +63,7 @@
 <div class="main-body">
     <div class="card chat-container">
         <div class="card-header">
-            Chat Box
+            @chatBoxTitle
         </div>
         <div class="card-body chat-box">
             @if (Model.Messages != null && Model.Messages.Any())
