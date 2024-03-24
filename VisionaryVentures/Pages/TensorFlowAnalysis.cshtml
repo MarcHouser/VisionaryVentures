@@ -38,25 +38,24 @@
         <div class="card data-set">
             <div class="card-header">Data</div>
 
-            <div class="input-group">
-                <input asp-action="inflation" placeholder="enter inflation rate..." aria-label="Search" />
-                <select>
+            <div class="input-group" id="analysis-bar">
+                <select class="form-select" aria-label="Default select example">
                     <option>test</option>
                     <option>test</option>
                     <option>test</option>
                 </select>
-                <select>
+                <select class="form-select" aria-label="Default select example">
                     <option>test</option>
                     <option>test</option>
                     <option>test</option>
                 </select>
-                <select>
+                <select class="form-select" aria-label="Default select example">
                     <option>test</option>
                     <option>test</option>
                     <option>test</option>
                 </select>
-                <input type="search" class="form-control rounded" id="data-search" placeholder="Search within dataset..." aria-label="Search" onkeyup="filterTableRows()">
-                <button class="btn-primary"type="submit">Start Analysis</button>
+                <input class="form-control" asp-action="inflation" placeholder="enter inflation rate..." aria-label="Search" />
+                <button class="btn btn-primary"type="submit">Start Analysis</button>
             </div>
 
             <div class="card-body table-body">
