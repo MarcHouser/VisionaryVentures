@@ -250,7 +250,7 @@ body {
     overflow-y: auto;
 }
 .table-body {
-    height: 45em;
+    height: 40em;
     width: 95%;
     overflow-y: auto;
     border: 2px solid black;
@@ -357,4 +357,11 @@ body {
     top: 0;
     left: 0;
     padding: 0.4rem .5rem ; /* Adjust these values to match the navbar padding */
+}
+#data-search{
+    padding:1%;
+    margin:.5em 1.7em 0 1em;
+}
+#analysis-bar {
+    padding: 1%;
 }
