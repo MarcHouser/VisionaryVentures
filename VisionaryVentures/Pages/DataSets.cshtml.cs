@@ -36,6 +36,8 @@ namespace VisionaryVentures.Pages
 
         public string SelectedFileName { get; set; }
 
+        private readonly string _connectionString = "Server=localhost;Database=Lab4;Trusted_Connection=True;";
+
 
 
         // GET: /DataSets
@@ -132,6 +134,64 @@ namespace VisionaryVentures.Pages
                 throw new InvalidOperationException("The file format is not supported.");
             }
         }
+
+        //public async Task<IActionResult> OnGetDeleteAsync(string fileName)
+        //{
+
+        //    var sanitizedFileName = Path.GetFileNameWithoutExtension(fileName); // Remove the extension
+        //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", fileName);
+
+        //    if (System.IO.File.Exists(filePath))
+        //    {
+        //        // Delete the file from the file system
+        //        System.IO.File.Delete(filePath);
+
+        //        // Delete the corresponding table from the database
+        //        string tableName = $"Dataset_{sanitizedFileName}";
+        //        string dropTableSql = $"DROP TABLE IF EXISTS [{tableName}];";
+        //        await ExecuteSqlNonQuery(dropTableSql);
+
+        //        // Optionally, remove any references from a dataset registry if you have one
+        //        // This step depends on how you are tracking datasets in your application.
+
+        //        return RedirectToPage(new { successMessage = "Dataset deleted successfully." });
+        //    }
+        //    else
+        //    {
+        //        return RedirectToPage(new { errorMessage = "File not found." });
+        //    }
+        //}
+
+        public IActionResult OnPostDeleteFile(string fileName)
+        {
+            // Delete table from SQL database
+            string tableName = Path.GetFileNameWithoutExtension(fileName).Replace(" ", "_");
+            string deleteTableQuery = $"DROP TABLE IF EXISTS [Dataset_{tableName}]";
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(deleteTableQuery, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            // Delete file from "Uploads" folder
+            var uploadDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset");
+            var filePath = Path.Combine(uploadDirectory, fileName);
+
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
+
+            // Redirect back to the page
+            return RedirectToPage();
+        }
+
+
 
         //public async Task<IActionResult> OnPostAsync()
         //{
