@@ -133,6 +133,30 @@ namespace VisionaryVentures.Pages
             }
         }
 
+        //public async Task<IActionResult> OnPostAsync()
+        //{
+        //    var filePaths = new List<string>();
+        //    foreach (var formFile in files)
+        //    {
+        //        if (formFile.Length > 0)
+        //        {
+        //            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", formFile.FileName);
+        //            filePaths.Add(filePath);
+        //            using (var stream = new FileStream(filePath, FileMode.Create))
+        //            {
+        //                formFile.CopyTo(stream);
+        //            }
+
+        //            //await CreateTableFromCSV(filePath, formFile.FileName);
+
+        //            DBClassWriters.AddDataset((int)HttpContext.Session.GetInt32("userid"), formFile.FileName, DateTime.Now);
+
+        //            await ProcessCSVAndCreateTable(filePath, formFile.FileName);
+        //        }
+        //    }
+        //    return RedirectToPage();
+        //}
+
         public async Task<IActionResult> OnPostAsync()
         {
             var filePaths = new List<string>();
@@ -144,18 +168,89 @@ namespace VisionaryVentures.Pages
                     filePaths.Add(filePath);
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
-                        formFile.CopyTo(stream);
+                        await formFile.CopyToAsync(stream);
                     }
 
-                    //await CreateTableFromCSV(filePath, formFile.FileName);
+                    // Check file extension and call the appropriate processing method
+                    var fileExtension = Path.GetExtension(formFile.FileName).ToLower();
+                    switch (fileExtension)
+                    {
+                        case ".csv":
+                            await ProcessCSVAndCreateTable(filePath, formFile.FileName);
+                            break;
+                        case ".xls":
+                        case ".xlsx":
+                            await ProcessExcelAndCreateTable(filePath, formFile.FileName);
+                            break;
+                        default:
+                            throw new InvalidOperationException("Unsupported file format.");
+                    }
 
                     DBClassWriters.AddDataset((int)HttpContext.Session.GetInt32("userid"), formFile.FileName, DateTime.Now);
-
-                    await ProcessCSVAndCreateTable(filePath, formFile.FileName);
                 }
             }
             return RedirectToPage();
         }
+
+        private async Task ProcessExcelAndCreateTable(string filePath, string fileName)
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+            using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelDataReader.ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet(new ExcelDataReader.ExcelDataSetConfiguration()
+                    {
+                        ConfigureDataTable = (_) => new ExcelDataReader.ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = true // Use the first row as headers
+                        }
+                    });
+
+                    DataTable dataTable = result.Tables[0];
+                    Dictionary<string, string> columnDataTypes = InferColumnDataTypesFromExcel(dataTable);
+
+                    string tableName = SanitizeFileNameForTableName(fileName);
+                    string createTableSql = BuildCreateTableSql(tableName, dataTable.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToArray(), columnDataTypes);
+                    await ExecuteSqlNonQuery(createTableSql);
+
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        string insertSql = BuildInsertSql(tableName, dataTable.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToArray(), row.ItemArray, columnDataTypes);
+                        await ExecuteSqlNonQuery(insertSql);
+                    }
+                }
+            }
+        }
+
+        private Dictionary<string, string> InferColumnDataTypesFromExcel(DataTable dataTable)
+        {
+            var columnTypes = new Dictionary<string, string>();
+            foreach (DataColumn column in dataTable.Columns)
+            {
+                // Default to string data type
+                columnTypes[column.ColumnName] = "NVARCHAR(MAX)";
+            }
+            // Optionally, implement more sophisticated type inference based on actual data
+            return columnTypes;
+        }
+
+        private string BuildInsertSql(string tableName, string[] headers, object[] values, Dictionary<string, string> columnTypes)
+        {
+            var valueList = new List<string>();
+            for (int i = 0; i < values.Length; i++)
+            {
+                var valueType = columnTypes[headers[i]];
+                string valueStr = valueType == "NVARCHAR(MAX)" ? $"'{values[i].ToString().Replace("'", "''")}'" : values[i].ToString();
+                valueList.Add(valueStr);
+            }
+
+            var columns = string.Join(", ", headers.Select(header => $"[{header}]"));
+            var valuesString = string.Join(", ", valueList);
+            return $"INSERT INTO [{tableName}] ({columns}) VALUES ({valuesString});";
+        }
+
 
 
 
@@ -382,5 +477,6 @@ namespace VisionaryVentures.Pages
 
             return columnTypes;
         }
+
     }
 }
