@@ -188,6 +188,37 @@ body {
     margin-left: 22%;
     margin-top: 1%;
 }
+
+.message {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.current-user {
+    justify-content: flex-end;
+}
+
+.other-user {
+    justify-content: flex-start;
+}
+
+.message-content {
+    background-color: #f1f1f1;
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+
+.message-othersender {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.message-currentsender {
+    font-weight: bold;
+    margin-left: 10px;
+}
+
 .card-header{
     background: darkgray;
     color: #100f0f;
@@ -246,9 +277,7 @@ body {
     inset-inline-start: 23vw;
     margin-top: 1%;
 }
-.my-1{
-    margin-left:2%;
-}
+
 #btn-card {
     margin-left: 22%;
     width: 74vw;
