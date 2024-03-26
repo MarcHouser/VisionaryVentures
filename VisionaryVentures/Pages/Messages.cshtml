@@ -70,7 +70,19 @@
             {
                 foreach (var message in Model.Messages)
                 {
-                    <p><strong>@message.FullName</strong>: @message.MessageContent</p>
+                    var isCurrentUser = message.SentFrom == HttpContext.Session.GetInt32("userid");
+                    <div class="@("message " + (isCurrentUser ? "current-user" : "other-user"))">
+                        @if (isCurrentUser)
+                        {
+                            <span class="message-content">@message.MessageContent</span>
+                            <span class="message-currentsender">You</span>
+                        }
+                        else
+                        {
+                            <span class="message-othersender">@message.FullName</span>
+                            <span class="message-content">@message.MessageContent</span>
+                        }
+                    </div>
                 }
             }
             else
