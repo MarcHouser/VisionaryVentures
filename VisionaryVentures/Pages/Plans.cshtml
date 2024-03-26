@@ -54,7 +54,82 @@
 </div>
 <div class="main-body">
     <!--Used to display Adding-->
-    @if (!Model.ShowAddPlanForm)
+    
+    <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn2">
+        <form method="post" class="form-inline">
+            @* <button type="submit" name="action" value="ShowAdd" class="btn btn-primary mb-3">Add Plan</button> *@
+            <button asp-page-handler="AddPlan" type="submit" name="action" value="ShowAdd" class="btn btn-primary mb-3">Add Plan</button>
+
+        </form>
+    </div>
+
+    <!--Used to display Adding-->
+    <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn1">
+        <form method="post" class="form-inline">
+            <button asp-page-handler="AddContent" type="submit" name="action" value="ShowAddContent" class="btn btn-primary mb-3">Add Plan Step</button>
+        </form>
+    </div>
+    
+    @if (Model.ShowAddPlanForm)
+    {
+        <div class="card" id="btn-card">
+            <div class="card-header">Add New Plan</div>
+            <div class="card-body">
+                <form asp-page-handler="AddPlan" method="post">
+                    <input type="hidden" name="action" value="Add" />
+                    <div class="form-group">
+                        <label for="PlanName">Plan Name</label>
+                        <input asp-for="PlanName" type="text" class="form-control" id="PlanNameInput" name="PlanName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="PlanDescription">Plan Description</label>
+                        <input asp-for="PlanDescription" type="text" class="form-control" id="PlanDescriptionInput" name="PlanDescription" required>
+                    </div>
+                    <br />
+                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="button" class="btn btn-primary" onclick="populatePlanFields()">Populate</button>
+                    <button type="button" class="btn btn-secondary" onclick="clearPlanFields()">Clear</button>
+                    <button type="button" onclick="location.href='@Url.Page("/Plans")'" class="btn btn-secondary">Cancel</button>
+                </form>
+            </div>
+        </div>
+    }
+    
+    @if (Model.ShowAddPlanContent)
+    {
+        <!-- Form to add to an existing plan -->
+        <div class="card" id="btn-card">
+            <div class="card-header">Add to Existing Plan</div>
+            <div class="card-body">
+                <form asp-page-handler="AddContent" method="post">
+                    <div class="form-group">
+                        <input type="hidden" name="action" value="AddContent" />
+                        <label for="SelectedPlan">Select a plan to add to:</label>
+                        <select asp-for="PlanID" class="form-control" id="SelectedPlanID">
+                            <option selected>Choose...</option>
+                            @foreach (var item in Model.plans)
+                            {
+                                <option value="@item.PlanID">@item.PlanName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="plan step">Plan Step</label>
+                        <input asp-for="PlanStep" type="text" class="form-control" id="PlanStep" name="PlanStep" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ContentDescription">Content</label>
+                        <input asp-for="ContentDescription" type="text" class="form-control" id="ContentDescription" name="ContentDescription" required>
+                    </div>
+                    <br />
+                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="button" onclick="location.href='@Url.Page("/Plans")'" class="btn btn-secondary">Cancel</button>
+                </form>
+            </div>
+        </div>
+    }
+
+    @* @if (!Model.ShowAddPlanForm)
     {
         <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn2">
             <form method="post" class="form-inline">
@@ -85,8 +160,8 @@
                 </form>
             </div>
         </div>
-    }
-    @if (!Model.ShowAddPlanContent)
+    } *@
+ @*    @if (!Model.ShowAddPlanContent)
     {
         <!--Used to display Adding-->
         <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn1">
@@ -127,7 +202,8 @@
                 </form>
             </div>
         </div>
-    }
+    } *@
+
     <div class="container knowledge-container">
         <div class="card">
             <div class="card-header">
