@@ -7,6 +7,8 @@ namespace VisionaryVentures.Pages
 {
     public class CreateUserModel : PageModel
     {
+
+
         [BindProperty]
         public string Username { get; set; }
         [BindProperty]

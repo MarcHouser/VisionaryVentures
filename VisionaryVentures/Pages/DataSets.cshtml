@@ -24,7 +24,7 @@
             <button id="search-btn" type="button" class="btn btn-primary search-button" onclick="filterItems('search');">Search</button>
         </div>
 
-        <div class="nav nav-pills flex-column mb-auto">
+        @* <div class="nav nav-pills flex-column mb-auto">
             @foreach (var fileName in Model.DataSetFiles)
             {
                 <a asp-page-handler="ReadCsv" asp-route-filename="@fileName"
@@ -40,6 +40,51 @@
                 }
                 <hr>
             }
+        </div> *@
+
+        @* <div class="nav nav-pills flex-column mb-auto">
+            @foreach (var fileName in Model.DataSetFiles)
+            {
+                <!-- Changed asp-page-handler to "ReadFile" to accommodate both CSV and Excel files -->
+                <a asp-page-handler="ReadFile" asp-route-filename="@fileName"
+                   class="btn dataset-btn @(Model.SelectedFileName == fileName ? "btn-selected" : "btn-primary") my-1"
+                   id="data-btn">
+                    @fileName
+                </a> *@
+
+        <div class="nav nav-pills flex-column mb-auto">
+            @{
+                string imagesDir = Directory.GetCurrentDirectory();
+                imagesDir += @"\wwwroot\dataset\";
+                <br />
+                DirectoryInfo imagesFolder = new DirectoryInfo(imagesDir);
+
+                var fileListing = imagesFolder.GetFiles();
+                <hr />
+                <br />
+                @foreach (var file in fileListing)
+                {
+                    <div class="nav nav-pills flex-column mb-auto">
+                        <div style="text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
+                            <a asp-page-handler="ReadFile" asp-route-filename="@file.Name" id="data-btn "class="btn dataset-btn @(Model.SelectedFileName == file.Name ? "btn-selected" : "btn-primary") my-1" id="data-btn">
+                                @file.Name
+                            </a>
+                            @if (Model.SelectedFileName == file.Name)
+                            {
+                                <form method="get" asp-page="TensorFlowAnalysis" asp-route-fileName="@file.Name" class="d-inline">
+                                    <button type="submit" class="btn btn-success btn-sm ml-2">Analyze with TensorFlow</button>
+                                </form>
+                                <form method="post" onsubmit="return confirm('Are you sure you want to delete this file?');">
+                                    <button type="submit" asp-page-handler="DeleteFile" asp-route-fileName="@file.Name" class="btn btn-danger" style="width: 100%;">Delete</button>
+                                </form>
+                            }
+                            
+                        </div>
+                    </div>
+                    <hr>
+                }
+            }
+            
         </div>
 
         <div class="side-bar-lower mb-3">
