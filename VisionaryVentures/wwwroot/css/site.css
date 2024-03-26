@@ -365,3 +365,6 @@ body {
 #analysis-bar {
     padding: 1%;
 }
+
+navbar-nav .nav-link:hover {
+    color: #007bff !important; /* Sets the hover color to Bootstrap's blue */
