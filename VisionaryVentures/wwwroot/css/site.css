@@ -383,6 +383,11 @@ header{
 #analysis-bar {
     padding: 1%;
 }
+#form-btn3{
+    display:inline-flex;
+    margin-top:.5%;
+    margin-left:20%;
+}
 
 navbar-nav .nav-link:hover {
     color: #007bff !important; /* Sets the hover color to Bootstrap's blue */
