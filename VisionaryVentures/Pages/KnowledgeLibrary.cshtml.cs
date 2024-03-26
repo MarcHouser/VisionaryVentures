@@ -195,7 +195,7 @@ namespace VisionaryVentures.Pages
                     ShowAddForm = false;
                     break;
                 case "CancelAddSWOT":
-                    ShowAddForm = false;
+                    ShowAddSWOTForm = false;
                     break;
                 default:
                     // Handle unexpected action

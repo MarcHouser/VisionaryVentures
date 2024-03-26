@@ -31,20 +31,15 @@
 
             <div class="nav nav-pills flex-column mb-auto mt-3">
                 <h2 class="mb-4">Categories</h2>
-                <form method="get">
-                    <button type="submit" name="selectedCategory" value="" class="btn btn-secondary">Exit Category</button>
-                </form>
                 <hr>
-                @if (Model.knowledgeItems != null && Model.knowledgeItems.Any())
+                @if (Model.AllCategories != null && Model.AllCategories.Any())
                 {
-                    @foreach (var group in Model.knowledgeItems.GroupBy(item => item.Category).Select(g => g.First()))
+                    @foreach (var category in Model.AllCategories)
                     {
                         <form method="get">
-                            <div>
-                                <button type="submit" name="selectedCategory" value="@group.Category" class="btn btn-primary">@group.Category</button>
-                            </div>
+                            <button type="submit" name="selectedCategory" value="@category" class="btn btn-block @(HttpContext.Request.Query["selectedCategory"] == category ? "btn-success" : "btn-primary")">@category</button>
+                            <hr>
                         </form>
-                        <hr>
                     }
                 }
                 else
@@ -52,22 +47,35 @@
                     <p>No Categories Found.</p>
                 }
             </div>
+
         </nav>
     </div>
 </div>
+
 <!--Used for interacting with the KnowledgeLibrary Body-->
 <div class="main-body">
-    <!--Used to display Adding-->
-    @if (!Model.ShowAddForm)
-    {
-        <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn2">
-            <form method="post" class="form-inline">
-                <button type="submit" name="action" value="ShowAdd" class="btn btn-primary mb-3">Add Item</button>
-            </form>
-        </div>
-    }
-    else
-    {
+
+    <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn2">
+        <form method="post" class="form-inline">
+            <button type="submit" asp-page-handler="AddItem" name="action" value="ShowAdd" class="btn btn-primary mb-3">Add Item</button>
+        </form>
+    </div>
+
+
+    <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn1">
+        <form method="post" class="form-inline">
+            <button asp-page-handler="EditItem" type="submit" name="action" value="ShowEdit" class="btn btn-primary mb-3">Edit Item</button>
+        </form>
+    </div>
+
+    <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn2">
+        <form method="post" asp-page-handler="AddSWOT" asp-route-action="ShowAddSWOT">
+            <button type="submit" class="btn btn-primary mb-3">Add SWOT</button>
+        </form>
+    </div>
+
+    @if (Model.ShowAddForm)
+    {   
         <div class="card" id="btn-card">
             <div class="card-header">Add New Knowledge Item</div>
             <div class="card-body">
@@ -94,16 +102,8 @@
             </div>
         </div>
     }
-    <!--Used to display Editing-->
-    @if (!Model.ShowEditForm)
-    {
-        <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn1">
-            <form method="post" class="form-inline">
-                <button asp-page-handler="EditItem" type="submit" name="action" value="ShowEdit" class="btn btn-primary mb-3">Edit Item</button>
-            </form>
-        </div>
-    }
-    else 
+
+    @if (Model.ShowEditForm)
     {
         <div class="card" id="btn-card">
             <div class="card-header">Edit Knowledge Item</div>
@@ -131,16 +131,8 @@
             </div>
         </div>
     }
-    <!--Used to display SWOT-->
-    @if (!Model.ShowAddSWOTForm)
-    {
-        <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn2">
-            <form method="post" asp-page-handler="AddSWOT" asp-route-action="ShowAddSWOT">
-                <button type="submit" class="btn btn-primary mb-3">Add SWOT</button>
-            </form>
-        </div>
-    }
-    else
+
+    @if (Model.ShowAddSWOTForm)
     {
         <div class="card" id="btn-card">
             <div class="card-header">Add SWOT Analyses</div>
@@ -181,6 +173,7 @@
             </div>
         </div>
     }
+
     <!--Used to display information on a selected item-->
     <div class="container knowledge-container">
         <div class="card mt-3">

@@ -24,6 +24,7 @@ namespace VisionaryVentures.Pages
 
         public List<Message> Messages { get; set; }
         public List<Collaboration>? Collaborations { get; set; }
+        public string SelectedCollaborationTitle { get; set; }
 
 
         public async Task OnGetAsync(int? SelectedCollaborationID)
@@ -47,6 +48,12 @@ namespace VisionaryVentures.Pages
 
             if (SelectedCollaborationID.HasValue)
             {
+                var selectedCollaboration = Collaborations.FirstOrDefault(c => c.CollaborationID == SelectedCollaborationID.Value);
+                if (selectedCollaboration != null)
+                {
+                    SelectedCollaborationTitle = selectedCollaboration.Title; // Set the title of the selected collaboration
+                }
+
                 using (var reader = DBClassReaders.MessageReader(SelectedCollaborationID))
                 {
                     while (reader.Read())

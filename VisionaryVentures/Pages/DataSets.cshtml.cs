@@ -13,6 +13,8 @@ using System.Reflection.PortableExecutable;
 using VisionaryVentures.Pages.DataClasses;
 using VisionaryVentures.Pages.DB;
 using System.Text.RegularExpressions;
+using ExcelDataReader;
+using System.Data;
 
 namespace VisionaryVentures.Pages
 {
@@ -34,6 +36,8 @@ namespace VisionaryVentures.Pages
 
         public string SelectedFileName { get; set; }
 
+        private readonly string _connectionString = "Server=localhost;Database=Lab4;Trusted_Connection=True;";
+
 
 
         // GET: /DataSets
@@ -51,55 +55,372 @@ namespace VisionaryVentures.Pages
             }
         }
 
-        public async Task OnGetReadCsvAsync(string fileName)
+        //public async Task OnGetReadCsvAsync(string fileName)
+        //{
+        //    SelectedFileName = fileName;
+
+        //    PopulateDataSetFiles();
+
+        //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", fileName);
+        //    using var reader = new StreamReader(filePath);
+        //    using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+        //    csv.Read();
+        //    csv.ReadHeader();
+        //    Headers = csv.HeaderRecord.ToList();
+
+        //    Records = new List<List<string>>();
+        //    while (csv.Read())
+        //    {
+        //        var record = new List<string>();
+        //        foreach (var header in Headers)
+        //        {
+        //            record.Add(csv.GetField(header));
+        //        }
+        //        Records.Add(record);
+        //    }
+        //}
+
+
+        public async Task OnGetReadFileAsync(string fileName)
         {
             SelectedFileName = fileName;
 
             PopulateDataSetFiles();
 
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", fileName);
-            using var reader = new StreamReader(filePath);
-            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
-            csv.Read();
-            csv.ReadHeader();
-            Headers = csv.HeaderRecord.ToList();
-
-            Records = new List<List<string>>();
-            while (csv.Read())
+            // Check the file extension and call the appropriate method
+            if (Path.GetExtension(fileName).Equals(".csv", StringComparison.OrdinalIgnoreCase))
             {
-                var record = new List<string>();
-                foreach (var header in Headers)
+                using var reader = new StreamReader(filePath);
+                using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+                csv.Read();
+                csv.ReadHeader();
+                Headers = csv.HeaderRecord.ToList();
+
+                Records = new List<List<string>>();
+                while (csv.Read())
                 {
-                    record.Add(csv.GetField(header));
+                    var record = new List<string>();
+                    foreach (var header in Headers)
+                    {
+                        record.Add(csv.GetField(header));
+                    }
+                    Records.Add(record);
                 }
-                Records.Add(record);
+            }
+            else if (Path.GetExtension(fileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase) ||
+                     Path.GetExtension(fileName).Equals(".xls", StringComparison.OrdinalIgnoreCase))
+            {
+                // Use ReadExcelAndInferDataTypes method to read the data and infer column types
+                var (excelData, columnTypes) = ReadExcelAndInferDataTypes(filePath);
+
+                // Assuming the first row contains headers
+                Headers = columnTypes.Keys.ToList();
+                Records = new List<List<string>>();
+
+                // Convert all data to string type as Records is a list of list of strings
+                foreach (var row in excelData)
+                {
+                    var record = row.Select(cellValue => cellValue?.ToString() ?? string.Empty).ToList();
+                    Records.Add(record);
+                }
+            }
+            else
+            {
+                // Handle unsupported file types or add logic to deal with other file formats
+                throw new InvalidOperationException("The file format is not supported.");
             }
         }
 
-        public async Task <IActionResult> OnPostAsync()
+        //public async Task<IActionResult> OnGetDeleteAsync(string fileName)
+        //{
+
+        //    var sanitizedFileName = Path.GetFileNameWithoutExtension(fileName); // Remove the extension
+        //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", fileName);
+
+        //    if (System.IO.File.Exists(filePath))
+        //    {
+        //        // Delete the file from the file system
+        //        System.IO.File.Delete(filePath);
+
+        //        // Delete the corresponding table from the database
+        //        string tableName = $"Dataset_{sanitizedFileName}";
+        //        string dropTableSql = $"DROP TABLE IF EXISTS [{tableName}];";
+        //        await ExecuteSqlNonQuery(dropTableSql);
+
+        //        // Optionally, remove any references from a dataset registry if you have one
+        //        // This step depends on how you are tracking datasets in your application.
+
+        //        return RedirectToPage(new { successMessage = "Dataset deleted successfully." });
+        //    }
+        //    else
+        //    {
+        //        return RedirectToPage(new { errorMessage = "File not found." });
+        //    }
+        //}
+
+        public IActionResult OnPostDeleteFile(string fileName)
+        {
+            // Delete table from SQL database
+            string tableName = Path.GetFileNameWithoutExtension(fileName).Replace(" ", "_");
+            string deleteTableQuery = $"DROP TABLE IF EXISTS [Dataset_{tableName}]";
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(deleteTableQuery, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            // Delete file from "Uploads" folder
+            var uploadDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset");
+            var filePath = Path.Combine(uploadDirectory, fileName);
+
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
+
+            // Redirect back to the page
+            return RedirectToPage();
+        }
+
+
+
+        //public async Task<IActionResult> OnPostAsync()
+        //{
+        //    var filePaths = new List<string>();
+        //    foreach (var formFile in files)
+        //    {
+        //        if (formFile.Length > 0)
+        //        {
+        //            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", formFile.FileName);
+        //            filePaths.Add(filePath);
+        //            using (var stream = new FileStream(filePath, FileMode.Create))
+        //            {
+        //                formFile.CopyTo(stream);
+        //            }
+
+        //            //await CreateTableFromCSV(filePath, formFile.FileName);
+
+        //            DBClassWriters.AddDataset((int)HttpContext.Session.GetInt32("userid"), formFile.FileName, DateTime.Now);
+
+        //            await ProcessCSVAndCreateTable(filePath, formFile.FileName);
+        //        }
+        //    }
+        //    return RedirectToPage();
+        //}
+
+        public async Task<IActionResult> OnPostAsync()
         {
             var filePaths = new List<string>();
             foreach (var formFile in files)
             {
-                if(formFile.Length > 0)
+                if (formFile.Length > 0)
                 {
                     var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", formFile.FileName);
                     filePaths.Add(filePath);
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
-                        formFile.CopyTo(stream);
+                        await formFile.CopyToAsync(stream);
                     }
 
-                    //await CreateTableFromCSV(filePath, formFile.FileName);
+                    // Check file extension and call the appropriate processing method
+                    var fileExtension = Path.GetExtension(formFile.FileName).ToLower();
+                    switch (fileExtension)
+                    {
+                        case ".csv":
+                            await ProcessCSVAndCreateTable(filePath, formFile.FileName);
+                            break;
+                        case ".xls":
+                        case ".xlsx":
+                            await ProcessExcelAndCreateTable(filePath, formFile.FileName);
+                            break;
+                        default:
+                            throw new InvalidOperationException("Unsupported file format.");
+                    }
 
                     DBClassWriters.AddDataset((int)HttpContext.Session.GetInt32("userid"), formFile.FileName, DateTime.Now);
-
-                    await ProcessCSVAndCreateTable(filePath, formFile.FileName);
                 }
             }
             return RedirectToPage();
         }
+
+        private async Task ProcessExcelAndCreateTable(string filePath, string fileName)
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+            using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelDataReader.ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet(new ExcelDataReader.ExcelDataSetConfiguration()
+                    {
+                        ConfigureDataTable = (_) => new ExcelDataReader.ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = true // Use the first row as headers
+                        }
+                    });
+
+                    DataTable dataTable = result.Tables[0];
+                    Dictionary<string, string> columnDataTypes = InferColumnDataTypesFromExcel(dataTable);
+
+                    string tableName = SanitizeFileNameForTableName(fileName);
+                    string createTableSql = BuildCreateTableSql(tableName, dataTable.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToArray(), columnDataTypes);
+                    await ExecuteSqlNonQuery(createTableSql);
+
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        string insertSql = BuildInsertSql(tableName, dataTable.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToArray(), row.ItemArray, columnDataTypes);
+                        await ExecuteSqlNonQuery(insertSql);
+                    }
+                }
+            }
+        }
+
+        private Dictionary<string, string> InferColumnDataTypesFromExcel(DataTable dataTable)
+        {
+            var columnTypes = new Dictionary<string, string>();
+            foreach (DataColumn column in dataTable.Columns)
+            {
+                // Default to string data type
+                columnTypes[column.ColumnName] = "NVARCHAR(MAX)";
+            }
+            // Optionally, implement more sophisticated type inference based on actual data
+            return columnTypes;
+        }
+
+        private string BuildInsertSql(string tableName, string[] headers, object[] values, Dictionary<string, string> columnTypes)
+        {
+            var valueList = new List<string>();
+            for (int i = 0; i < values.Length; i++)
+            {
+                var valueType = columnTypes[headers[i]];
+                string valueStr = valueType == "NVARCHAR(MAX)" ? $"'{values[i].ToString().Replace("'", "''")}'" : values[i].ToString();
+                valueList.Add(valueStr);
+            }
+
+            var columns = string.Join(", ", headers.Select(header => $"[{header}]"));
+            var valuesString = string.Join(", ", valueList);
+            return $"INSERT INTO [{tableName}] ({columns}) VALUES ({valuesString});";
+        }
+
+
+
+
+        private async Task InsertDataIntoTable(string tableName, List<List<object>> data, string[] headers)
+        {
+            foreach (var row in data)
+            {
+                var columns = string.Join(", ", headers.Select(header => $"[{header}]"));
+                var values = string.Join(", ", row.Select(value => $"'{value.ToString().Replace("'", "''")}'"));
+                string insertSql = $"INSERT INTO [{tableName}] ({columns}) VALUES ({values});";
+                await ExecuteSqlNonQuery(insertSql);
+            }
+        }
+
+
+        // Method to read Excel file without treating the first row as headers
+        //private List<List<object>> ReadExcel(string filePath)
+        //{
+        //    using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+        //    using (var reader = ExcelDataReader.ExcelReaderFactory.CreateReader(stream))
+        //    {
+        //        var result = reader.AsDataSet(new ExcelDataReader.ExcelDataSetConfiguration()
+        //        {
+        //            ConfigureDataTable = (_) => new ExcelDataReader.ExcelDataTableConfiguration()
+        //            {
+        //                UseHeaderRow = false // Do not use the first row as header
+        //            }
+        //        });
+
+        //        DataTable dataTable = result.Tables[0];
+        //        List<List<object>> data = new List<List<object>>();
+
+        //        foreach (DataRow row in dataTable.Rows)
+        //        {
+        //            List<object> rowData = row.ItemArray.ToList();
+        //            data.Add(rowData);
+        //        }
+
+        //        return data;
+        //    }
+        //}
+
+        private (List<List<object>> data, Dictionary<string, string> columnTypes) ReadExcelAndInferDataTypes(string filePath)
+        {
+            using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+            using (var reader = ExcelDataReader.ExcelReaderFactory.CreateReader(stream))
+            {
+                var result = reader.AsDataSet(new ExcelDataReader.ExcelDataSetConfiguration()
+                {
+                    ConfigureDataTable = (_) => new ExcelDataReader.ExcelDataTableConfiguration()
+                    {
+                        UseHeaderRow = true // Use the first row as header
+                    }
+                });
+
+                DataTable dataTable = result.Tables[0];
+                Dictionary<string, string> columnTypes = InitializeColumnDataTypes(dataTable.Columns);
+                List<List<object>> data = new List<List<object>>();
+
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    List<object> rowData = new List<object>();
+                    for (int i = 0; i < dataTable.Columns.Count; i++)
+                    {
+                        object cellValue = row[i];
+                        rowData.Add(cellValue);
+
+                        // Infer data type
+                        string columnName = dataTable.Columns[i].ColumnName;
+                        InferColumnType(columnTypes, columnName, cellValue);
+                    }
+                    data.Add(rowData);
+                }
+
+                return (data, columnTypes);
+            }
+        }
+
+        private Dictionary<string, string> InitializeColumnDataTypes(DataColumnCollection columns)
+        {
+            var columnTypes = new Dictionary<string, string>();
+            foreach (DataColumn column in columns)
+            {
+                // Initialize all columns as INT
+                columnTypes[column.ColumnName] = "INT";
+            }
+            return columnTypes;
+        }
+
+        private void InferColumnType(Dictionary<string, string> columnTypes, string columnName, object cellValue)
+        {
+            // If the current type is already NVARCHAR(MAX), no need to check further
+            if (columnTypes[columnName] == "NVARCHAR(MAX)") return;
+
+            // If it's not an INT, check if it's a FLOAT or NVARCHAR
+            if (cellValue != null && !int.TryParse(cellValue.ToString(), out _))
+            {
+                if (float.TryParse(cellValue.ToString(), out _))
+                {
+                    // Upgrade to FLOAT if it's currently INT
+                    if (columnTypes[columnName] == "INT") columnTypes[columnName] = "FLOAT";
+                }
+                else
+                {
+                    // Upgrade to NVARCHAR(MAX) if it's not a valid float
+                    columnTypes[columnName] = "NVARCHAR(MAX)";
+                }
+            }
+        }
+
 
         public IActionResult OnPostAnalyzeDataset(string fileName)
         {
@@ -216,5 +537,6 @@ namespace VisionaryVentures.Pages
 
             return columnTypes;
         }
+
     }
 }

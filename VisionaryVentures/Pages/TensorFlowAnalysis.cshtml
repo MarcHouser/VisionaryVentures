@@ -5,9 +5,7 @@
     ViewData["Title"] = "TensorFlow Analysis";
 }
 
-<h2>TensorFlow Analysis: @Model.FileName</h2>
-
-@if (Model.Headers != null && Model.Records != null)
+@* @if (Model.Headers != null && Model.Records != null)
 {
     <table class="table">
         <thead>
@@ -30,8 +28,70 @@
             }
         </tbody>
     </table>
-}
-else
+} *@
+<section>
+    <option> </option>
+</section>
+<div class="main-body">
+    <div class="container">
+        <!-- Data display table -->
+        <div class="card data-set">
+            <div class="card-header">Data</div>
+
+            <div class="input-group" id="analysis-bar">
+                <select class="form-select" aria-label="Default select example">
+                    <option>test</option>
+                    <option>test</option>
+                    <option>test</option>
+                </select>
+                <select class="form-select" aria-label="Default select example">
+                    <option>test</option>
+                    <option>test</option>
+                    <option>test</option>
+                </select>
+                <select class="form-select" aria-label="Default select example">
+                    <option>test</option>
+                    <option>test</option>
+                    <option>test</option>
+                </select>
+                <input class="form-control" asp-action="inflation" placeholder="enter inflation rate..." aria-label="Search" />
+                <button class="btn btn-primary"type="submit">Start Analysis</button>
+            </div>
+
+            <div class="card-body table-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            @if (Model.Headers != null)
+                            {
+                                foreach (var header in Model.Headers)
+                                {
+                                    <th>@header</th>
+                                }
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Records != null)
+                        {
+                            foreach (var record in Model.Records)
+                            {
+                                <tr>
+                                    @foreach (var field in record)
+                                    {
+                                        <td>@field</td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@* else
 {
     <p>Please select a dataset to analyze.</p>
 }
+ *@
