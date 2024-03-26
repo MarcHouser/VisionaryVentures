@@ -64,9 +64,9 @@
                 <br />
                 @foreach (var file in fileListing)
                 {
-                    <div class="d-flex justify-content-between">
+                    <div class="nav nav-pills flex-column mb-auto">
                         <div style="text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
-                            <a asp-page-handler="ReadFile" asp-route-filename="@file.Name" class="btn dataset-btn @(Model.SelectedFileName == file.Name ? "btn-selected" : "btn-primary") my-1" id="data-btn">
+                            <a asp-page-handler="ReadFile" asp-route-filename="@file.Name" id="data-btn "class="btn dataset-btn @(Model.SelectedFileName == file.Name ? "btn-selected" : "btn-primary") my-1" id="data-btn">
                                 @file.Name
                             </a>
                             @if (Model.SelectedFileName == file.Name)
@@ -81,30 +81,11 @@
                             
                         </div>
                     </div>
-                    @* <div class="d-flex justify-content-between">
-            <a asp-page-handler="ReadFile" asp-route-filename="@fileName"
-            class="btn dataset-btn @(Model.SelectedFileName == fileName ? "btn-selected" : "btn-primary") my-1"
-            id="data-btn">
-            @fileName
-            </a>
-            </div> *@
-                    @* @if (Model.SelectedFileName == fileName)
-            { *@
-                    @* <form method="get" asp-page="TensorFlowAnalysis" asp-route-fileName="@fileName" class="d-inline">
-            <button type="submit" class="btn btn-success btn-sm ml-2">Analyze with TensorFlow</button>
-            </form> *@
-                    @* <form method="post" asp-page-handler="Delete" asp-route-filename="@fileName">
-            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-            </form> *@
-
-
-                    @* } *@
                     <hr>
                 }
             }
             
         </div>
-
 
         <div class="side-bar-lower mb-3">
             <form method="post" enctype="multipart/form-data" asp-action="DataSets">
