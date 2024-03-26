@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -7,58 +7,73 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/VisionaryVentures.styles.css" asp-append-version="true" />
+    <style>
+        .active-link {
+            font-weight: bold;
+            color: #007bff; /* Example style: Blue color and bold text */
+        }
+
+
+        .active-link {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #007bff !important;
+        }
+    </style>
 </head>
 <body>
     @{
         var currentPage = Context.GetRouteValue("page")?.ToString() ?? "";
     }
-    @if (currentPage != "/Login"){
+    @if (currentPage != "/Login")
+    {
 
-            <header>
-                <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-darkgray align-items-center">
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-darkgray align-items-center">
 
                 <div class="container" id="nav-bar">
                     <a class="navbar-brand" asp-area="" asp-page="/Index"></a>
                     <img class="img-fluid navbar-brand-img" id="top-logo" src="~/img/VisionaryVentersTempLogo.png" />
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between align-items-center">
-                            <ul class="navbar-nav flex-grow-1">
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/CollabHub">Collaborations</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/KnowledgeLibrary">Knowledge Library</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/Plans">Plans</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/DataSets">Data Sets</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/Messages">Messages</a>
-                                </li>
-                            </ul>
-                            <form asp-page="Login" asp-page-handler="LogoutHandler" id="logout" class="ml-auto">
-                                <input type="submit" class="btn btn-danger" value="Logout">
-                            </form>
-                        </div>
-
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between align-items-center">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark @(currentPage == "/CollabHub" ? "active-link" : "")" asp-area="" asp-page="/CollabHub">Collaborations</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark @(currentPage == "/KnowledgeLibrary" ? "active-link" : "")" asp-area="" asp-page="/KnowledgeLibrary">Knowledge Library</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark @(currentPage == "/Plans" ? "active-link" : "")" asp-area="" asp-page="/Plans">Plans</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark @(currentPage == "/DataSets" ? "active-link" : "")" asp-area="" asp-page="/DataSets">Data Sets</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark @(currentPage == "/Messages" ? "active-link" : "")" asp-area="" asp-page="/Messages">Messages</a>
+                            </li>
+                        </ul>
+                        <form asp-page="Login" asp-page-handler="LogoutHandler" id="logout" class="ml-auto">
+                            <input type="submit" class="btn btn-danger" value="Logout">
+                        </form>
                     </div>
-                </nav>
-            </header>
-         } 
-        
+
+                </div>
+            </nav>
+        </header>
+    }
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-
-
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
