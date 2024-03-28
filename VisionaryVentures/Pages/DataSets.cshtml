@@ -24,39 +24,22 @@
             <input type="search" class="form-control rounded" id="search" placeholder="Search datasets..." aria-label="Search">
             <button id="search-btn" type="button" class="btn btn-primary search-button" onclick="filterItems('search');">Search</button>
         </div>
-
-        @* <div class="nav nav-pills flex-column mb-auto">
-            @foreach (var fileName in Model.DataSetFiles)
-            {
-                <a asp-page-handler="ReadCsv" asp-route-filename="@fileName"
-                   class="btn dataset-btn @(Model.SelectedFileName == fileName ? "btn-selected" : "btn-primary") my-1"
-                   id="data-btn">
-                    @fileName
-                </a>
-                @if (Model.SelectedFileName == fileName)
-                {
-                    <form method="get" asp-page="TensorFlowAnalysis" asp-route-fileName="@fileName" class="d-inline">
-                        <button type="submit" class="btn btn-success btn-sm ml-2">Analyze with TensorFlow</button>
-                    </form>
-                }
-                <hr>
-            }
-        </div> *@
-
-        @* <div class="nav nav-pills flex-column mb-auto">
-            @foreach (var fileName in Model.DataSetFiles)
-            {
-                <!-- Changed asp-page-handler to "ReadFile" to accommodate both CSV and Excel files -->
-                <a asp-page-handler="ReadFile" asp-route-filename="@fileName"
-                   class="btn dataset-btn @(Model.SelectedFileName == fileName ? "btn-selected" : "btn-primary") my-1"
-                   id="data-btn">
-                    @fileName
-                </a> *@
-
         <div class="nav nav-pills flex-column mb-auto">
             <hr />
             <a asp-page="/TensorFlowAnalysis" asp-page-handler="ReadFile" asp-route-filename=@HttpContext.Session.GetString("fileName") id="data-btn " class="btn btn-primary" id="data-btn">
                 Regression Analysis
+            </a>
+            <hr />
+            <a class="btn btn-primary" id="data-btn">
+                Forecasting Analysis
+            </a>
+            <hr />
+            <a class="btn btn-primary" id="data-btn">
+                Summary Analysis
+            </a>
+            <hr />
+            <a class="btn btn-primary" id="data-btn">
+                Full Data View
             </a>
         </div>
     </div>

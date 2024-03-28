@@ -45,7 +45,6 @@ namespace VisionaryVentures.Pages
             DBClassWriters.AddUserWithAccount(userType, userTypeDescription, FirstName, LastName, EmailAddress, PhoneNumber, StreetAddress, City, State, PostalCode, Country);
             DBClassWriters.LabOneDBConnection.Close();
 
-            ViewData["UserCreate"] = "User Successfully Created!";
 
             return RedirectToPage("Home");
         }

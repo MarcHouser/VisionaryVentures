@@ -24,7 +24,7 @@ namespace VisionaryVentures.Pages.DB
             SqlCommand CmdUserRead = new SqlCommand();
             CmdUserRead.Connection = LabOneDBConnection;
             CmdUserRead.Connection.ConnectionString = LabOneDBConnectionString;
-            CmdUserRead.CommandText = "SELECT * FROM Users";
+            CmdUserRead.CommandText = "SELECT * FROM Users JOIN Accounts ON Users.AccountID = Accounts.AccountID WHERE Accounts.UserType = 2";
             CmdUserRead.Connection.Open();
 
             SqlDataReader UserReader = CmdUserRead.ExecuteReader();
@@ -46,20 +46,77 @@ namespace VisionaryVentures.Pages.DB
             return DatasetReader;
         }
 
+        // Method to read Chat information
+        public static SqlDataReader ChatReader()
+        {
+            SqlCommand CmdChatRead = new SqlCommand();
+            CmdChatRead.Connection = LabOneDBConnection;
+            CmdChatRead.Connection.ConnectionString = LabOneDBConnectionString;
+            CmdChatRead.CommandText = "SELECT * FROM Chats";
+            CmdChatRead.Connection.Open();
+
+            SqlDataReader ChatReader = CmdChatRead.ExecuteReader();
+
+            return ChatReader;
+        }
+
         // Method to read message information
-        public static SqlDataReader MessageReader(int? CollaborationID)
+        public static SqlDataReader MessageReader(int? ChatID)
         {
             SqlCommand CmdMessageRead = new SqlCommand();
             CmdMessageRead.Connection = LabOneDBConnection;
             CmdMessageRead.Connection.ConnectionString = LabOneDBConnectionString;
             CmdMessageRead.CommandText = @"SELECT Messages.*, Users.FirstName, Users.LastName FROM Messages INNER JOIN Users ON Messages.SentFrom = Users.UserID 
-                                           JOIN Collaborations c ON Messages.CollaborationID = c.CollaborationID WHERE c.CollaborationID = @CollaborationID";
-            CmdMessageRead.Parameters.AddWithValue("@CollaborationID", CollaborationID);
+                                           JOIN Chats c ON Messages.ChatID = c.ChatID WHERE c.ChatID = @ChatID";
+            CmdMessageRead.Parameters.AddWithValue("@ChatID", ChatID);
             CmdMessageRead.Connection.Open();
 
             SqlDataReader MessageReader = CmdMessageRead.ExecuteReader();
 
             return MessageReader;
+        }
+
+        // Method to read knowledge groups by user
+        public static SqlDataReader KnowledgeGroupReaderByUser(int? UserID)
+        {
+            SqlCommand CmdKnowledgeGroupRead = new SqlCommand();
+            CmdKnowledgeGroupRead.Connection = LabOneDBConnection;
+            CmdKnowledgeGroupRead.Connection.ConnectionString = LabOneDBConnectionString;
+            CmdKnowledgeGroupRead.CommandText = @"SELECT kg.KnowledgeGroupID, kg.Title, kg.Description FROM KnowledgeGroups kg JOIN KnowledgeGroupParticipants kgp 
+                                                ON kg.KnowledgeGroupID = kgp.KnowledgeGroupID WHERE kgp.UserID = @UserID";
+            CmdKnowledgeGroupRead.Parameters.AddWithValue("@UserID", UserID);
+            CmdKnowledgeGroupRead.Connection.Open();
+
+            SqlDataReader KnowledgeGroupReader = CmdKnowledgeGroupRead.ExecuteReader();
+
+            return KnowledgeGroupReader;
+        }
+
+        // Method to read knowledge groups
+        public static SqlDataReader KnowledgeGroupReader()
+        {
+            SqlCommand CmdKnowledgeGroupRead = new SqlCommand();
+            CmdKnowledgeGroupRead.Connection = LabOneDBConnection;
+            CmdKnowledgeGroupRead.Connection.ConnectionString = LabOneDBConnectionString;
+            CmdKnowledgeGroupRead.CommandText = "SELECT * FROM KnowledgeGroups";
+            CmdKnowledgeGroupRead.Connection.Open();
+
+            SqlDataReader KnowledgeGroupReader = CmdKnowledgeGroupRead.ExecuteReader();
+
+            return KnowledgeGroupReader;
+        }
+
+        public static SqlDataReader KnowledgeReader()
+        {
+            SqlCommand CmdKnowledgeRead = new SqlCommand();
+            CmdKnowledgeRead.Connection = LabOneDBConnection;
+            CmdKnowledgeRead.Connection.ConnectionString = LabOneDBConnectionString;
+            CmdKnowledgeRead.CommandText = "SELECT * FROM KnowledgeItems";
+            CmdKnowledgeRead.Connection.Open();
+
+            SqlDataReader KnowledgeReader = CmdKnowledgeRead.ExecuteReader();
+
+            return KnowledgeReader;
         }
 
         public static SqlDataReader SWOTAnalysisReader()

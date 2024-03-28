@@ -18,36 +18,52 @@ namespace VisionaryVentures.Pages
         [BindProperty]
         public String? MessageContent { get; set; }
         [BindProperty]
-        public int CollaborationID { get; set; }
+        public int ChatID { get; set; }
         [BindProperty]
         public int UserID { get; set; }
+        [BindProperty]
+        public string NewChatTitle { get; set; }
 
         public List<Message> Messages { get; set; }
-        public List<Collaboration>? Collaborations { get; set; }
-        public string SelectedCollaborationTitle { get; set; }
+        public List<Chat>? Chats { get; set; }
+        public string SelectedChatTitle { get; set; }
 
 
-        public async Task OnGetAsync(int? SelectedCollaborationID)
+        public async Task OnGetAsync(int? SelectedChatID)
         {
             Messages = new List<Message>();
-            Collaborations = new List<Collaboration>();
+            Chats = new List<Chat>();
 
-            if (SelectedCollaborationID.HasValue)
+            using (var reader = DBClassReaders.ChatReader())
             {
-                var selectedCollaboration = Collaborations.FirstOrDefault(c => c.CollaborationID == SelectedCollaborationID.Value);
-                if (selectedCollaboration != null)
+                while (reader.Read())
                 {
-                    SelectedCollaborationTitle = selectedCollaboration.Title; // Set the title of the selected collaboration
+                    Chats.Add(new Chat
+                    {
+                        ChatID = reader.GetInt32(0),
+                        DateCreated = reader.GetDateTime(1),
+                        Title = reader.GetString(2)
+                    });
+                }
+                DBClassReaders.LabOneDBConnection.Close();
+            }
+
+            if (SelectedChatID.HasValue)
+            {
+                var selectedChat = Chats.FirstOrDefault(c => c.ChatID == SelectedChatID.Value);
+                if (selectedChat != null)
+                {
+                    SelectedChatTitle = selectedChat.Title; // Set the title of the selected collaboration
                 }
 
-                using (var reader = DBClassReaders.MessageReader(SelectedCollaborationID))
+                using (var reader = DBClassReaders.MessageReader(SelectedChatID))
                 {
                     while (reader.Read())
                     {
                         Messages.Add(new Message
                         {
                             MessageID = reader.GetInt32(0),
-                            CollaborationID = reader.GetInt32(1),
+                            ChatID = reader.GetInt32(1),
                             SentFrom = reader.GetInt32(2),
                             MessageContent = reader.GetString(3),
                             DateCreated = reader.GetDateTime(4),
@@ -56,7 +72,7 @@ namespace VisionaryVentures.Pages
                     }
                     DBClassReaders.LabOneDBConnection.Close();
                 }
-                HttpContext.Session.SetInt32("collaborationid", (int)SelectedCollaborationID);
+                HttpContext.Session.SetInt32("chatid", (int)SelectedChatID);
             }
         }
 
@@ -66,9 +82,23 @@ namespace VisionaryVentures.Pages
             if (!string.IsNullOrEmpty(MessageContent))
             {
                 UserID = (int)HttpContext.Session.GetInt32("userid");
-                CollaborationID = (int)HttpContext.Session.GetInt32("collaborationid");
-                DBClassWriters.AddMessage(CollaborationID, UserID, MessageContent, DateTime.Now);
-                return RedirectToPage("/Messages", new { SelectedCollaborationID = CollaborationID });
+                ChatID = (int)HttpContext.Session.GetInt32("chatid");
+                DBClassWriters.AddMessage(ChatID, UserID, MessageContent, DateTime.Now);
+                return RedirectToPage("/Messages", new { SelectedChatID = ChatID });
+            }
+            else
+            {
+                return Page();
+            }
+        }
+
+        // Add a chat to the database
+        public IActionResult OnPostAddChat()
+        {
+            if (!string.IsNullOrEmpty(NewChatTitle))
+            {
+                DBClassWriters.AddChat(NewChatTitle, DateTime.Now);
+                return RedirectToPage("/Messages");
             }
             else
             {

@@ -44,6 +44,8 @@ body {
     margin-right: auto;
     width: 50%;
     margin-top: 5%;
+    background:#fff;
+    color:black;
 }
 .login, username,password {
     width: 90%;
@@ -64,9 +66,10 @@ body {
     left: 0; /* Position the sidebar at the left */
     overflow-y: auto; /* Enable vertical scrolling if the content overflows */
     overflow-x: hidden; /* Hide horizontal overflow */
-    background-color: darkgray; /* Keep the same background color */
+    background-color: #1c3459; /* Keep the same background color */
     z-index: 1;
-    overflow-wrap:anywhere;
+    overflow-wrap: anywhere;
+    color: #fff;
 }
 
 
@@ -219,10 +222,10 @@ body {
     margin-left: 10px;
 }
 
-.card-header{
-    background: darkgray;
-    color: #100f0f;
-    text-align:center;
+.card-header {
+    background: #1c3459;
+    color: #fff;
+    text-align: center;
     font-size: 1em;
 }
 
@@ -400,7 +403,8 @@ header{
 
 
 .navbar-brand-img {
-    position: absolute;
+    position:relative;
+    float:left;
     top: 0;
     left: 0;
     padding: 0.4rem .5rem ; /* Adjust these values to match the navbar padding */

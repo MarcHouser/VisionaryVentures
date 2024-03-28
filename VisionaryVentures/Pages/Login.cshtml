@@ -2,13 +2,15 @@
 @model VisionaryVentures.Pages.LoginModel
 @{
 }
-<img id="logo" src="~/img/VisionaryVentersTempLogo.png" />
+<style>
+    body{background: #1c3459;
+         color:#fff;
+    }
+    
+</style>
+<img id="logo" src="~/img/Madison County Logo.jpg" />
 
 
-@if (TempData["LogoutMessage"] != null)
-{
-    <p class="text-success">@TempData["LogoutMessage"]</p>
-}
 
 @if (ViewData["LoginMessage"] != null)
     {

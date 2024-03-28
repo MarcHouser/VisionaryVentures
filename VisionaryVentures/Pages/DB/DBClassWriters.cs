@@ -151,6 +151,24 @@ namespace VisionaryVentures.Pages.DB
             }
         }
 
+        public static void AddChat(string Title, DateTime DateCreated)
+        {
+            String ChatInsertQuery = "INSERT INTO Chats VALUES (@DateCreated, @Title)";
+
+            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand ChatInsertCommand = new SqlCommand(ChatInsertQuery, connection))
+                {
+                    ChatInsertCommand.Parameters.AddWithValue("@DateCreated", DateCreated);
+                    ChatInsertCommand.Parameters.AddWithValue("@Title", Title);
+
+                    ChatInsertCommand.ExecuteNonQuery();
+                }
+            }
+        }
+
         // Add SWOT
         public static void UpsertSwotAnalysis(int knowledgeItemID, string strengths, string weaknesses, string opportunities, string threats)
         {
@@ -263,6 +281,91 @@ namespace VisionaryVentures.Pages.DB
                 connection.Open();
                 int reportId = Convert.ToInt32(command.ExecuteScalar());
                 return reportId;
+            }
+        }
+
+        // Add Knowledge Item
+        public static void AddKnowledgeItem(int UserID, String Category, String Title, String Information, DateTime DateCreated, DateTime LastDateModified)
+        {
+
+            String KnowledgeItemInsertQuery = "INSERT INTO KnowledgeItems VALUES (@UserID, @Category, @Title, @Information, @DateCreated, @LastDateModified)";
+
+            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand KnowledgeItemInsertCommand = new SqlCommand(KnowledgeItemInsertQuery, connection))
+                {
+                    KnowledgeItemInsertCommand.Parameters.AddWithValue("@UserID", UserID);
+                    KnowledgeItemInsertCommand.Parameters.AddWithValue("@Category", Category);
+                    KnowledgeItemInsertCommand.Parameters.AddWithValue("@Title", Title);
+                    KnowledgeItemInsertCommand.Parameters.AddWithValue("@Information", Information);
+                    KnowledgeItemInsertCommand.Parameters.AddWithValue("@DateCreated", DateCreated);
+                    KnowledgeItemInsertCommand.Parameters.AddWithValue("@LastDateModified", LastDateModified);
+
+                    KnowledgeItemInsertCommand.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // Edit Knowledge Item
+        public static void EditKnowledgeItem(int KnowledgeItemID, String Information, DateTime LastDateModified)
+        {
+            String KnowledgeItemEditQuery = "UPDATE KnowledgeItems SET Information = @Information, LastDateModified = @LastDateModified " +
+                "WHERE KnowledgeItemID = @KnowledgeItemID";
+
+            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand KnowledgeItemEditCommand = new SqlCommand(KnowledgeItemEditQuery, connection))
+                {
+                    KnowledgeItemEditCommand.Parameters.AddWithValue("@KnowledgeItemID", KnowledgeItemID);
+                    KnowledgeItemEditCommand.Parameters.AddWithValue("@Information", Information);
+                    KnowledgeItemEditCommand.Parameters.AddWithValue("@LastDateModified", LastDateModified);
+
+                    KnowledgeItemEditCommand.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // Method to create a new knowledge group
+        public static void CreateKnowledgeGroup(String GroupName, String Description)
+        {
+
+            String KnowledgeGroupInsertQuery = "INSERT INTO KnowledgeGroups VALUES (@GroupName, @Description)";
+
+            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand KnowledgeGroupInsertCommand = new SqlCommand(KnowledgeGroupInsertQuery, connection))
+                {
+                    KnowledgeGroupInsertCommand.Parameters.AddWithValue("@GroupName", GroupName);
+                    KnowledgeGroupInsertCommand.Parameters.AddWithValue("@Description", Description);
+
+                    KnowledgeGroupInsertCommand.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // Method to add a user to a knowledge group
+        public static void AddUserToKnowledgeGroup(int UserID, int KnowledgeGroupID)
+        {
+
+            String UserCollabInsertQuery = "INSERT INTO KnowledgeGroupParticipants VALUES (@KnowledgeGroupID, @UserID)";
+
+            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand UserCollabInsertCommand = new SqlCommand(UserCollabInsertQuery, connection))
+                {
+                    UserCollabInsertCommand.Parameters.AddWithValue("@KnowledgeGroupID", KnowledgeGroupID);
+                    UserCollabInsertCommand.Parameters.AddWithValue("@UserID", UserID);
+
+                    UserCollabInsertCommand.ExecuteNonQuery();
+                }
             }
         }
     }

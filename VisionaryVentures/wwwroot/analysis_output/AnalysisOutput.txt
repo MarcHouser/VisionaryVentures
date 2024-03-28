@@ -4,7 +4,7 @@ Dep. Variable:           2024 Actuals   R-squared:                       0.582
 Model:                            OLS   Adj. R-squared:                  0.581
 Method:                 Least Squares   F-statistic:                     1604.
 Date:                Thu, 28 Mar 2024   Prob (F-statistic):          1.70e-220
-Time:                        00:46:01   Log-Likelihood:                -15467.
+Time:                        13:09:41   Log-Likelihood:                -15467.
 No. Observations:                1155   AIC:                         3.094e+04
 Df Residuals:                    1153   BIC:                         3.095e+04
 Df Model:                           1                                         
