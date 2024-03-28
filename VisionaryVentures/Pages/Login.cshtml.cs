@@ -50,6 +50,7 @@ namespace VisionaryVentures.Pages
                 {
                     ViewData["LoginMessage"] = "Username and/or Password Incorrect";
                     DBClassReaders.LabOneDBConnection.Close();
+                    DBClassReaders.AuthConn.Close();
                     return Page();
                 }
             }
