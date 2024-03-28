@@ -4,8 +4,15 @@ CREATE TABLE Collaborations (
 	Description TEXT
 );
 
+CREATE TABLE Accounts (
+	AccountID INT IDENTITY(1,1) PRIMARY KEY,
+	UserType SMALLINT,
+	UserTypeDescription VARCHAR(30)
+);
+
 CREATE TABLE Users (
 	UserID INT IDENTITY(1, 1) PRIMARY KEY,
+	AccountID INT,
 	FirstName VARCHAR(100),
 	LastName VARCHAR(100),
 	EmailAddress NVARCHAR(255),
@@ -15,6 +22,7 @@ CREATE TABLE Users (
 	State VARCHAR(50),
 	PostalCode INT,
 	Country VARCHAR(255),
+	FOREIGN KEY (AccountID) REFERENCES Accounts(AccountID)
 );
 
 CREATE TABLE Plans (

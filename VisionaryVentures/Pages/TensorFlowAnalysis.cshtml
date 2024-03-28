@@ -3,95 +3,107 @@
 
 @{
     ViewData["Title"] = "TensorFlow Analysis";
+    ViewData["fileName"] = HttpContext.Session.GetString("fileName");
 }
 
-@* @if (Model.Headers != null && Model.Records != null)
+@if (!string.IsNullOrEmpty(Model.Output))
 {
-    <table class="table">
-        <thead>
-            <tr>
-                @foreach (var header in Model.Headers)
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Analysis Output Column -->
+            <div class="col-md-6">
+                @if (!string.IsNullOrEmpty(Model.Output))
                 {
-                    <th>@header</th>
+                    <div class="result">
+                        <h3>Analysis Result</h3>
+                        <pre>@Model.Output</pre> <!-- Displaying the textual output from Python script -->
+                        <img src="/charts/plot.png" alt="Regression Analysis Chart" /> <!-- Displaying the generated chart -->
+                    </div>
                 }
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var record in Model.Records)
-            {
-                <tr>
-                    @foreach (var field in record)
-                    {
-                        <td>@field</td>
-                    }
-                </tr>
-            }
-        </tbody>
-    </table>
-} *@
-<section>
-    <option> </option>
-</section>
-<div class="main-body">
-    <div class="container">
-        <!-- Data display table -->
-        <div class="card data-set">
-            <div class="card-header">Data</div>
-
-            <div class="input-group" id="analysis-bar">
-                <select class="form-select" aria-label="Default select example">
-                    <option>test</option>
-                    <option>test</option>
-                    <option>test</option>
-                </select>
-                <select class="form-select" aria-label="Default select example">
-                    <option>test</option>
-                    <option>test</option>
-                    <option>test</option>
-                </select>
-                <select class="form-select" aria-label="Default select example">
-                    <option>test</option>
-                    <option>test</option>
-                    <option>test</option>
-                </select>
-                <input class="form-control" asp-action="inflation" placeholder="enter inflation rate..." aria-label="Search" />
-                <button class="btn btn-primary"type="submit">Start Analysis</button>
             </div>
 
-            <div class="card-body table-body">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            @if (Model.Headers != null)
-                            {
-                                foreach (var header in Model.Headers)
-                                {
-                                    <th>@header</th>
-                                }
-                            }
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model.Records != null)
-                        {
-                            foreach (var record in Model.Records)
-                            {
-                                <tr>
-                                    @foreach (var field in record)
-                                    {
-                                        <td>@field</td>
-                                    }
-                                </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
+            <!-- Input and Button Column -->
+            <div class="col-md-6">
+                <div class="d-flex justify-content-around mb-3">
+                    <a href="?handler=DownloadOutput" class="btn btn-primary">Download Output File</a>
+                    <!-- Add the Create Report button -->
+                    <button class="btn btn-secondary" onclick="createReport()">Create Report</button>
+                </div>
+
+                <!-- Input Areas for Notes, SWOT, and PEST Analysis -->
+                <form method="post" asp-page-handler="CreateReport">
+                    <!-- Notes -->
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">General Notes</label>
+                        <textarea class="form-control" id="notes" name="Notes" rows="3"></textarea>
+                    </div>
+                    <!-- SWOT Analysis Inputs -->
+                    <div class="mb-3">
+                        <h4>SWOT Analysis</h4>
+                        <input type="text" class="form-control mb-2" name="SwotType" placeholder="Type (Strength, Weakness, Opportunity, Threat)" />
+                        <textarea class="form-control mb-2" name="SwotDescription" placeholder="Description" rows="2"></textarea>
+                        <textarea class="form-control mb-2" name="SwotImplications" placeholder="Implications" rows="2"></textarea>
+                        <textarea class="form-control mb-2" name="SwotStrategies" placeholder="Strategies" rows="2"></textarea>
+                        <input type="date" class="form-control mb-2" name="SwotAnalysisDate" placeholder="Analysis Date" />
+                        <textarea class="form-control mb-2" name="SwotNotes" placeholder="Notes" rows="2"></textarea>
+                    </div>
+                    <!-- PEST Analysis Inputs -->
+                    <div class="mb-3">
+                        <h4>PEST Analysis</h4>
+                        <input type="text" class="form-control mb-2" name="PestCategory" placeholder="Category (Political, Economic, Social, Technological)" />
+                        <textarea class="form-control mb-2" name="PestFactor" placeholder="Factor" rows="2"></textarea>
+                        <textarea class="form-control mb-2" name="PestImplications" placeholder="Implications" rows="2"></textarea>
+                        <textarea class="form-control mb-2" name="PestPossibleActions" placeholder="Possible Actions" rows="2"></textarea>
+                        <input type="date" class="form-control mb-2" name="PestAnalysisDate" placeholder="Analysis Date" />
+                        <textarea class="form-control mb-2" name="PestNotes" placeholder="Notes" rows="2"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Create Report</button>
+                </form>
             </div>
         </div>
     </div>
-</div>
-@* else
+} else
 {
-    <p>Please select a dataset to analyze.</p>
+    <form method="post" asp-page-handler="StartRegression">
+        <div class="form-group">
+            <label for="DependentVariable">Dependent Variable</label>
+            <select class="form-control" id="DependentVariable" name="DependentVariable">
+                @foreach (var header in Model.Headers)
+                {
+                    <option value="@header">@header</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="IndependentVariables">Independent Variables</label>
+            <select class="form-control" id="IndependentVariables" name="IndependentVariables" multiple>
+                @foreach (var header in Model.Headers)
+                {
+                    <option value="@header">@header</option>
+                }
+            </select>
+        </div>
+        <small>Select multiple independent variables using Ctrl (Cmd on Mac) + click.</small>
+        <button type="submit" class="btn btn-primary">Start Analysis</button>
+    </form>
 }
- *@
+
+
+@section Scripts {
+    <script>
+        function createReport() {
+            // JavaScript to collect form data and post to a server-side handler
+            const formData = new FormData(document.getElementById('reportForm'));
+            // Example of posting form data to a server-side handler
+            fetch('?handler=CreateReport', {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if (response.ok) {
+                    alert('Report created successfully');
+                    // Optionally, redirect or update the UI here
+                }
+            }).catch(error => console.error('Error creating report:', error));
+        }
+    </script>
+}

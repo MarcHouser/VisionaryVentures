@@ -35,14 +35,16 @@ namespace VisionaryVentures.Pages
                 if (DBClassReaders.HashedParameterLogin(Username, Password) && DBClassReaders.SPLogin(Username))
                 {
                     var UserID = DBClassReaders.GetUserID(Username);
+                    var UserType = DBClassReaders.GetUserType(UserID);
 
                     HttpContext.Session.SetString("username", Username);
                     HttpContext.Session.SetInt32("userid", UserID);
+                    HttpContext.Session.SetInt32("usertype", UserType);
 
                     ViewData["LoginMessage"] = "Login Successful!";
                     DBClassReaders.LabOneDBConnection.Close();
                     DBClassReaders.AuthConn.Close();
-                    return RedirectToPage("/CollabHub");
+                    return RedirectToPage("/Home");
                 }
                 else
                 {

@@ -32,20 +32,6 @@ namespace VisionaryVentures.Pages
             Messages = new List<Message>();
             Collaborations = new List<Collaboration>();
 
-            using (var reader = DBClassReaders.CollaborationReader())
-            {
-                while (reader.Read())
-                {
-                    Collaborations.Add(new Collaboration
-                    {
-                        CollaborationID = reader.GetInt32(0),
-                        Title = reader.GetString(1),
-                        Description = reader.GetString(2)
-                    });
-                }
-                DBClassReaders.LabOneDBConnection.Close();
-            }
-
             if (SelectedCollaborationID.HasValue)
             {
                 var selectedCollaboration = Collaborations.FirstOrDefault(c => c.CollaborationID == SelectedCollaborationID.Value);

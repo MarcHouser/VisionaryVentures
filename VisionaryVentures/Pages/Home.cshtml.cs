@@ -17,12 +17,12 @@ using System.Data;
 
 namespace VisionaryVentures.Pages
 {
-    public class DataSetsModel : PageModel
+    public class HomeModel : PageModel
     {
 
         [BindProperty]
         public IFormFile UploadedFile { get; set; }
-       
+
 
         public List<dynamic> Data { get; set; } = new List<dynamic>();
         [BindProperty]
@@ -82,8 +82,8 @@ namespace VisionaryVentures.Pages
 
         public async Task OnGetReadFileAsync(string fileName)
         {
-            HttpContext.Session.SetString("fileName", fileName);
-            SelectedFileName = HttpContext.Session.GetString(fileName);
+            
+            SelectedFileName = fileName;
 
             PopulateDataSetFiles();
 
@@ -310,6 +310,9 @@ namespace VisionaryVentures.Pages
             return $"INSERT INTO [{tableName}] ({columns}) VALUES ({valuesString});";
         }
 
+
+
+
         private async Task InsertDataIntoTable(string tableName, List<List<object>> data, string[] headers)
         {
             foreach (var row in data)
@@ -420,7 +423,8 @@ namespace VisionaryVentures.Pages
 
         public IActionResult OnPostAnalyzeDataset(string fileName)
         {
-            return RedirectToPage("./TensorFlowAnalysis", fileName);
+            // Redirect to the Analyze page with the fileName as a parameter
+            return RedirectToPage("./Analyze", new { fileName });
         }
 
         private async Task ProcessCSVAndCreateTable(string filePath, string fileName)
@@ -477,7 +481,7 @@ namespace VisionaryVentures.Pages
                 {
                     await command.ExecuteNonQueryAsync();
                 }
-            connection.Close();
+                connection.Close();
             }
         }
 
@@ -532,6 +536,5 @@ namespace VisionaryVentures.Pages
 
             return columnTypes;
         }
-
     }
 }

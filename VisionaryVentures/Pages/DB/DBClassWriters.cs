@@ -16,33 +16,54 @@ namespace VisionaryVentures.Pages.DB
             "Server=localhost;Database=AUTH;Trusted_Connection=True";
 
         // Method to add a user
-        public static void AddUser(string firstName, string lastName, string EmailAddress, string phoneNumber,
-            string streetAddress, string city, string state, int postalCode, string country)
+        public static void AddUserWithAccount(short userType, string userTypeDescription, string firstName, string lastName, string emailAddress, string phoneNumber, string streetAddress, string city, string state, int postalCode, string country)
         {
-            string userInsertQuery = "INSERT INTO Users (FirstName, LastName, EmailAddress, PhoneNumber, StreetAddress, City, State, PostalCode, Country) " +
-                "VALUES (@FirstName, @LastName, @EmailAddress, @PhoneNumber, @StreetAddress, @City, @State, @PostalCode, @Country)";
+            string accountInsertQuery = "INSERT INTO Accounts (UserType, UserTypeDescription) OUTPUT INSERTED.AccountID VALUES (@UserType, @UserTypeDescription);";
+            string userInsertQuery = "INSERT INTO Users (AccountID, FirstName, LastName, EmailAddress, PhoneNumber, StreetAddress, City, State, PostalCode, Country) VALUES (@AccountID, @FirstName, @LastName, @EmailAddress, @PhoneNumber, @StreetAddress, @City, @State, @PostalCode, @Country);";
 
             using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
             {
                 connection.Open();
+                SqlTransaction transaction = connection.BeginTransaction();
 
-                // Insert into Users with the captured AccountID
-                using (SqlCommand userInsertCommand = new SqlCommand(userInsertQuery, connection))
+                try
                 {
-                    userInsertCommand.Parameters.AddWithValue("@FirstName", firstName);
-                    userInsertCommand.Parameters.AddWithValue("@LastName", lastName);
-                    userInsertCommand.Parameters.AddWithValue("@EmailAddress", EmailAddress);
-                    userInsertCommand.Parameters.AddWithValue("@PhoneNumber", phoneNumber);
-                    userInsertCommand.Parameters.AddWithValue("@StreetAddress", streetAddress);
-                    userInsertCommand.Parameters.AddWithValue("@City", city);
-                    userInsertCommand.Parameters.AddWithValue("@State", state);
-                    userInsertCommand.Parameters.AddWithValue("@PostalCode", postalCode);
-                    userInsertCommand.Parameters.AddWithValue("@Country", country);
+                    // Insert into Accounts and retrieve the new AccountID
+                    using (SqlCommand accountInsertCommand = new SqlCommand(accountInsertQuery, connection, transaction))
+                    {
+                        accountInsertCommand.Parameters.AddWithValue("@UserType", userType);
+                        accountInsertCommand.Parameters.AddWithValue("@UserTypeDescription", userTypeDescription);
 
-                    userInsertCommand.ExecuteNonQuery();
+                        int accountID = (int)accountInsertCommand.ExecuteScalar();
+
+                        // Now insert into Users with the captured AccountID
+                        using (SqlCommand userInsertCommand = new SqlCommand(userInsertQuery, connection, transaction))
+                        {
+                            userInsertCommand.Parameters.AddWithValue("@AccountID", accountID);
+                            userInsertCommand.Parameters.AddWithValue("@FirstName", firstName);
+                            userInsertCommand.Parameters.AddWithValue("@LastName", lastName);
+                            userInsertCommand.Parameters.AddWithValue("@EmailAddress", emailAddress);
+                            userInsertCommand.Parameters.AddWithValue("@PhoneNumber", phoneNumber);
+                            userInsertCommand.Parameters.AddWithValue("@StreetAddress", streetAddress);
+                            userInsertCommand.Parameters.AddWithValue("@City", city);
+                            userInsertCommand.Parameters.AddWithValue("@State", state);
+                            userInsertCommand.Parameters.AddWithValue("@PostalCode", postalCode);
+                            userInsertCommand.Parameters.AddWithValue("@Country", country);
+
+                            userInsertCommand.ExecuteNonQuery();
+                        }
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw; // Rethrow the exception to handle it outside or log it
                 }
             }
         }
+
 
         public static void CreateHashedUser(string Username, string Password)
         {
@@ -66,51 +87,11 @@ namespace VisionaryVentures.Pages.DB
 
         }
 
-        // Method to build a collaboration
-        public static void AddCollaboration(String Title, String Description)
-        {
-
-            String CollabInsertQuery = "INSERT INTO Collaborations VALUES (@Title, @Description)";
-
-            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
-            {
-                connection.Open();
-
-                using (SqlCommand CollabInsertCommand = new SqlCommand(CollabInsertQuery, connection))
-                {
-                    CollabInsertCommand.Parameters.AddWithValue("@Title", Title);
-                    CollabInsertCommand.Parameters.AddWithValue("@Description", Description);
-
-                    CollabInsertCommand.ExecuteNonQuery();
-                }
-            }
-        }
-
-        // Method to add a user to a collaboration
-        public static void AddUserToCollaboration(int UserID, int CollabID)
-        {
-
-            String UserCollabInsertQuery = "INSERT INTO CollaborationParticipants VALUES (@CollabID, @UserID)";
-
-            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
-            {
-                connection.Open();
-
-                using (SqlCommand UserCollabInsertCommand = new SqlCommand(UserCollabInsertQuery, connection))
-                {
-                    UserCollabInsertCommand.Parameters.AddWithValue("@CollabID", CollabID);
-                    UserCollabInsertCommand.Parameters.AddWithValue("@UserID", UserID);
-
-                    UserCollabInsertCommand.ExecuteNonQuery();
-                }
-            }
-        }
-
         // Method to add a dataset
-        public static void AddDataset(int UserID, String FileName, DateTime DateUploaded)
+        public static void AddDataset(int UserID, String FileName, DateTime DateUploaded, string Description)
         {
 
-            String DatasetInsertQuery = "INSERT INTO Datasets VALUES (@UserID, @FileName, @DateUploaded)";
+            String DatasetInsertQuery = "INSERT INTO Datasets VALUES (@UserID, @FileName, @DateUploaded, @Description)";
 
             using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
             {
@@ -121,28 +102,9 @@ namespace VisionaryVentures.Pages.DB
                     DatasetInsertCommand.Parameters.AddWithValue("@UserID", UserID);
                     DatasetInsertCommand.Parameters.AddWithValue("@FileName", FileName);
                     DatasetInsertCommand.Parameters.AddWithValue("@DateUploaded", DateUploaded);
+                    DatasetInsertCommand.Parameters.AddWithValue("@Description", Description);
 
                     DatasetInsertCommand.ExecuteNonQuery();
-                }
-            }
-        }
-
-        // Method to add a dataset to a collaboration
-        public static void AddDatasetToCollaboration(int CollabID, int DatasetID)
-        {
-
-            String DatasetCollabInsertQuery = "INSERT INTO CollaborationData VALUES (@CollabID, @DatasetID)";
-
-            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
-            {
-                connection.Open();
-
-                using (SqlCommand DatasetCollabInsertCommand = new SqlCommand(DatasetCollabInsertQuery, connection))
-                {
-                    DatasetCollabInsertCommand.Parameters.AddWithValue("@CollabID", CollabID);
-                    DatasetCollabInsertCommand.Parameters.AddWithValue("@DatasetID", DatasetID);
-
-                    DatasetCollabInsertCommand.ExecuteNonQuery();
                 }
             }
         }
@@ -167,76 +129,11 @@ namespace VisionaryVentures.Pages.DB
             }
         }
 
-        // Add Knowledge Item
-        public static void AddKnowledgeItem(int UserID, String Category, String Title, String Information, DateTime DateCreated, DateTime LastDateModified)
-        {
-
-            String KnowledgeItemInsertQuery = "INSERT INTO KnowledgeItems VALUES (@UserID, @Category, @Title, @Information, @DateCreated, @LastDateModified)";
-
-            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
-            {
-                connection.Open();
-
-                using (SqlCommand KnowledgeItemInsertCommand = new SqlCommand(KnowledgeItemInsertQuery, connection))
-                {
-                    KnowledgeItemInsertCommand.Parameters.AddWithValue("@UserID", UserID);
-                    KnowledgeItemInsertCommand.Parameters.AddWithValue("@Category", Category);
-                    KnowledgeItemInsertCommand.Parameters.AddWithValue("@Title", Title);
-                    KnowledgeItemInsertCommand.Parameters.AddWithValue("@Information", Information);
-                    KnowledgeItemInsertCommand.Parameters.AddWithValue("@DateCreated", DateCreated);
-                    KnowledgeItemInsertCommand.Parameters.AddWithValue("@LastDateModified", LastDateModified);
-
-                    KnowledgeItemInsertCommand.ExecuteNonQuery();
-                }
-            }
-        }
-
-        // Edit Knowledge Item
-        public static void EditKnowledgeItem(int KnowledgeItemID, String Information, DateTime LastDateModified)
-        {
-            String KnowledgeItemEditQuery = "UPDATE KnowledgeItems SET Information = @Information, LastDateModified = @LastDateModified " +
-                "WHERE KnowledgeItemID = @KnowledgeItemID";
-
-            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
-            {
-                connection.Open();
-
-                using (SqlCommand KnowledgeItemEditCommand = new SqlCommand(KnowledgeItemEditQuery, connection))
-                {
-                    KnowledgeItemEditCommand.Parameters.AddWithValue("@KnowledgeItemID", KnowledgeItemID);
-                    KnowledgeItemEditCommand.Parameters.AddWithValue("@Information", Information);
-                    KnowledgeItemEditCommand.Parameters.AddWithValue("@LastDateModified", LastDateModified);
-
-                    KnowledgeItemEditCommand.ExecuteNonQuery();
-                }
-            }
-        }
-
-        // Add Knowledge Item to Collaboration
-        public static void AddKnowledgeItemToCollaboration(int KnowledgeItemID, int CollaborationID)
-        {
-
-            String KnowledgeItemCollabInsertQuery = "INSERT INTO CollaborationKnowledge VALUES (@KnowledgeItemID, @CollaborationID)";
-
-            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
-            {
-                connection.Open();
-
-                using (SqlCommand KnowledgeItemCollabInsertCommand = new SqlCommand(KnowledgeItemCollabInsertQuery, connection))
-                {
-                    KnowledgeItemCollabInsertCommand.Parameters.AddWithValue("@KnowledgeItemID", KnowledgeItemID);
-                    KnowledgeItemCollabInsertCommand.Parameters.AddWithValue("@CollaborationID", CollaborationID);
-
-                    KnowledgeItemCollabInsertCommand.ExecuteNonQuery();
-                }
-            }
-        }
-
         // Add Message
-        public static void AddMessage(int CollaborationID, int UserID, String MessageContents, DateTime DateCreated)
+        public static void AddMessage(int ChatID, int UserID, String MessageContents, DateTime DateCreated)
         {
 
-            String MessageInsertQuery = "INSERT INTO Messages VALUES (@CollaborationID, @UserID, @MessageContents, @DateSent)";
+            String MessageInsertQuery = "INSERT INTO Messages VALUES (@ChatID, @UserID, @MessageContents, @DateSent)";
 
             using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
             {
@@ -244,90 +141,12 @@ namespace VisionaryVentures.Pages.DB
 
                 using (SqlCommand MessageInsertCommand = new SqlCommand(MessageInsertQuery, connection))
                 {
-                    MessageInsertCommand.Parameters.AddWithValue("@CollaborationID", CollaborationID);
+                    MessageInsertCommand.Parameters.AddWithValue("@ChatID", ChatID);
                     MessageInsertCommand.Parameters.AddWithValue("@UserID", UserID);
                     MessageInsertCommand.Parameters.AddWithValue("@MessageContents", MessageContents);
                     MessageInsertCommand.Parameters.AddWithValue("@DateSent", DateCreated);
 
                     MessageInsertCommand.ExecuteNonQuery();
-                }
-            }
-        }
-
-        // Add Plan
-        public static void AddPlan(String PlanName, String PlanDescription, DateTime DateCreated)
-        {
-            String PlanInsertQuery = "INSERT INTO Plans VALUES (@PlanName, @PlanDescription, @DateCreated)";
-
-            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
-            {
-                connection.Open();
-
-                using (SqlCommand PlanInsertCommand = new SqlCommand(PlanInsertQuery, connection))
-                {
-                    PlanInsertCommand.Parameters.AddWithValue("@PlanName", PlanName);
-                    PlanInsertCommand.Parameters.AddWithValue("@PlanDescription", PlanDescription);
-                    PlanInsertCommand.Parameters.AddWithValue("@DateCreated", DateCreated);
-
-                    PlanInsertCommand.ExecuteNonQuery();
-                }
-            }
-        }
-
-        // User plan correlation
-        public static void AddUserPlan(int UserID, int PlanID)
-        {
-            String UserPlanInsertQuery = "INSERT INTO UserPlans VALUES (@UserID, @PlanID)";
-
-            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
-            {
-                connection.Open();
-
-                using (SqlCommand UserPlanInsertCommand = new SqlCommand(UserPlanInsertQuery, connection))
-                {
-                    UserPlanInsertCommand.Parameters.AddWithValue("@UserID", UserID);
-                    UserPlanInsertCommand.Parameters.AddWithValue("@PlanID", PlanID);
-
-                    UserPlanInsertCommand.ExecuteNonQuery();
-                }
-            }
-        }
-
-        // Add Plan Contents
-        public static void AddPlanContents(int PlanID, int PlanStep, String Description)
-        {
-            String PlanContentsInsertQuery = "INSERT INTO PlanContents VALUES (@PlanID, @PlanStep, @Description)";
-
-            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
-            {
-                connection.Open();
-
-                using (SqlCommand PlanContentsInsertCommand = new SqlCommand(PlanContentsInsertQuery, connection))
-                {
-                    PlanContentsInsertCommand.Parameters.AddWithValue("@PlanID", PlanID);
-                    PlanContentsInsertCommand.Parameters.AddWithValue("@PlanStep", PlanStep);
-                    PlanContentsInsertCommand.Parameters.AddWithValue("@Description", Description);
-
-                    PlanContentsInsertCommand.ExecuteNonQuery();
-                }
-            }
-        }
-
-        // Add Plan to Collaboration
-        public static void AddPlanToCollaboration(int CollaborationID, int PlanID)
-        {
-            String PlanCollabInsertQuery = "INSERT INTO CollaborationPlans VALUES (@CollaborationID, @PlanID)";
-
-            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
-            {
-                connection.Open();
-
-                using (SqlCommand PlanCollabInsertCommand = new SqlCommand(PlanCollabInsertQuery, connection))
-                {
-                    PlanCollabInsertCommand.Parameters.AddWithValue("@CollaborationID", CollaborationID);
-                    PlanCollabInsertCommand.Parameters.AddWithValue("@PlanID", PlanID);
-
-                    PlanCollabInsertCommand.ExecuteNonQuery();
                 }
             }
         }
@@ -382,5 +201,69 @@ namespace VisionaryVentures.Pages.DB
             }
         }
 
+        public static int InsertSWOTAnalysis(string type, string description, string implications, string strategies, DateTime analysisDate, string notes)
+        {
+            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
+            {
+                string insertQuery = @"
+            INSERT INTO SwotAnalysis(Type, Description, Implications, Strategies, AnalysisDate, Notes)
+            VALUES (@Type, @Description, @Implications, @Strategies, @AnalysisDate, @Notes);
+            SELECT SCOPE_IDENTITY();";
+
+                SqlCommand command = new SqlCommand(insertQuery, connection);
+                command.Parameters.AddWithValue("@Type", type);
+                command.Parameters.AddWithValue("@Description", description);
+                command.Parameters.AddWithValue("@Implications", implications);
+                command.Parameters.AddWithValue("@Strategies", strategies);
+                command.Parameters.AddWithValue("@AnalysisDate", analysisDate);
+                command.Parameters.AddWithValue("@Notes", notes);
+
+                connection.Open();
+                int swotId = Convert.ToInt32(command.ExecuteScalar());
+                return swotId;
+            }
+        }
+
+        public static int InsertPESTAnalysis(string category, string factor, string implications, string possibleActions, DateTime analysisDate, string notes)
+        {
+            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
+            {
+                string insertQuery = @"
+            INSERT INTO PestAnalysis(Category, Factor, Implications, PossibleActions, AnalysisDate, Notes)
+            VALUES (@Category, @Factor, @Implications, @PossibleActions, @AnalysisDate, @Notes);
+            SELECT SCOPE_IDENTITY();";
+
+                SqlCommand command = new SqlCommand(insertQuery, connection);
+                command.Parameters.AddWithValue("@Category", category);
+                command.Parameters.AddWithValue("@Factor", factor);
+                command.Parameters.AddWithValue("@Implications", implications);
+                command.Parameters.AddWithValue("@PossibleActions", possibleActions);
+                command.Parameters.AddWithValue("@AnalysisDate", analysisDate);
+                command.Parameters.AddWithValue("@Notes", notes);
+
+                connection.Open();
+                int pestId = Convert.ToInt32(command.ExecuteScalar());
+                return pestId;
+            }
+        }
+
+        public static int CreateReport(int swotAnalysisId, int pestAnalysisId)
+        {
+            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
+            {
+                string insertQuery = @"
+            INSERT INTO Reports(SwotAnalysisID, PestAnalysisID, DateCreated)
+            VALUES (@SwotAnalysisID, @PestAnalysisID, GETDATE());
+            SELECT SCOPE_IDENTITY();";
+
+                SqlCommand command = new SqlCommand(insertQuery, connection);
+                command.Parameters.AddWithValue("@SwotAnalysisID", swotAnalysisId);
+                command.Parameters.AddWithValue("@PestAnalysisID", pestAnalysisId);
+
+                connection.Open();
+                int reportId = Convert.ToInt32(command.ExecuteScalar());
+                return reportId;
+            }
+        }
     }
 }

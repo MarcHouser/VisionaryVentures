@@ -420,3 +420,22 @@ header{
 
 navbar-nav .nav-link:hover {
     color: #007bff !important; /* Sets the hover color to Bootstrap's blue */
+}
+.colab-body {
+    margin-left: 8%;
+    width: 80%;
+}
+
+.data-upload {
+    float: right;
+    margin-top: 2%;
+    width: 60%;
+}
+
+.dataset-btn {
+    word-wrap: anywhere;
+}
+
+.home-header {
+    text-align: center;
+}

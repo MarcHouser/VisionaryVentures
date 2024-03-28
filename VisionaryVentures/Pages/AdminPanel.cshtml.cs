@@ -1,25 +1,24 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using VisionaryVentures.Pages.DataClasses;
+using System.Collections.Generic;
 using VisionaryVentures.Pages.DB;
+using VisionaryVentures.Pages.DataClasses;
 
 namespace VisionaryVentures.Pages
 {
-    public class PrintReportModel : PageModel
+    public class AdminPanelModel : PageModel
     {
-        public Collaboration Collaboration { get; set; }
-        public List<KnowledgeItem> KnowledgeItems { get; set; } = new List<KnowledgeItem>();
-        public List<PlanContent> PlanContents { get; set; } = new List<PlanContent>();
-        public List<User> users { get; set; } = new List<User>();
+        public List<User> Users { get; set; } = new List<User>();
+        public List<Collaboration> Collaborations { get; set; } = new List<Collaboration>();
+        public List<Plan> Plans { get; set; } = new List<Plan>();
 
-        public void OnGet(int? CollaborationID)
+        public void OnGet()
         {
-
+            // Fetch all users from the database
             using (var reader = DBClassReaders.UserReader())
             {
                 while (reader.Read())
                 {
-                    users.Add(new User
+                    Users.Add(new User
                     {
                         UserID = reader.GetInt32(0),
                         AccountID = reader.GetInt32(1),
@@ -34,7 +33,6 @@ namespace VisionaryVentures.Pages
                         Country = reader.GetString(10)
                     });
                 }
-
                 DBClassReaders.LabOneDBConnection.Close();
             }
         }
