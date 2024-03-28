@@ -176,7 +176,7 @@ body {
     margin-top: 1%;
 }
 .chat-box {
-    height: 70vh; /* Adjust the initial height as needed */
+    height: 68vh; /* Adjust the initial height as needed */
     width: 95%;
     overflow-y: auto;
     border: 2px solid black;
@@ -186,9 +186,9 @@ body {
 }
 
 .chat-container {
-    height: 85vh; /* Adjust the initial height as needed */
-    width: 75%;
-    margin-left: 22%;
+    height: 80vh; /* Adjust the initial height as needed */
+    width: 100%;
+    margin-left: 0%;
     margin-top: 1%;
 }
 
@@ -288,9 +288,9 @@ body {
 }
 
 .data-set {
-    margin-left: 20%;
+    margin-left: 0%;
     margin-top: 1%;
-    width: 65vw;
+    width: 77vw;
     height: 85vh;
     overflow-y: auto;
 }
@@ -442,4 +442,8 @@ navbar-nav .nav-link:hover {
 
 .home-header {
     text-align: center;
+}
+.main-body{
+    margin-left:15%;
+    width:95%;
 }

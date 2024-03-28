@@ -6,6 +6,13 @@
     ViewData["fileName"] = HttpContext.Session.GetString("fileName");
 }
 
+<style>
+    .custom-select-height {
+        height: 580px;
+        overflow-y: auto;
+    }
+</style>
+
 @if (!string.IsNullOrEmpty(Model.Output))
 {
     <div class="container-fluid mt-4">
@@ -26,8 +33,7 @@
             <div class="col-md-6">
                 <div class="d-flex justify-content-around mb-3">
                     <a href="?handler=DownloadOutput" class="btn btn-primary">Download Output File</a>
-                    <!-- Add the Create Report button -->
-                    <button class="btn btn-secondary" onclick="createReport()">Create Report</button>
+                    <button type="submit" class="btn btn-secondary">Create Report</button>
                 </div>
 
                 <!-- Input Areas for Notes, SWOT, and PEST Analysis -->
@@ -57,7 +63,6 @@
                         <input type="date" class="form-control mb-2" name="PestAnalysisDate" placeholder="Analysis Date" />
                         <textarea class="form-control mb-2" name="PestNotes" placeholder="Notes" rows="2"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-secondary">Create Report</button>
                 </form>
             </div>
         </div>
@@ -76,7 +81,7 @@
         </div>
         <div class="form-group">
             <label for="IndependentVariables">Independent Variables</label>
-            <select class="form-control" id="IndependentVariables" name="IndependentVariables" multiple>
+            <select class="form-control custom-select-height" id="IndependentVariables" name="IndependentVariables" multiple>
                 @foreach (var header in Model.Headers)
                 {
                     <option value="@header">@header</option>

@@ -52,7 +52,10 @@
                                 <a class="nav-link text-white @(currentPage == "/Home" ? "active-link" : "")" asp-area="" asp-page="/Home">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white @(currentPage == "/KnowledgeBase" ? "active-link" : "")" asp-area="" asp-page="/KnowledgeLibrary">Knowledge Base</a>
+                                <a class="nav-link text-white @(currentPage == "/KnowledgeLibrary" ? "active-link" : "")" asp-area="" asp-page="/KnowledgeLibrary">Knowledge Base</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white @(currentPage == "/Reports" ? "active-link" : "")" asp-area="" asp-page="/Reports">Reports</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-white @(currentPage == "/Messages" ? "active-link" : "")" asp-area="" asp-page="/Messages">Messages</a>
@@ -60,6 +63,7 @@
                             <li class="nav-item">
                                 <a class="nav-link text-white @(currentPage == "/AdminPanel" ? "active-link" : "")" asp-area="" asp-page="/AdminPanel">Admin Panel</a>
                             </li>
+
                         </ul>
                         <form asp-page="Login" asp-page-handler="LogoutHandler" id="logout" class="ml-auto">
                             <input type="submit" class="btn btn-danger" value="Logout">
