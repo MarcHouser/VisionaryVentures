@@ -61,16 +61,7 @@ namespace VisionaryVentures.Pages
             }
             
         }
-        public IActionResult OnPostPopulateHandler()
-        {
-            if(!ModelState.IsValid){
-                ModelState.Clear();
 
-                Username = "admin";
-                Password = "password";
-            }
-            return Page();
-        }
         public IActionResult OnPostClearHandler()
         {
             return RedirectToPage("/Login");

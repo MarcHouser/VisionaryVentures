@@ -64,6 +64,11 @@
                     <div class="card-body" style="text-align: center; display: flex; flex-direction: column;">
                         <h5 class="card-title">@file.Name</h5>
                         <p class="card-text">Description</p>
+                        <form method="post" asp-page-handler="UpdateDescription">
+                            <input type="hidden" name="fileName" value="@file.Name" />
+                            <input type="text" name="Description" placeholder="Enter new description" class="form-control mb-2" />
+                            <input type="submit" value="Update Description" class="btn btn-primary btn-sm" />
+                        </form>
                         <div style="margin-top: auto;">
                             <hr />
                             <a asp-page="/Datasets" asp-page-handler="ReadFile" asp-route-filename="@file.Name" id="data-btn " class="btn dataset-btn @(Model.SelectedFileName == file.Name ? "btn-selected" : "btn-primary") my-1" id="data-btn">

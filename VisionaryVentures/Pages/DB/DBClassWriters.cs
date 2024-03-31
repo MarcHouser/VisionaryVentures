@@ -11,7 +11,7 @@ namespace VisionaryVentures.Pages.DB
 
         // Instantiate connection string
         private static readonly String? LabOneDBConnectionString =
-            "Server=localhost;Database=Lab4;Trusted_Connection=True";
+            "Server=localhost;Database=Sprint2;Trusted_Connection=True";
         private static readonly String? AuthConnString =
             "Server=localhost;Database=AUTH;Trusted_Connection=True";
 
@@ -64,7 +64,7 @@ namespace VisionaryVentures.Pages.DB
             }
         }
 
-
+        // Create a hashed user
         public static void CreateHashedUser(string Username, string Password)
         {
             string loginQuery =
@@ -151,6 +151,7 @@ namespace VisionaryVentures.Pages.DB
             }
         }
 
+        // Add Chat
         public static void AddChat(string Title, DateTime DateCreated)
         {
             String ChatInsertQuery = "INSERT INTO Chats VALUES (@DateCreated, @Title)";
@@ -219,6 +220,7 @@ namespace VisionaryVentures.Pages.DB
             }
         }
 
+        // Add SWOT
         public static int InsertSWOTAnalysis(string type, string description, string implications, string strategies, DateTime analysisDate, string notes)
         {
             using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
@@ -242,6 +244,7 @@ namespace VisionaryVentures.Pages.DB
             }
         }
 
+        // Add PEST
         public static int InsertPESTAnalysis(string category, string factor, string implications, string possibleActions, DateTime analysisDate, string notes)
         {
             using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
@@ -265,6 +268,7 @@ namespace VisionaryVentures.Pages.DB
             }
         }
 
+        // Add Report
         public static int CreateReport(int swotAnalysisId, int pestAnalysisId)
         {
             using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
@@ -365,6 +369,25 @@ namespace VisionaryVentures.Pages.DB
                     UserCollabInsertCommand.Parameters.AddWithValue("@UserID", UserID);
 
                     UserCollabInsertCommand.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // Update description of dataset
+        public static void UpdateDatasetDescription(string FileName, string Description)
+        {
+            String DatasetUpdateQuery = "UPDATE Datasets SET Description = @Description WHERE FileName = @FileName";
+
+            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand DatasetUpdateCommand = new SqlCommand(DatasetUpdateQuery, connection))
+                {
+                    DatasetUpdateCommand.Parameters.AddWithValue("@FileName", FileName);
+                    DatasetUpdateCommand.Parameters.AddWithValue("@Description", Description);
+
+                    DatasetUpdateCommand.ExecuteNonQuery();
                 }
             }
         }

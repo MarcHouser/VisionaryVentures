@@ -13,7 +13,7 @@ namespace VisionaryVentures.Pages.DB
 
         // Instantiate connection string
         private static readonly String? LabOneDBConnectionString =
-            "Server=localhost;Database=Lab4;Trusted_Connection=True";
+            "Server=localhost;Database=Sprint2;Trusted_Connection=True";
 
         private static readonly String? AuthConnString =
             "Server=Localhost;Database=AUTH;Trusted_Connection=True";
@@ -262,6 +262,19 @@ namespace VisionaryVentures.Pages.DB
                 }
             }
             return firstName;
+        }
+
+        public static SqlDataReader GetDatasetByUser(int? UserID)
+        {
+            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
+            {
+                string sqlQuery = "SELECT * FROM Datasets WHERE UserID = @UserID";
+                SqlCommand command = new SqlCommand(sqlQuery, connection);
+                command.Parameters.AddWithValue("@UserID", UserID);
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                return reader;
+            }
         }
 
         public static SqlDataReader GeneralReaderQuery(string sqlQuery)

@@ -34,7 +34,7 @@ namespace VisionaryVentures.Pages
 
         public string SelectedFileName { get; set; }
 
-        private readonly string _connectionString = "Server=localhost;Database=Lab4;Trusted_Connection=True;";
+        private readonly string _connectionString = "Server=localhost;Database=Sprint2;Trusted_Connection=True;";
 
 
 
@@ -470,7 +470,7 @@ namespace VisionaryVentures.Pages
 
         private async Task ExecuteSqlNonQuery(string sqlCommandText)
         {
-            using (var connection = new SqlConnection("Server=localhost;Database=Lab4;Trusted_Connection=True"))
+            using (var connection = new SqlConnection("Server=localhost;Database=Sprint2;Trusted_Connection=True"))
             {
                 await connection.OpenAsync();
                 using (var command = new SqlCommand(sqlCommandText, connection))
