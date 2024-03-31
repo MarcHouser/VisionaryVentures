@@ -1,5 +1,11 @@
 INSTRUCTIONS
 
+Python
+Explanation: We used Python to perform our regression analysis functions. In the near future, Python will not be required
+			on a local machine to run this program. For now however, Python must be installed on your local machine.
+1. Go to command prompt
+2. Enter the following command: pip install pandas statsmodels matplotlib
+
 SQL Server Management Studio
 1. In SQL Server Management Studio, create one database called "Sprint2" and one database called "AUTH".
 2. Run: "Sprint2DB_TableCreationAndPopulation" for the Sprint2 database.
