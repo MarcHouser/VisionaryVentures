@@ -1,0 +1,10 @@
+Steps for Creating a New User to Access Web Pages:
+
+1. Run the 'Lab3TableCreationAndInsertion' file
+2. RUN the 'AUTHTableCreation' file
+3. Run the stored procedure for the database 'AUTH'
+4. Open the Solution file.
+5. Run the solution.
+6. On the login page, you could either manually enter 'admin' for Username and 'password' for Password,
+   OR use the Populate button to automatically enter in those fields.
+7. Enjoy the web page!
