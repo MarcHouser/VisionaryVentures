@@ -24,7 +24,7 @@
         }
         .nav-item{
             font-size:1.5em;
-            padding-right:10%;
+            padding-right:3%;
         }
 
     </style>
@@ -37,7 +37,7 @@
     @if (currentPage != "/Login" && userType == 1)
     {
         <header>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-#1c3459 align-items-center">
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm  navbar-dark bg-#1c3459 align-items-center">
                 <img class="img-fluid navbar-brand-img" id="top-logo" src="~/img/Madison County Logo.jpg" />
                 <div class="container" id="nav-bar">
                     <a class="navbar-brand" asp-area="" asp-page="/Index"></a>
@@ -63,11 +63,13 @@
                             <li class="nav-item">
                                 <a class="nav-link text-white @(currentPage == "/AdminPanel" ? "active-link" : "")" asp-area="" asp-page="/AdminPanel">Admin Panel</a>
                             </li>
-
+                            <li>
+                                <form asp-page="Login" asp-page-handler="LogoutHandler" id="logout" class="ml-auto">
+                                    <input type="submit" class="btn btn-danger" value="Logout">
+                                </form>
+                            </li>
                         </ul>
-                        <form asp-page="Login" asp-page-handler="LogoutHandler" id="logout" class="ml-auto">
-                            <input type="submit" class="btn btn-danger" value="Logout">
-                        </form>
+
                     </div>
                 </div>
             </nav>
@@ -76,7 +78,7 @@
     else if (currentPage != "/Login" && userType == 2)
     {
         <header>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-#1c3459 align-items-center">
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-#1c3459 align-items-center">
                 <img class="img-fluid navbar-brand-img" id="top-logo" src="~/img/Madison County Logo.jpg" />
                 <div class="container" id="nav-bar">
                     <a class="navbar-brand" asp-area="" asp-page="/Index"></a>
@@ -98,10 +100,13 @@
                             <li class="nav-item">
                                 <a class="nav-link text-white @(currentPage == "/Messages" ? "active-link" : "")" asp-area="" asp-page="/Messages">Messages</a>
                             </li>
+                            <li>
+                                <form asp-page="Login" asp-page-handler="LogoutHandler" id="logout" class="ml-auto">
+                                    <input type="submit" class="btn btn-danger" value="Logout">
+                                </form>
+                            </li>
                         </ul>
-                        <form asp-page="Login" asp-page-handler="LogoutHandler" id="logout" class="ml-auto">
-                            <input type="submit" class="btn btn-danger" value="Logout">
-                        </form>
+
                     </div>
                 </div>
             </nav>
