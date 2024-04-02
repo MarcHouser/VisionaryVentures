@@ -223,3 +223,8 @@ function checkCheckbox(card) {
         deleteCheckbox.checked = !deleteCheckbox.checked;
     }
 }
+function toggleConfirmDeleteButtons() {
+    document.querySelectorAll('.confirm-delete').forEach(button => {
+        button.style.display = button.style.display === 'none' ? 'block' : 'none';
+    });
+}
