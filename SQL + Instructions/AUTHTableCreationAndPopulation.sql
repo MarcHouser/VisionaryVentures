@@ -4,8 +4,11 @@ CREATE TABLE HashedCredentials (
 	PasswordHash NVARCHAR(255)
 );
 
-INSERT INTO [Lab4].[dbo].[Users]
-           ([FirstName]
+INSERT INTO [Sprint2].[dbo].[Accounts] (UserType, UserTypeDescription) Values (1, 'Administrative');
+
+INSERT INTO [Sprint2].[dbo].[Users]
+           ([AccountID]
+		   ,[FirstName]
            ,[LastName]
            ,[EmailAddress]
            ,[PhoneNumber]
@@ -15,7 +18,8 @@ INSERT INTO [Lab4].[dbo].[Users]
            ,[PostalCode]
            ,[Country])
      VALUES
-           ('Admin'
+           (1
+		   ,'Admin'
 		   ,'User'
 		   ,'Admin.User@gmail.com'
 		   ,'703626-0156'

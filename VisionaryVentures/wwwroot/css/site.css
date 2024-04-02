@@ -44,6 +44,8 @@ body {
     margin-right: auto;
     width: 50%;
     margin-top: 5%;
+    background:#fff;
+    color:black;
 }
 .login, username,password {
     width: 90%;
@@ -57,18 +59,26 @@ body {
 .side-bar {
     display: flex;
     flex-direction: column;
-    height: 100%; /* Use viewport height to cover the full height of the viewport */
-    width: 20%; /* Set the width to 20% */
+    height: 100vh; /* Use viewport height to cover the full height of the viewport */
+    width: 20vw; /* Set the width to 20% of the viewport width */
     position: fixed; /* Position the sidebar fixed to the left */
-    top:0;
+    top: 0;
     left: 0; /* Position the sidebar at the left */
     overflow-y: auto; /* Enable vertical scrolling if the content overflows */
-    background-color: darkgray; /* Keep the same background color */
+    overflow-x: hidden; /* Hide horizontal overflow */
+    background-color: #1c3459; /* Keep the same background color */
+    z-index: 1;
+    overflow-wrap: anywhere;
+    color: #fff;
 }
+
+
 .sidbar,p {
+    padding-top:4em;
 }
 .side-bar button {
     width: 100%;
+    padding-right:1em;
 }
 .side-bar .search-button {
     width: auto; /* Resetting width for the search button */
@@ -78,6 +88,9 @@ body {
     background-color: #04AA6D; /* Original active background color */
     color: white;
 }
+.sidbar, a {
+    padding-right:10em;
+}
 
 .side-bar a:hover:not(.active),
 .side-bar button:hover:not(.active) {
@@ -85,10 +98,10 @@ body {
     color: white;
 }
 
-@media screen and (max-width: 768px) {
+/*@media screen and (max-width: 768px) {
     .side-bar {
-        width: 100vw; /* Set width to viewport width */
-        height: 35%;
+        width: 100vw;*/ /* Set width to viewport width */
+        /*height: 35%;
         flex-direction: row;
         z-index:1;
     }
@@ -103,8 +116,8 @@ body {
     }
     .navbar {
         z-index: 3;
-        padding: 1rem 23rem; /* Adjust these values for small devices */
-    }
+        padding: 1rem 23rem;*/ /* Adjust these values for small devices */
+    /*}
     .navbar-toggler{
         margin-left:3rem;
         margin-top:-1rem;
@@ -143,7 +156,7 @@ body {
         display: block;
         position: relative;
     }
-}
+}*/
 
 
 .side-bar-lower form {
@@ -163,28 +176,61 @@ body {
     margin-top: 1%;
 }
 .chat-box {
-    height: 40em;
+    height: 68vh; /* Adjust the initial height as needed */
     width: 95%;
     overflow-y: auto;
     border: 2px solid black;
     margin-left: 2.5%;
-    margin-top: 2%;
+    margin-top: 1%;
     margin-bottom: 2%;
 }
+
 .chat-container {
-    height: calc(100% - 100px);
-    margin-left: 22%;
-    margin-top: 3%;
+    height: 80vh; /* Adjust the initial height as needed */
+    width: 100%;
+    margin-left: 0%;
+    margin-top: 1%;
 }
-.card-header{
-    background: darkgray;
-    color: #100f0f;
-    text-align:center;
+
+.message {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.current-user {
+    justify-content: flex-end;
+}
+
+.other-user {
+    justify-content: flex-start;
+}
+
+.message-content {
+    background-color: #f1f1f1;
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+
+.message-othersender {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.message-currentsender {
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.card-header {
+    background: #1c3459;
+    color: #fff;
+    text-align: center;
     font-size: 1em;
 }
 
 .task-box {
-    height: 15em;
+    height: 40vh;
     width: 95%;
     overflow-y: auto;
     border: 2px solid black;
@@ -193,8 +239,8 @@ body {
     margin-bottom: 2%;
 }
 .plan-box {
-    height: 15em;
-    width: 95%;
+    height: 40vh;
+    width: 31vw;
     overflow-y: auto;
     border: 2px solid black;
     margin-left: 2.5%;
@@ -202,25 +248,25 @@ body {
     margin-bottom: 2%;
 }
 .task-container {
-    margin-left: 22%;
+    margin-left: 20%;
     margin-top: 1%;
     width: 80%;
 }
 .knowledge-container {
     margin-left: 22%;
-    margin-top: 2%;
-    height: 30%;
-    width: 80%;
+    margin-top: 1%;
+    height: 40vh;
+    width: 75vw;
 }
 .knowledge-box {
-    height: 40em;
+    height: 60vh;
     width: 95%;
     overflow-y: auto;
     border: 2px solid black;
     margin-left: 2.5%;
     margin-top: 2%;
     margin-bottom: 2%;
-    padding:2%;
+    padding: 2%;
 }
 #dropdown {
     margin-left: 11%;
@@ -231,26 +277,25 @@ body {
 
 #form-btn1, #form-btn2 {
     display: inline-block;
-    inset-inline-start:50%;
-    margin-top:1%;
+    inset-inline-start: 23vw;
+    margin-top: 1%;
 }
-.my-1{
-    margin-left:2%;
-}
-#btn-card{
-    margin-left:23%;
-    margin-top:1%;
+
+#btn-card {
+    margin-left: 22%;
+    width: 74vw;
+    margin-top: 1%;
 }
 
 .data-set {
-    margin-left: 22%;
-    margin-top:1%;
-    width: 80%;
-    height: 20%;
+    margin-left: 0%;
+    margin-top: 1%;
+    width: 70vw;
+    height: 85vh;
     overflow-y: auto;
 }
 .table-body {
-    height: 45em;
+    height: 90vh;
     width: 95%;
     overflow-y: auto;
     border: 2px solid black;
@@ -267,7 +312,6 @@ body {
 }
 
 #logout {
-    position: relative;
     margin-right: 1%;
 }
 .file {
@@ -328,7 +372,7 @@ body {
     margin: 0;
 }
 .collab-body {
-    margin-left: -27%;
+    margin-left:-7%;
 }
 .collab-body #form-btn2{
     position:relative;
@@ -338,7 +382,6 @@ body {
     display: block;
     margin-top:3%;
     margin-left: auto;
-    margin-right: auto;
     border:solid;
 }
 #top-logo {
@@ -352,9 +395,53 @@ body {
     width:100%;
     justify-content: center;
 }
+header{
+    z-index:3;
+}
+
+
 .navbar-brand-img {
-    position: absolute;
+    position:relative;
+    float:left;
     top: 0;
     left: 0;
     padding: 0.4rem .5rem ; /* Adjust these values to match the navbar padding */
+}
+#data-search{
+    padding:1%;
+    margin:.5em 1.7em 0 1em;
+}
+#analysis-bar {
+    padding: 1%;
+}
+#form-btn3{
+    display:inline-flex;
+    margin-top:.5%;
+    margin-left:20%;
+}
+
+navbar-nav .nav-link:hover {
+    color: #007bff !important; /* Sets the hover color to Bootstrap's blue */
+}
+.colab-body {
+    margin-left: 8%;
+    width: 80%;
+}
+
+.data-upload {
+    float: right;
+    margin-top: 2%;
+    width: 60%;
+}
+
+.dataset-btn {
+    word-wrap: anywhere;
+}
+
+.home-header {
+    text-align: center;
+}
+.main-body{
+    margin-left:15%;
+    width:95%;
 }
