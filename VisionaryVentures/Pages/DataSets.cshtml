@@ -2,6 +2,7 @@
 @model VisionaryVentures.Pages.DataSetsModel
 @{
     ViewData["Title"] = "Data Sets";
+    ViewData["fileName"] = HttpContext.Session.GetString("fileName");
 }
 @{
     if (HttpContext.Session.GetString("username") != null)
@@ -16,83 +17,30 @@
 }
 <div class="side-bar">
     <div class="d-flex flex-column flex-shrink-0 p-3 side-bar">
-        <p>@HttpContext.Session.GetString("username")</p>
+        <p></p>
         <hr>
 
         <div class="input-group" id="search-form">
             <input type="search" class="form-control rounded" id="search" placeholder="Search datasets..." aria-label="Search">
             <button id="search-btn" type="button" class="btn btn-primary search-button" onclick="filterItems('search');">Search</button>
         </div>
-
-        @* <div class="nav nav-pills flex-column mb-auto">
-            @foreach (var fileName in Model.DataSetFiles)
-            {
-                <a asp-page-handler="ReadCsv" asp-route-filename="@fileName"
-                   class="btn dataset-btn @(Model.SelectedFileName == fileName ? "btn-selected" : "btn-primary") my-1"
-                   id="data-btn">
-                    @fileName
-                </a>
-                @if (Model.SelectedFileName == fileName)
-                {
-                    <form method="get" asp-page="TensorFlowAnalysis" asp-route-fileName="@fileName" class="d-inline">
-                        <button type="submit" class="btn btn-success btn-sm ml-2">Analyze with TensorFlow</button>
-                    </form>
-                }
-                <hr>
-            }
-        </div> *@
-
-        @* <div class="nav nav-pills flex-column mb-auto">
-            @foreach (var fileName in Model.DataSetFiles)
-            {
-                <!-- Changed asp-page-handler to "ReadFile" to accommodate both CSV and Excel files -->
-                <a asp-page-handler="ReadFile" asp-route-filename="@fileName"
-                   class="btn dataset-btn @(Model.SelectedFileName == fileName ? "btn-selected" : "btn-primary") my-1"
-                   id="data-btn">
-                    @fileName
-                </a> *@
-
         <div class="nav nav-pills flex-column mb-auto">
-            @{
-                string imagesDir = Directory.GetCurrentDirectory();
-                imagesDir += @"\wwwroot\dataset\";
-                <br />
-                DirectoryInfo imagesFolder = new DirectoryInfo(imagesDir);
-
-                var fileListing = imagesFolder.GetFiles();
-                <hr />
-                <br />
-                @foreach (var file in fileListing)
-                {
-                    <div class="nav nav-pills flex-column mb-auto">
-                        <div style="text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
-                            <a asp-page-handler="ReadFile" asp-route-filename="@file.Name" id="data-btn "class="btn dataset-btn @(Model.SelectedFileName == file.Name ? "btn-selected" : "btn-primary") my-1" id="data-btn">
-                                @file.Name
-                            </a>
-                            @if (Model.SelectedFileName == file.Name)
-                            {
-                                <form method="get" asp-page="TensorFlowAnalysis" asp-route-fileName="@file.Name" class="d-inline">
-                                    <button type="submit" class="btn btn-success btn-sm mb-1">Analyze with TensorFlow</button>
-                                </form>
-                                <form method="post" onsubmit="return confirm('Are you sure you want to delete this file?');">
-                                    <button type="submit" asp-page-handler="DeleteFile" asp-route-fileName="@file.Name" class="btn btn-danger btn-sm ml-2" style="width: 100%;">Delete</button>
-                                </form>
-                            }
-                            
-                        </div>
-                    </div>
-                    <hr>
-                }
-            }
-            
-        </div>
-
-        <div class="side-bar-lower mb-3">
-            <form method="post" enctype="multipart/form-data" asp-action="DataSets">
-                <input asp-for="files" type="file" class="form-control" multiple>
-                <br>
-                <input type="submit" value="Upload" class="btn btn-primary">
-            </form>
+            <hr />
+            <a asp-page="/TensorFlowAnalysis" asp-page-handler="ReadFile" asp-route-filename=@HttpContext.Session.GetString("fileName") id="data-btn " class="btn btn-primary" id="data-btn">
+                Regression Analysis
+            </a>
+            <hr />
+            <a class="btn btn-primary" id="data-btn">
+                Forecasting Analysis
+            </a>
+            <hr />
+            <a class="btn btn-primary" id="data-btn">
+                Summary Analysis
+            </a>
+            <hr />
+            <a class="btn btn-primary" id="data-btn">
+                Full Data View
+            </a>
         </div>
     </div>
 </div>

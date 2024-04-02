@@ -1,0 +1,78 @@
+﻿@page
+@model VisionaryVentures.Pages.HomeModel
+@{
+    ViewData["Title"] = "Home";
+    ViewData["username"] = HttpContext.Session.GetString("username");
+}
+@{
+    if (HttpContext.Session.GetString("username") != null)
+    {
+        Page();
+    }
+    else
+    {
+        Response.Redirect("/Login");
+        return;
+    }
+}
+
+<div class="colab-body">
+    <br />
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+            <h3>Upload Your Data</h3>
+            <form method="post" enctype="multipart/form-data" asp-action="DataSets">
+                <input asp-for="files" type="file" class="form-control " multiple>
+                <input type="submit" value="Upload" class="btn btn-primary data-upload">
+            </form>
+        </div>
+        <div>
+            <h3>Edit Dataset</h3>
+            <div class="d-flex flex-row">
+                <button class="btn btn-primary" onclick="toggleCheckboxes('.edit-checkbox')">Edit</button>
+                <button class="btn btn-success confirm-selection" style="display: none;">Confirm Selection</button>
+            </div>
+        </div>
+        <div>
+            <h3>Delete Dataset</h3>
+            <div class="d-flex flex-row">
+                <button class="btn btn-danger" onclick="toggleCheckboxes('.delete-checkbox')">Delete</button>
+                <button class="btn btn-success confirm-delete" style="display: none;">Confirm Deletion</button>
+            </div>
+        </div>
+
+    </div>
+    <hr />
+    <div class="input-group" id="search-form">
+        <input type="search" class="form-control rounded" id="search" placeholder="Search datasets..." aria-label="Search">
+        <button id="search-btn" type="button" class="btn btn-primary search-button" onclick="filterItems2('search');">Search</button>
+    </div>
+    <!-- Display existing collaborations -->
+    @{
+        string imagesDir = Directory.GetCurrentDirectory();
+        imagesDir += @"\wwwroot\dataset\";
+        <br />
+        DirectoryInfo imagesFolder = new DirectoryInfo(imagesDir);
+
+        var fileListing = imagesFolder.GetFiles();
+        <section class="allCards" style="display: grid; grid-gap: 2em; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+            @foreach (var file in fileListing)
+            {
+                <div class="card" style="max-width: 20rem;" onclick="checkCheckbox(this)">
+                    <input type="checkbox" class="edit-checkbox" style="display: none;">
+                    <input type="checkbox" class="delete-checkbox" style="display: none;">
+                    <div class="card-body" style="text-align: center; display: flex; flex-direction: column;">
+                        <h5 class="card-title">@file.Name</h5>
+                        <p class="card-text">Description</p>
+                        <div style="margin-top: auto;">
+                            <hr />
+                            <a asp-page="/Datasets" asp-page-handler="ReadFile" asp-route-filename="@file.Name" id="data-btn " class="btn dataset-btn @(Model.SelectedFileName == file.Name ? "btn-selected" : "btn-primary") my-1" id="data-btn">
+                                Build Report
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </section>
+    }
+</div>

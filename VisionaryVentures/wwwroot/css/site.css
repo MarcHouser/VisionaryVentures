@@ -44,6 +44,8 @@ body {
     margin-right: auto;
     width: 50%;
     margin-top: 5%;
+    background:#fff;
+    color:black;
 }
 .login, username,password {
     width: 90%;
@@ -64,9 +66,10 @@ body {
     left: 0; /* Position the sidebar at the left */
     overflow-y: auto; /* Enable vertical scrolling if the content overflows */
     overflow-x: hidden; /* Hide horizontal overflow */
-    background-color: darkgray; /* Keep the same background color */
+    background-color: #1c3459; /* Keep the same background color */
     z-index: 1;
-    overflow-wrap:anywhere;
+    overflow-wrap: anywhere;
+    color: #fff;
 }
 
 
@@ -173,7 +176,7 @@ body {
     margin-top: 1%;
 }
 .chat-box {
-    height: 70vh; /* Adjust the initial height as needed */
+    height: 68vh; /* Adjust the initial height as needed */
     width: 95%;
     overflow-y: auto;
     border: 2px solid black;
@@ -183,9 +186,9 @@ body {
 }
 
 .chat-container {
-    height: 85vh; /* Adjust the initial height as needed */
-    width: 75%;
-    margin-left: 22%;
+    height: 80vh; /* Adjust the initial height as needed */
+    width: 100%;
+    margin-left: 0%;
     margin-top: 1%;
 }
 
@@ -219,10 +222,10 @@ body {
     margin-left: 10px;
 }
 
-.card-header{
-    background: darkgray;
-    color: #100f0f;
-    text-align:center;
+.card-header {
+    background: #1c3459;
+    color: #fff;
+    text-align: center;
     font-size: 1em;
 }
 
@@ -285,9 +288,9 @@ body {
 }
 
 .data-set {
-    margin-left: 20%;
+    margin-left: 0%;
     margin-top: 1%;
-    width: 65vw;
+    width: 70vw;
     height: 85vh;
     overflow-y: auto;
 }
@@ -309,7 +312,6 @@ body {
 }
 
 #logout {
-    position: relative;
     margin-right: 1%;
 }
 .file {
@@ -380,7 +382,6 @@ body {
     display: block;
     margin-top:3%;
     margin-left: auto;
-    margin-right: auto;
     border:solid;
 }
 #top-logo {
@@ -400,7 +401,8 @@ header{
 
 
 .navbar-brand-img {
-    position: absolute;
+    position:relative;
+    float:left;
     top: 0;
     left: 0;
     padding: 0.4rem .5rem ; /* Adjust these values to match the navbar padding */
@@ -420,3 +422,26 @@ header{
 
 navbar-nav .nav-link:hover {
     color: #007bff !important; /* Sets the hover color to Bootstrap's blue */
+}
+.colab-body {
+    margin-left: 8%;
+    width: 80%;
+}
+
+.data-upload {
+    float: right;
+    margin-top: 2%;
+    width: 60%;
+}
+
+.dataset-btn {
+    word-wrap: anywhere;
+}
+
+.home-header {
+    text-align: center;
+}
+.main-body{
+    margin-left:15%;
+    width:95%;
+}
