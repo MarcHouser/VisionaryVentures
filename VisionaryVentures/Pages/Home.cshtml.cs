@@ -113,7 +113,7 @@ namespace VisionaryVentures.Pages
         public IActionResult OnPostDeleteFile(string fileName)
         {
             // Delete table from SQL database
-            string tableName = Path.GetFileNameWithoutExtension(fileName).Replace(" ", "_");
+            string tableName = Path.GetFileNameWithoutExtension(fileName).Replace(" ", "");
             string deleteTableQuery = $"DROP TABLE IF EXISTS [Dataset_{tableName}]";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
