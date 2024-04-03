@@ -429,10 +429,82 @@ namespace VisionaryVentures.Pages
             return columnTypes;
         }
 
-        public IActionResult OnPostUpdateDescription(string fileName, string Description)
+        public int GetDatasetId(string fileName)
         {
-            DBClassWriters.UpdateDatasetDescription(fileName, Description);
+            int datasetId = -1; // Default value if not found
+
+            // SQL query to retrieve the DatasetID
+            string query = "SELECT DatasetID FROM Datasets WHERE FileName = @FileName";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    // Ensure the file name is properly parameterized to avoid SQL injection
+                    command.Parameters.AddWithValue("@FileName", fileName);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            datasetId = reader.GetInt32(0); // Get the first column (DatasetID)
+                        }
+                    }
+                }
+            }
+
+            return datasetId;
+        }
+
+        public string GetDatasetDescription(string fileName)
+        {
+            string datasetDescription = "Description not set";
+
+            // SQL query to retrieve the DatasetID
+            string query = "SELECT Description FROM Datasets WHERE FileName = @FileName";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    // Ensure the file name is properly parameterized to avoid SQL injection
+                    command.Parameters.AddWithValue("@FileName", fileName);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            datasetDescription = reader.GetString(0); // Get the first column (DatasetID)
+                        }
+                    }
+                }
+            }
+
+            return datasetDescription;
+        }
+
+        public async Task<IActionResult> OnPostUpdateDatasetDescriptionAsync(int datasetId, string newDescription)
+        {
+
+            var query = "UPDATE Datasets SET Description = @Description WHERE DatasetID = @DatasetID";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Description", newDescription);
+                    command.Parameters.AddWithValue("@DatasetID", datasetId);
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+
             return RedirectToPage();
         }
+
     }
 }

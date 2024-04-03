@@ -28,17 +28,23 @@
             </form>
         </div>
         <div>
-            <h3>Edit Dataset</h3>
+            @* <h3>Edit Dataset Description</h3>
             <div class="d-flex flex-row">
                 <button class="btn btn-primary" onclick="toggleCheckboxes('.edit-checkbox')">Edit</button>
                 <button class="btn btn-success confirm-selection" style="display: none;">Confirm Selection</button>
+            </div> *@
+            <h3>Edit Dataset Description</h3>
+            <div class="d-flex flex-row">
+                @* <button class="btn btn-primary" onclick="toggleEditDescriptionBoxes()">Edit</button> *@
+                <button class="btn btn-primary" onclick="toggleEditDescriptionBoxes()">Edit Descriptions</button>
+                @*  <button class="btn btn-success confirm-selection" style="display: none;" onclick="confirmEditDescriptions()">Confirm Selection</button> *@
             </div>
+
         </div>
         <div>
             <h3>Delete Dataset</h3>
             <div class="d-flex flex-row">
                 <button class="btn btn-danger" onclick="toggleConfirmDeleteButtons()">Delete</button>
-                @* <button class="btn btn-success confirm-delete" style="display: none;">Confirm Deletion</button> *@
             </div>
         </div>
 
@@ -62,7 +68,17 @@
                 <div class="card" style="max-width: 20rem;">
                     <div class="card-body" style="text-align: center; display: flex; flex-direction: column;">
                         <h5 class="card-title">@file.Name</h5>
-                        <p class="card-text">Description</p>
+                        <p class="card-text">@Model.GetDatasetDescription(file.Name)</p>
+                        <!-- Text box goes here for the user to type in the new Description -->
+                        <!-- Hidden Text Box for Editing Description -->
+                        @*<input type="text" id="editDescription-@file.Name" class="form-control edit-description" style="display: none;" />*@
+                        <form method="post" asp-page-handler="UpdateDatasetDescription" style="display: none;" id="form-editDescription-@file.Name">
+                            <input type="text" name="newDescription" class="form-control edit-description" id="editDescription-@file.Name" />
+                            
+                            <input type="hidden" name="datasetId" value="@Model.GetDatasetId(file.Name)" /> <!-- Assuming you have a method to retrieve the DatasetID by filename -->
+                            <input type="submit" class="btn btn-primary" value="Save" />
+                        </form>
+
                         <div style="margin-top: auto;">
                             <hr />
                             <a asp-page="/Datasets" asp-page-handler="ReadFile" asp-route-filename="@file.Name" class="btn dataset-btn @(Model.SelectedFileName == file.Name ? "btn-selected" : "btn-primary") my-1">
