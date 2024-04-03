@@ -166,3 +166,65 @@ function filterItems(elementId) {
         }
     });
 }
+function filterItems2(inputId) {
+    var searchInput = document.getElementById(inputId);
+    var searchValue = searchInput.value.toLowerCase();
+    var cards = document.querySelectorAll('.card');
+
+    cards.forEach(function (card) {
+        var title = card.querySelector('.card-title').textContent.toLowerCase();
+        if (title.includes(searchValue)) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+function selectCard(filename) {
+    var buttons = document.querySelectorAll('.dataset-btn');
+    buttons.forEach(function (button) {
+        button.classList.remove('btn-selected');
+    });
+
+    var selectedButton = document.querySelector('#data-btn-' + filename);
+    selectedButton.classList.add('btn-selected');
+
+    var checkboxes = document.querySelectorAll('.card-checkbox');
+    checkboxes.forEach(function (checkbox) {
+        checkbox.style.display = 'block';
+    });
+}
+
+function toggleCheckboxes(selector) {
+    var checkboxes = document.querySelectorAll(selector);
+
+    checkboxes.forEach(function (checkbox) {
+        checkbox.style.display = checkbox.style.display === 'none' ? 'block' : 'none';
+    });
+
+    var confirmButton;
+    if (selector === '.edit-checkbox') {
+        confirmButton = document.querySelector('.confirm-selection');
+    } else if (selector === '.delete-checkbox') {
+        confirmButton = document.querySelector('.confirm-delete');
+    }
+    confirmButton.style.display = confirmButton.style.display === 'none' ? 'block' : 'none';
+}
+
+function checkCheckbox(card) {
+    var editCheckbox = card.querySelector('.edit-checkbox');
+    var deleteCheckbox = card.querySelector('.delete-checkbox');
+
+    if (editCheckbox) {
+        editCheckbox.checked = !editCheckbox.checked;
+    }
+
+    if (deleteCheckbox) {
+        deleteCheckbox.checked = !deleteCheckbox.checked;
+    }
+}
+function toggleConfirmDeleteButtons() {
+    document.querySelectorAll('.confirm-delete').forEach(button => {
+        button.style.display = button.style.display === 'none' ? 'block' : 'none';
+    });
+}

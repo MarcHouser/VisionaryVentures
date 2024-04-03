@@ -38,19 +38,15 @@ namespace VisionaryVentures.Pages
 
         public IActionResult OnPost()
         {
-            // Perform Validation First on Form
-            // then...
+            short userType = 2;
+            string userTypeDescription = "General";
 
             DBClassWriters.CreateHashedUser(Username, Password);
-            DBClassWriters.AddUser(FirstName, LastName, EmailAddress, PhoneNumber, StreetAddress, City, State, PostalCode, Country);
+            DBClassWriters.AddUserWithAccount(userType, userTypeDescription, FirstName, LastName, EmailAddress, PhoneNumber, StreetAddress, City, State, PostalCode, Country);
             DBClassWriters.LabOneDBConnection.Close();
 
-            // Perform actual logic to check if user was successfully
-            //  added in your projects but for demo purposes we can say:
 
-            ViewData["UserCreate"] = "User Successfully Created!";
-
-            return RedirectToPage("Collaboration");
+            return RedirectToPage("Home");
         }
     }
 }

@@ -1,0 +1,178 @@
+﻿@page
+@model VisionaryVentures.Pages.AdminPanelModel
+
+@{
+    ViewData["Title"] = "Admin Panel";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<!-- Bootstrap Nav Tabs -->
+<ul class="nav nav-tabs" id="adminPanelTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="true">Users</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="groups-tab" data-bs-toggle="tab" data-bs-target="#groups" type="button" role="tab" aria-controls="groups" aria-selected="false">Groups</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="assignment-tab" data-bs-toggle="tab" data-bs-target="#assignments" type="button" role="tab" aria-controls="assignments" aria-selected="false">Assignments</button>
+    </li>
+    <!-- Add more tabs as needed -->
+</ul>
+
+<!-- Tab Content -->
+<div class="tab-content" id="adminPanelTabsContent">
+    <!-- Users -->
+    <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab">
+        <h3>Users</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Account ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email Address</th>
+                    <th>Phone Number</th>
+                    <th>Street Address</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Postal Code</th>
+                    <th>Country</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Users)
+                {
+                    <tr>
+                        <td>@user.UserID</td>
+                        <td>@user.AccountID</td>
+                        <td>@user.FirstName</td>
+                        <td>@user.LastName</td>
+                        <td>@user.EmailAddress</td>
+                        <td>@user.PhoneNumber</td>
+                        <td>@user.StreetAddress</td>
+                        <td>@user.City</td>
+                        <td>@user.State</td>
+                        <td>@user.PostalCode</td>
+                        <td>@user.Country</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="groups" role="tabpanel" aria-labelledby="groups-tab">
+        <h3>Groups</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Group ID</th>
+                    <th>Group Name</th>
+                    <th>Group Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var group in Model.knowledgeGroups)
+                {
+                    <tr>
+                        <td>@group.KnowledgeGroupID</td>
+                        <td>@group.Title</td>
+                        <td>@group.Description</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="assignments" role="tabpanel" aria-labelledby="assignments-tab">
+        <h3>Users</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Account ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email Address</th>
+                    <th>Phone Number</th>
+                    <th>Street Address</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Postal Code</th>
+                    <th>Country</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Users)
+                {
+                    <tr>
+                        <td>@user.UserID</td>
+                        <td>@user.AccountID</td>
+                        <td>@user.FirstName</td>
+                        <td>@user.LastName</td>
+                        <td>@user.EmailAddress</td>
+                        <td>@user.PhoneNumber</td>
+                        <td>@user.StreetAddress</td>
+                        <td>@user.City</td>
+                        <td>@user.State</td>
+                        <td>@user.PostalCode</td>
+                        <td>@user.Country</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <h3>Groups</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Group ID</th>
+                    <th>Group Name</th>
+                    <th>Group Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var group in Model.knowledgeGroups)
+                {
+                    <tr>
+                        <td>@group.KnowledgeGroupID</td>
+                        <td>@group.Title</td>
+                        <td>@group.Description</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <h4>Assign User to Group</h4>
+        <form method="post" asp-page-handler="AssignUserToGroup">
+            <div class="row mb-3">
+                <div class="col">
+                    <select class="form-control" name="UserID" required>
+                        <option value="">Select User</option>
+                        @foreach (var user in Model.Users)
+                        {
+                            <option value="@user.UserID">@user.FirstName @user.LastName</option>
+                        }
+                    </select>
+                </div>
+                <div class="col">
+                    <select class="form-control" name="KnowledgeGroupID" required>
+                        <option value="">Select Group</option>
+                        @foreach (var group in Model.knowledgeGroups)
+                        {
+                            <option value="@group.KnowledgeGroupID">@group.Title</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Assign</button>
+        </form>
+    </div>
+    <!-- Add more tab content panes as needed -->
+</div>
+
+
+@section Scripts {
+    <script>
+        var adminPanelTab = new bootstrap.Tab(document.querySelector('#adminPanelTabs .nav-link.active'));
+        adminPanelTab.show(); // Activate the first tab on page load
+    </script>
+}

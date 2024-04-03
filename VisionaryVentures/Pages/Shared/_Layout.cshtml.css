@@ -13,13 +13,13 @@ a {
 
 .btn-primary {
     color: #fff;
-    background-color: #1b6ec2;
+    background-color: #1c3459;
     border-color: #1861ac;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
     color: #fff;
-    background-color: #1b6ec2;
+    background-color: #1c3459;
     border-color: #1861ac;
 }
 
@@ -50,9 +50,9 @@ button.accept-policy {
 }
 
 header {
-    background: darkgray;
+    background: #1c3459;
     width: 100%;
     top: auto;
-    position:relative;
+    position: relative;
 }
 

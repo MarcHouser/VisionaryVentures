@@ -17,12 +17,14 @@ using System.Data;
 
 namespace VisionaryVentures.Pages
 {
-    public class DataSetsModel : PageModel
+    public class HomeModel : PageModel
     {
 
         [BindProperty]
         public IFormFile UploadedFile { get; set; }
-       
+
+        [BindProperty]
+        public string Description { get; set; }
 
         public List<dynamic> Data { get; set; } = new List<dynamic>();
         [BindProperty]
@@ -53,37 +55,11 @@ namespace VisionaryVentures.Pages
             }
         }
 
-        //public async Task OnGetReadCsvAsync(string fileName)
-        //{
-        //    SelectedFileName = fileName;
-
-        //    PopulateDataSetFiles();
-
-        //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", fileName);
-        //    using var reader = new StreamReader(filePath);
-        //    using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-
-        //    csv.Read();
-        //    csv.ReadHeader();
-        //    Headers = csv.HeaderRecord.ToList();
-
-        //    Records = new List<List<string>>();
-        //    while (csv.Read())
-        //    {
-        //        var record = new List<string>();
-        //        foreach (var header in Headers)
-        //        {
-        //            record.Add(csv.GetField(header));
-        //        }
-        //        Records.Add(record);
-        //    }
-        //}
-
 
         public async Task OnGetReadFileAsync(string fileName)
         {
-            HttpContext.Session.SetString("fileName", fileName);
-            SelectedFileName = HttpContext.Session.GetString(fileName);
+            
+            SelectedFileName = fileName;
 
             PopulateDataSetFiles();
 
@@ -134,37 +110,10 @@ namespace VisionaryVentures.Pages
             }
         }
 
-        //public async Task<IActionResult> OnGetDeleteAsync(string fileName)
-        //{
-
-        //    var sanitizedFileName = Path.GetFileNameWithoutExtension(fileName); // Remove the extension
-        //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", fileName);
-
-        //    if (System.IO.File.Exists(filePath))
-        //    {
-        //        // Delete the file from the file system
-        //        System.IO.File.Delete(filePath);
-
-        //        // Delete the corresponding table from the database
-        //        string tableName = $"Dataset_{sanitizedFileName}";
-        //        string dropTableSql = $"DROP TABLE IF EXISTS [{tableName}];";
-        //        await ExecuteSqlNonQuery(dropTableSql);
-
-        //        // Optionally, remove any references from a dataset registry if you have one
-        //        // This step depends on how you are tracking datasets in your application.
-
-        //        return RedirectToPage(new { successMessage = "Dataset deleted successfully." });
-        //    }
-        //    else
-        //    {
-        //        return RedirectToPage(new { errorMessage = "File not found." });
-        //    }
-        //}
-
         public IActionResult OnPostDeleteFile(string fileName)
         {
             // Delete table from SQL database
-            string tableName = Path.GetFileNameWithoutExtension(fileName).Replace(" ", "_");
+            string tableName = Path.GetFileNameWithoutExtension(fileName).Replace(" ", "");
             string deleteTableQuery = $"DROP TABLE IF EXISTS [Dataset_{tableName}]";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -189,32 +138,6 @@ namespace VisionaryVentures.Pages
             // Redirect back to the page
             return RedirectToPage();
         }
-
-
-
-        //public async Task<IActionResult> OnPostAsync()
-        //{
-        //    var filePaths = new List<string>();
-        //    foreach (var formFile in files)
-        //    {
-        //        if (formFile.Length > 0)
-        //        {
-        //            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", formFile.FileName);
-        //            filePaths.Add(filePath);
-        //            using (var stream = new FileStream(filePath, FileMode.Create))
-        //            {
-        //                formFile.CopyTo(stream);
-        //            }
-
-        //            //await CreateTableFromCSV(filePath, formFile.FileName);
-
-        //            DBClassWriters.AddDataset((int)HttpContext.Session.GetInt32("userid"), formFile.FileName, DateTime.Now);
-
-        //            await ProcessCSVAndCreateTable(filePath, formFile.FileName);
-        //        }
-        //    }
-        //    return RedirectToPage();
-        //}
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -321,34 +244,6 @@ namespace VisionaryVentures.Pages
             }
         }
 
-
-        // Method to read Excel file without treating the first row as headers
-        //private List<List<object>> ReadExcel(string filePath)
-        //{
-        //    using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
-        //    using (var reader = ExcelDataReader.ExcelReaderFactory.CreateReader(stream))
-        //    {
-        //        var result = reader.AsDataSet(new ExcelDataReader.ExcelDataSetConfiguration()
-        //        {
-        //            ConfigureDataTable = (_) => new ExcelDataReader.ExcelDataTableConfiguration()
-        //            {
-        //                UseHeaderRow = false // Do not use the first row as header
-        //            }
-        //        });
-
-        //        DataTable dataTable = result.Tables[0];
-        //        List<List<object>> data = new List<List<object>>();
-
-        //        foreach (DataRow row in dataTable.Rows)
-        //        {
-        //            List<object> rowData = row.ItemArray.ToList();
-        //            data.Add(rowData);
-        //        }
-
-        //        return data;
-        //    }
-        //}
-
         private (List<List<object>> data, Dictionary<string, string> columnTypes) ReadExcelAndInferDataTypes(string filePath)
         {
             using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
@@ -420,7 +315,8 @@ namespace VisionaryVentures.Pages
 
         public IActionResult OnPostAnalyzeDataset(string fileName)
         {
-            return RedirectToPage("./TensorFlowAnalysis", fileName);
+            // Redirect to the Analyze page with the fileName as a parameter
+            return RedirectToPage("./Analyze", new { fileName });
         }
 
         private async Task ProcessCSVAndCreateTable(string filePath, string fileName)
@@ -477,7 +373,7 @@ namespace VisionaryVentures.Pages
                 {
                     await command.ExecuteNonQueryAsync();
                 }
-            connection.Close();
+                connection.Close();
             }
         }
 
@@ -533,5 +429,10 @@ namespace VisionaryVentures.Pages
             return columnTypes;
         }
 
+        public IActionResult OnPostUpdateDescription(string fileName, string Description)
+        {
+            DBClassWriters.UpdateDatasetDescription(fileName, Description);
+            return RedirectToPage();
+        }
     }
 }

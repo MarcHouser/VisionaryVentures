@@ -4,7 +4,7 @@
     {
 
         public int MessageID { get; set; }
-        public int CollaborationID { get; set; }
+        public int ChatID { get; set; }
         public int SentFrom { get; set; }
         public String? MessageContent { get; set; }
         public DateTime DateCreated { get; set; }
