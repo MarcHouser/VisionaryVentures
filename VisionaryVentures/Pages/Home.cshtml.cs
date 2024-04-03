@@ -139,15 +139,78 @@ namespace VisionaryVentures.Pages
             return RedirectToPage();
         }
 
+        public bool FileExistsInDatabase(string fileName)
+        {
+            bool exists = false;
+            string tableName = SanitizeFileNameForTableName(fileName);
+            string query = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @TableName";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@TableName", tableName);
+                    exists = (int)command.ExecuteScalar() > 0;
+                }
+            }
+
+            return exists;
+        }
+
+
+
+        //public async Task<IActionResult> OnPostAsync()
+        //{
+        //    var filePaths = new List<string>();
+        //    foreach (var formFile in files)
+        //    {
+        //        if (formFile.Length > 0)
+        //        {
+        //            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", formFile.FileName);
+        //            filePaths.Add(filePath);
+        //            using (var stream = new FileStream(filePath, FileMode.Create))
+        //            {
+        //                await formFile.CopyToAsync(stream);
+        //            }
+
+        //            // Check file extension and call the appropriate processing method
+        //            var fileExtension = Path.GetExtension(formFile.FileName).ToLower();
+        //            switch (fileExtension)
+        //            {
+        //                case ".csv":
+        //                    await ProcessCSVAndCreateTable(filePath, formFile.FileName);
+        //                    break;
+        //                case ".xls":
+        //                case ".xlsx":
+        //                    await ProcessExcelAndCreateTable(filePath, formFile.FileName);
+        //                    break;
+        //                default:
+        //                    throw new InvalidOperationException("Unsupported file format.");
+        //            }
+
+        //            DBClassWriters.AddDataset((int)HttpContext.Session.GetInt32("userid"), formFile.FileName, DateTime.Now, "No Description");
+        //        }
+        //    }
+        //    return RedirectToPage();
+        //}
+
         public async Task<IActionResult> OnPostAsync()
         {
-            var filePaths = new List<string>();
+            var skippedFiles = new List<string>(); // To keep track of skipped files
             foreach (var formFile in files)
             {
                 if (formFile.Length > 0)
                 {
+                    // Check if the file already exists in the database
+                    if (FileExistsInDatabase(formFile.FileName))
+                    {
+                        // Add the file name to the list of skipped files
+                        skippedFiles.Add(formFile.FileName);
+                        continue; // Skip to the next file
+                    }
+
                     var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", formFile.FileName);
-                    filePaths.Add(filePath);
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await formFile.CopyToAsync(stream);
@@ -171,6 +234,13 @@ namespace VisionaryVentures.Pages
                     DBClassWriters.AddDataset((int)HttpContext.Session.GetInt32("userid"), formFile.FileName, DateTime.Now, "No Description");
                 }
             }
+
+            // If there are any skipped files, add a message to TempData
+            if (skippedFiles.Any())
+            {
+                TempData["SkippedFiles"] = $"The following files were not uploaded because they already exist in the database: {string.Join(", ", skippedFiles)}";
+            }
+
             return RedirectToPage();
         }
 
