@@ -158,43 +158,6 @@ namespace VisionaryVentures.Pages
             return exists;
         }
 
-
-
-        //public async Task<IActionResult> OnPostAsync()
-        //{
-        //    var filePaths = new List<string>();
-        //    foreach (var formFile in files)
-        //    {
-        //        if (formFile.Length > 0)
-        //        {
-        //            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", formFile.FileName);
-        //            filePaths.Add(filePath);
-        //            using (var stream = new FileStream(filePath, FileMode.Create))
-        //            {
-        //                await formFile.CopyToAsync(stream);
-        //            }
-
-        //            // Check file extension and call the appropriate processing method
-        //            var fileExtension = Path.GetExtension(formFile.FileName).ToLower();
-        //            switch (fileExtension)
-        //            {
-        //                case ".csv":
-        //                    await ProcessCSVAndCreateTable(filePath, formFile.FileName);
-        //                    break;
-        //                case ".xls":
-        //                case ".xlsx":
-        //                    await ProcessExcelAndCreateTable(filePath, formFile.FileName);
-        //                    break;
-        //                default:
-        //                    throw new InvalidOperationException("Unsupported file format.");
-        //            }
-
-        //            DBClassWriters.AddDataset((int)HttpContext.Session.GetInt32("userid"), formFile.FileName, DateTime.Now, "No Description");
-        //        }
-        //    }
-        //    return RedirectToPage();
-        //}
-
         public async Task<IActionResult> OnPostAsync()
         {
             var skippedFiles = new List<string>(); // To keep track of skipped files
