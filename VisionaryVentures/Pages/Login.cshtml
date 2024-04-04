@@ -6,10 +6,16 @@
     body{background: #1c3459;
          color:#fff;
     }
-    
-</style>
-<img id="logo" src="~/img/Madison County Logo.jpg">
 
+    #logo {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 20%; /* Adjust this value based on your desired image width */
+    }
+    }
+</style>
+<img id="logo" src="~/img/Madison County Logo.jpg" alt="Madison County Logo">
 
 
 @if (ViewData["LoginMessage"] != null)

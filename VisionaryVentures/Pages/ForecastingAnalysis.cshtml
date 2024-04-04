@@ -1,0 +1,57 @@
+﻿@page
+@model VisionaryVentures.Pages.ForecastingAnalysisModel
+
+@{
+    ViewData["Title"] = "Forecasting Analysis";
+}
+
+<h2>Forecasting Analysis</h2>
+
+@if (string.IsNullOrEmpty(Model.Output))
+{
+    <form method="post" asp-page-handler="StartForecasting">
+        <!-- Optional Time Column Specification -->
+        <div class="form-group">
+            <label for="TimeColumn">Time Column (Optional)</label>
+            <select class="form-control" id="TimeColumn" name="TimeColumn">
+                <option value="">No Time Column</option>
+                @foreach (var header in Model.Headers)
+                {
+                    <option value="@header">@header</option>
+                }
+            </select>
+        </div>
+
+        <!-- Forecast Column Specification -->
+        <div class="form-group">
+            <label for="ForecastColumn">Forecast Column</label>
+            <select class="form-control" id="ForecastColumn" name="ForecastColumn">
+                @foreach (var header in Model.Headers)
+                {
+                    <option value="@header">@header</option>
+                }
+            </select>
+        </div>
+
+        <!-- Independent Variables Specification -->
+        <div class="form-group">
+            <label for="IndependentVariables">Independent Variables</label>
+            <select class="form-control" id="IndependentVariables" name="IndependentVariables" multiple>
+                @foreach (var header in Model.Headers)
+                {
+                    <option value="@header">@header</option>
+                }
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Start Forecasting</button>
+    </form>
+}
+else
+{
+    <div class="mt-4">
+        <h3>Forecasting Output</h3>
+        <pre>@Model.Output</pre>
+        <img src="/charts/forecast_chart.png" alt="Forecasting Chart" />
+    </div>
+}
