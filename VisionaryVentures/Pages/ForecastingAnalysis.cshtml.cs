@@ -1,60 +1,31 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Collections.Generic;
-using System.IO;
-using System.Globalization;
 using CsvHelper;
 using ExcelDataReader;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using VisionaryVentures.Pages.DB;
+using System.Globalization;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace VisionaryVentures.Pages
 {
-    public class TensorFlowAnalysisModel : PageModel
+    public class ForecastingAnalysisModel : PageModel
     {
-        public string FileName { get; set; }
         public List<string> Headers { get; set; }
         public List<List<string>> Records { get; set; }
         public string SelectedFileName { get; set; }
-
-        [BindProperty]
-        public string DependentVariable { get; set; }
-        [BindProperty]
-        public string IndependentVariables { get; set; }
-
         public string Output { get; set; }
 
         [BindProperty]
-        public string Notes { get; set; }
+        public string TimeColumn { get; set; } // New property for specifying the time column
+        [BindProperty]
+        public string ForecastColumn { get; set; }
+        [BindProperty]
+        public List<string> IndependentVariables { get; set; } = new List<string>();
 
-        // Properties for SWOT Analysis
-        [BindProperty]
-        public string SwotType { get; set; }
-        [BindProperty]
-        public string SwotDescription { get; set; }
-        [BindProperty]
-        public string SwotImplications { get; set; }
-        [BindProperty]
-        public string SwotStrategies { get; set; }
-        [BindProperty]
-        public DateTime SwotAnalysisDate { get; set; }
-        [BindProperty]
-        public string SwotNotes { get; set; }
-
-        // Properties for PEST Analysis
-        [BindProperty]
-        public string PestCategory { get; set; }
-        [BindProperty]
-        public string PestFactor { get; set; }
-        [BindProperty]
-        public string PestImplications { get; set; }
-        [BindProperty]
-        public string PestPossibleActions { get; set; }
-        [BindProperty]
-        public DateTime PestAnalysisDate { get; set; }
-        [BindProperty]
-        public string PestNotes { get; set; }
 
         public async Task OnGetReadFileAsync(string fileName)
         {
@@ -175,19 +146,23 @@ namespace VisionaryVentures.Pages
             }
         }
 
-        public void OnPostStartRegression()
+        public async Task<IActionResult> OnPostStartForecastingAsync()
         {
             SelectedFileName = HttpContext.Session.GetString("fileName");
 
             // Assuming filePath is stored in session or determined here
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", SelectedFileName);
-            string scriptPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "analysis", "RegressionAnalysis.py");
+            string scriptPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "analysis", "ForecastingAnalysis.py");
 
             // Ensure Python executable path is correct. This might vary based on your server setup.
             string pythonExecutable = "python";
 
-            string arguments = $"\"{scriptPath}\" \"{filePath}\" \"{DependentVariable}\" \"{IndependentVariables}\"";
+            string timeColumnArg = string.IsNullOrEmpty(TimeColumn) ? "Time" : TimeColumn;
+
+            string arguments = $"\"{scriptPath}\" \"{filePath}\" \"{timeColumnArg}\" \"{ForecastColumn}\" \"{string.Join(",", IndependentVariables)}\"";
             Output = RunPythonScript(pythonExecutable, arguments);
+
+            return Page();
         }
 
         private string RunPythonScript(string pythonExecutable, string arguments)
@@ -212,34 +187,5 @@ namespace VisionaryVentures.Pages
                 }
             }
         }
-
-        public IActionResult OnGetDownloadOutput()
-        {
-            // Define the path to the file you want to download
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "analysis_output", "AnalysisOutput.txt");
-            string fileName = "AnalysisOutput.txt"; // This is the name the downloaded file will have
-
-            // Read the file's contents
-            byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
-
-            // Return the file
-            return File(fileBytes, "text/plain", fileName);
-        }
-
-        public async Task<IActionResult> OnPostCreateReportAsync(string swotType, string swotDescription, string swotImplications, string swotStrategies, DateTime swotAnalysisDate, string swotNotes, string pestCategory, string pestFactor, string pestImplications, string pestPossibleActions, DateTime pestAnalysisDate, string pestNotes)
-        {
-            // Insert SWOT Analysis
-            int swotAnalysisId = DBClassWriters.InsertSWOTAnalysis(swotType, swotDescription, swotImplications, swotStrategies, swotAnalysisDate, swotNotes);
-
-            // Insert PEST Analysis
-            int pestAnalysisId = DBClassWriters.InsertPESTAnalysis(pestCategory, pestFactor, pestImplications, pestPossibleActions, pestAnalysisDate, pestNotes);
-
-            // Create Report linking SWOT and PEST analyses
-            int reportId = DBClassWriters.CreateReport(swotAnalysisId, pestAnalysisId);
-
-            // Redirect to a confirmation page, the Reports page, or return a success result
-            return RedirectToPage("/SomeConfirmationPage", new { reportId = reportId });
-        }
-
     }
 }

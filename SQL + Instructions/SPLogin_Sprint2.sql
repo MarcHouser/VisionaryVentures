@@ -7,7 +7,7 @@ GO
 -- Create date: 2/29/2024
 -- Description:	Stored Procedure to login into our ASP.NET Razor Page for Lab3
 -- =============================================
-CREATE PROCEDURE sp_Lab4Login
+CREATE PROCEDURE sp_Sprint2Login
 	@Username AS NVARCHAR(50)
 AS
 BEGIN

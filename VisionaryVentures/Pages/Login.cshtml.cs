@@ -35,19 +35,22 @@ namespace VisionaryVentures.Pages
                 if (DBClassReaders.HashedParameterLogin(Username, Password) && DBClassReaders.SPLogin(Username))
                 {
                     var UserID = DBClassReaders.GetUserID(Username);
+                    var UserType = DBClassReaders.GetUserType(UserID);
 
                     HttpContext.Session.SetString("username", Username);
                     HttpContext.Session.SetInt32("userid", UserID);
+                    HttpContext.Session.SetInt32("usertype", UserType);
 
                     ViewData["LoginMessage"] = "Login Successful!";
                     DBClassReaders.LabOneDBConnection.Close();
                     DBClassReaders.AuthConn.Close();
-                    return RedirectToPage("/CollabHub");
+                    return RedirectToPage("/Main");
                 }
                 else
                 {
                     ViewData["LoginMessage"] = "Username and/or Password Incorrect";
                     DBClassReaders.LabOneDBConnection.Close();
+                    DBClassReaders.AuthConn.Close();
                     return Page();
                 }
             }
@@ -58,16 +61,7 @@ namespace VisionaryVentures.Pages
             }
             
         }
-        public IActionResult OnPostPopulateHandler()
-        {
-            if(!ModelState.IsValid){
-                ModelState.Clear();
 
-                Username = "admin";
-                Password = "password";
-            }
-            return Page();
-        }
         public IActionResult OnPostClearHandler()
         {
             return RedirectToPage("/Login");

@@ -16,28 +16,42 @@
         return;
     }
 }
+@{
+    // Default title if no chat is selected
+    var chatBoxTitle = "Chat Box";
+    if (!string.IsNullOrEmpty(Model.SelectedChatTitle))
+    {
+        chatBoxTitle = Model.SelectedChatTitle; // Use the selected collaboration title if available
+    }
+}
+
 <div class="container-fluid">
     <div class="row">
         <nav id="sidebar" class="col-md-3 d-flex flex-column flex-shrink-0 p-3 side-bar">
-            <p>@HttpContext.Session.GetString("username")</p>
+            <p></p>
             <hr>
 
             <form method="get" id="search-form">
                 <div class="input-group">
-                    <input type="search" class="form-control rounded" id="search" placeholder="Search collaboration chats..." aria-label="Search">
+                    <input type="search" class="form-control rounded" id="search" placeholder="Search chats..." aria-label="Search">
                     <button id="search-btn" type="button" class="btn btn-primary search-button" onclick="filterItems('search');">Search</button>
                 </div>
             </form>
 
+            <hr />
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addChatModal">
+                Add Chat
+            </button>
+
             <div class="nav nav-pills flex-column mb-auto mt-3">
-                <h2 class="mb-4">Collaborations</h2>
-                @if (Model.Collaborations != null && Model.Collaborations.Any())
+                <h2 class="mb-4">Chats</h2>
+                @if (Model.Chats != null && Model.Chats.Any())
                 {
-                    @foreach (var group in Model.Collaborations.GroupBy(item => item.CollaborationID).Select(g => g.First()))
+                    @foreach (var group in Model.Chats.GroupBy(item => item.ChatID).Select(g => g.First()))
                     {
                         <form method="get">
-                            <button type="submit" name="SelectedCollaborationID" value="@group.CollaborationID"
-                                    class="btn btn-block @((HttpContext.Session.GetInt32("collaborationid") == group.CollaborationID) ? "btn-success" : "btn-primary") mb-2">
+                            <button type="submit" name="SelectedChatID" value="@group.ChatID"
+                                    class="btn btn-block @((HttpContext.Session.GetInt32("chatid") == group.ChatID) ? "btn-success" : "btn-primary") mb-2">
                                 @group.Title
                             </button>
                         </form>
@@ -45,23 +59,58 @@
                 }
                 else
                 {
-                    <p>No Collaborations Found.</p>
+                    <p>No Chats Found.</p>
                 }
             </div>
         </nav>
     </div>
 </div>
+
+<!-- Add Chat Modal -->
+<div class="modal fade" id="addChatModal" tabindex="-1" aria-labelledby="addChatModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addChatModalLabel">Add New Chat</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="AddChat">
+                    <div class="mb-3">
+                        <label for="chat-title" class="form-label">Chat Title</label>
+                        <input asp-for="NewChatTitle" type="text" class="form-control" id="chat-title" name="NewChatTitle" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Chat</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="main-body">
     <div class="card chat-container">
         <div class="card-header">
-            Chat Box
+            @chatBoxTitle
         </div>
         <div class="card-body chat-box">
             @if (Model.Messages != null && Model.Messages.Any())
             {
                 foreach (var message in Model.Messages)
                 {
-                    <p><strong>@message.FullName</strong>: @message.MessageContent</p>
+                    var isCurrentUser = message.SentFrom == HttpContext.Session.GetInt32("userid");
+                    <div class="@("message " + (isCurrentUser ? "current-user" : "other-user"))">
+                        @if (isCurrentUser)
+                        {
+                            <span class="message-content">@message.MessageContent</span>
+                            <span class="message-currentsender">You</span>
+                        }
+                        else
+                        {
+                            <span class="message-othersender">@message.FullName</span>
+                            <span class="message-content">@message.MessageContent</span>
+                        }
+                    </div>
                 }
             }
             else
