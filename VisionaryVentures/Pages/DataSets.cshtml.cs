@@ -34,7 +34,16 @@ namespace VisionaryVentures.Pages
 
         public string SelectedFileName { get; set; }
 
-        private readonly string _connectionString = "Server=localhost;Database=Sprint2;Trusted_Connection=True;";
+        private readonly string _connectionString = 
+            "Server=tcp:visionaryventures.database.windows.net,1433;" +
+            "Initial Catalog=Sprint3;" +
+            "Persist Security Info=False;" +
+            "User ID=VisionaryVenturesAdmin;" +
+            "Password=COB484Capstone;" +
+            "MultipleActiveResultSets=False;" +
+            "Encrypt=True;" +
+            "TrustServerCertificate=False;" +
+            "Connection Timeout=30;";
 
 
 
