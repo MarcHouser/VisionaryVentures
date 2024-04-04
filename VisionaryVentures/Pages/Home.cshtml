@@ -27,6 +27,11 @@
     }
 
     <div class="container">
+        @{
+            var currentPage = HttpContext.GetRouteValue("page")?.ToString() ?? "";
+            var userType = HttpContext.Session.GetInt32("usertype");
+        }
+
         <div class="row">
             <div class="col-md-4 col-12 mb-3 mb-md-0">
                 <h3>Upload Your Data</h3>
@@ -35,14 +40,19 @@
                     <input type="submit" value="Upload" class="btn btn-primary">
                 </form>
             </div>
-            <div class="col-md-4 col-12 mb-3 mb-md-0">
-                <h3>Edit Dataset Description</h3>
-                <button class="btn btn-primary" onclick="toggleEditDescriptionBoxes()">Edit Descriptions</button>
-            </div>
-            <div class="col-md-4 col-12">
-                <h3>Delete Dataset</h3>
-                <button class="btn btn-danger" onclick="toggleConfirmDeleteButtons()">Delete</button>
-            </div>
+
+            @if (currentPage != "/Login" && userType == 1)
+            {
+                <div class="col-md-4 col-12 mb-3 mb-md-0">
+                    <h3>Edit Dataset Description</h3>
+                    <button class="btn btn-primary" onclick="toggleEditDescriptionBoxes()">Edit Descriptions</button>
+                </div>
+                <div class="col-md-4 col-12">
+                    <h3>Delete Dataset</h3>
+                    <button class="btn btn-danger" onclick="toggleConfirmDeleteButtons()">Delete</button>
+                </div>
+            }
+
         </div>
     </div>
 
