@@ -1,0 +1,156 @@
+﻿@page
+@model VisionaryVentures.Pages.MainModel
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<script>
+    $(document).ready(function () {
+        var username = '@HttpContext.Session.GetString("username")';
+        $("#dynamic-greeting").hide().html(generateGreeting(username)).fadeIn(1000);
+
+        if ('@HttpContext.Session.GetInt32("usertype")' == 1) {
+            $('.hero-section').addClass('admin-specific-style');
+        }
+    });
+
+    function generateGreeting(username) {
+        var now = new Date();
+        var hour = now.getHours();
+        return `Good ${hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening"}, ${username ? username : "Guest"}!`;
+    }
+</script>
+
+<style>
+    .hero-section {
+        padding: 60px 0;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+    }
+    .hero-section .overlay {
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0;
+        background: rgba(0, 0, 0, 0.5); /* Adjust for text readability */
+    }
+    .card {
+        transition: transform .2s; /* Smooth animation for hover */
+    }
+    .card:hover {
+        transform: scale(1.05); /* Slightly enlarge cards on hover */
+    }
+    .card-title i {
+        margin-right: 10px;
+        color: #04AA6D; /* Theme's primary color */
+    }
+    .btn-primary:hover {
+        background-color: darken(#007bff, 10%);
+    }
+    @@media (max-width: 768px) {
+        .hero-section .overlay {
+            background: rgba(0, 0, 0, 0.7); /* Darker overlay for small devices */
+        }
+    }
+</style>
+
+<div class="hero-section text-white text-center py-5" style="position: relative; background: url('/img/Madison-County.jpg') no-repeat center center; background-size: cover;">
+    <div class="overlay"></div>
+    <h2 id="dynamic-greeting" class="display-4 fw-bold">Welcome!</h2>
+    <p class="lead">Start your journey with us.</p>
+    <p></p>
+</div>
+
+<div class="container mt-5">
+    <!-- User-specific Content -->
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+        @if (HttpContext.Session.GetInt32("usertype") == 1)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-analytics"></i> Data Page</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Upload files and perform data analysis.</h6>
+                        <p class="card-text">Perform Regression Analysis, Forecasting, and Summary Analysis.</p>
+                        <a href="/Home" class="card-link">View your data</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Knowledge Base</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Build reports and perform SWOT and PEST analyses.</h6>
+                        <p class="card-text">Add data and build an insightful, detailed report.</p>
+                        <a href="/KnowledgeLibrary" class="card-link">Enhance Knowledge Base</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Reports</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Track reports.</h6>
+                        <p class="card-text">Track, access, and manage reports.</p>
+                        <a href="/Reports" class="card-link">Go to Reports</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Messages</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Collaborate effectively with your peers.</h6>
+                        <p class="card-text">Share knowledge, data, and information.</p>
+                        <a href="/Messages" class="card-link">Go to Messages</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Admin Dashboard</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Control and manage the platform.</h6>
+                        <p class="card-text">Access your admin panel to manage users, content, and settings.</p>
+                        <a href="/AdminPanel" class="card-link">Go to Admin Panel</a>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (HttpContext.Session.GetInt32("usertype") == 2)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Data Page</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Upload files and perform data analysis.</h6>
+                    <p class="card-text">Perform Regression Analysis, Forecasting, and Summary Analysis.</p>
+                    <a href="/Home" class="card-link">View your data</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Knowledge Base</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Build reports and perform SWOT and PEST analyses.</h6>
+                    <p class="card-text">Add data and build an insightful, detailed report.</p>
+                    <a href="/KnowledgeLibrary" class="card-link">Enhance Knowledge Base</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Reports</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Track reports.</h6>
+                    <p class="card-text">Track, access, and manage reports.</p>
+                    <a href="/Reports" class="card-link">Go to Reports</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Messages</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Collaborate effectively with your peers.</h6>
+                    <p class="card-text">Share knowledge, data, and information.</p>
+                    <a href="/Messages" class="card-link">Go to Messages</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

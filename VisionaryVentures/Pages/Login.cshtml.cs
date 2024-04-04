@@ -44,7 +44,7 @@ namespace VisionaryVentures.Pages
                     ViewData["LoginMessage"] = "Login Successful!";
                     DBClassReaders.LabOneDBConnection.Close();
                     DBClassReaders.AuthConn.Close();
-                    return RedirectToPage("/Home");
+                    return RedirectToPage("/Main");
                 }
                 else
                 {

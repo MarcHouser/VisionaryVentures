@@ -223,3 +223,43 @@ function checkCheckbox(card) {
         deleteCheckbox.checked = !deleteCheckbox.checked;
     }
 }
+function toggleConfirmDeleteButtons() {
+    document.querySelectorAll('.confirm-delete').forEach(button => {
+        button.style.display = button.style.display === 'none' ? 'block' : 'none';
+    });
+}
+
+function toggleEditBox(filename) {
+    // Toggle the display of the text box
+    var editBox = document.getElementById('editDescription-' + filename);
+    editBox.style.display = editBox.style.display === 'none' ? 'block' : 'none';
+}
+
+//function toggleEditDescriptionBoxes() {
+//    var editBoxes = document.querySelectorAll('.edit-description');
+//    var confirmButton = document.querySelector('.confirm-selection');
+
+//    editBoxes.forEach(function (box) {
+//        box.style.display = box.style.display === 'none' ? 'block' : 'none';
+//    });
+
+//    // Toggle the "Confirm Selection" button visibility
+//    confirmButton.style.display = confirmButton.style.display === 'none' ? 'block' : 'none';
+//}
+
+function toggleEditDescriptionBoxes() {
+    var editForms = document.querySelectorAll('form[id^="form-editDescription-"]');
+    editForms.forEach(function (form) {
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    });
+}
+
+function confirmEditDescriptions() {
+    document.querySelectorAll('.edit-description').forEach(function (input) {
+        // Trigger the form submission for the input that was edited
+        if (input.value) { // Check if there's a new description entered
+            var formId = 'form-' + input.id;
+            document.getElementById(formId).submit();
+        }
+    });
+}
