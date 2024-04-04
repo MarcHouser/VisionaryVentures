@@ -30,7 +30,7 @@
                 Regression Analysis
             </a>
             <hr />
-            <a class="btn btn-primary" id="data-btn">
+            <a asp-page="/ForecastingAnalysis" asp-page-handler="ReadFile" asp-route-filename=@HttpContext.Session.GetString("fileName") id="data-btn " class="btn btn-primary" id="data-btn">
                 Forecasting Analysis
             </a>
             <hr />
