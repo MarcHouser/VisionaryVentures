@@ -15,7 +15,7 @@
     }
     }
 </style>
-<img id="logo" src="~/img/Madison County Logo.jpg" alt="Madison County Logo">
+<img id="logo" src="~/img/Madison County Logo.png" alt="Madison County Logo">
 
 
 @if (ViewData["LoginMessage"] != null)
@@ -65,12 +65,10 @@
                     <input asp-for="Password" class="form-control" type="password" placeholder="Password" aria-label="Password" value="@Model.Password" />
                 </div>
                 <input type="submit" class="btn btn-primary login-btn" value="Login" />
-                <button type="submit" class="btn btn-secondary login-btn" asp-page="Login" asp-page-handler="ClearHandler" formnovalidate>Clear</button>
-                <button type="submit" class="btn btn-primary login-btn" asp-page="Login" asp-page-handler="CreateUserHandler">Create Account</button>
         </form>
         <br />
     }
-
+        // <button type="submit" class="btn btn-secondary login-btn" asp-page="Login" asp-page-handler="ClearHandler" formnovalidate>Clear</button>
 
 }
 </div>

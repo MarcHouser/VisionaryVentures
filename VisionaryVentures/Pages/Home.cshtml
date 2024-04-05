@@ -102,9 +102,11 @@
                                 Build Report
                             </a>
                             <!-- Form for Delete Confirmation, initially hidden -->
-                            <form method="post" asp-page-handler="DeleteFile" asp-route-fileName="@file.Name" class="confirm-delete-form">
-                                <button type="submit" class="btn btn-success confirm-delete my-1" style="display: none;">Confirm Delete</button>
-                            </form>
+                            <div class="conf-delete">
+                                <form method="post" asp-page-handler="DeleteFile" asp-route-fileName="@file.Name" class="confirm-delete-form">
+                                    <button type="submit" class="btn btn-success confirm-delete" style="display: none;">Confirm Delete</button>
+                                </form>
+                            </div>
 
 
                         </div>
