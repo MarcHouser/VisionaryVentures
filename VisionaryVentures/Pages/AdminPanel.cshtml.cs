@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using VisionaryVentures.Pages.DB;
 using VisionaryVentures.Pages.DataClasses;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.Metrics;
+using System.Net.Mail;
 
 namespace VisionaryVentures.Pages
 {
@@ -16,6 +18,28 @@ namespace VisionaryVentures.Pages
         public string KnowledgeGroupTitle { get; set; }
         [BindProperty]
         public string KnowledgeGroupDescription { get; set; }
+        [BindProperty]
+        public string Username { get; set; }
+        [BindProperty]
+        public string Password { get; set; }
+        [BindProperty]
+        public string FirstName { get; set; }
+        [BindProperty]
+        public string LastName { get; set; }
+        [BindProperty]
+        public string EmailAddress { get; set; }
+        [BindProperty]
+        public string PhoneNumber { get; set; }
+        [BindProperty]
+        public string StreetAddress { get; set; }
+        [BindProperty]
+        public string City { get; set; }
+        [BindProperty]
+        public string State { get; set; }
+        [BindProperty]
+        public int PostalCode { get; set; }
+        [BindProperty]
+        public string Country { get; set; }
 
         public void OnGet()
         {
@@ -78,6 +102,17 @@ namespace VisionaryVentures.Pages
             // Optionally, add success message or redirect logic here
             return RedirectToPage();
         }
+        public IActionResult OnPostCreateUser()
+        {
+            short userType = 2;
+            string userTypeDescription = "General";
+            DBClassWriters.CreateHashedUser(Username, Password);
+            DBClassWriters.AddUserWithAccount(userType, userTypeDescription, FirstName, LastName, EmailAddress, PhoneNumber, StreetAddress, City, State, PostalCode, Country);
+            DBClassWriters.LabOneDBConnection.Close();
 
+
+            return Page();
+        }
     }
+
 }
