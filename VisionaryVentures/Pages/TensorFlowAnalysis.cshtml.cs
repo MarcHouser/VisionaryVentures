@@ -184,7 +184,7 @@ namespace VisionaryVentures.Pages
             string scriptPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "analysis", "RegressionAnalysis.py");
 
             // Ensure Python executable path is correct. This might vary based on your server setup.
-            string pythonExecutable = "python";
+            string pythonExecutable = @"C:\home\python3111x64\python.exe";
 
             string arguments = $"\"{scriptPath}\" \"{filePath}\" \"{DependentVariable}\" \"{IndependentVariables}\"";
             Output = RunPythonScript(pythonExecutable, arguments);
