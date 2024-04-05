@@ -13,38 +13,38 @@
     else
     {
         Response.Redirect("/Login");
-        return; 
+        return;
     }
 }
 
 <div class="side-bar">
     <div class="row">
         <nav class="col-md-3 d-flex flex-column flex-shrink-0 p-3 side-bar">
-            <p>@HttpContext.Session.GetString("username")</p>
+            <p></p>
             <hr>
             <form method="get" id="search-form">
                 <div class="input-group">
-                    <input type="search" class="form-control rounded" id="search" placeholder="Search knowledge category..." aria-label="Search">
+                    <input type="search" class="form-control rounded" id="search" placeholder="Search groups" aria-label="Search">
                     <button id="search-btn" type="button" class="btn btn-primary search-button" onclick="filterItems('search');">Search</button>
                 </div>
             </form>
 
             <div class="nav nav-pills flex-column mb-auto mt-3">
-                <h2 class="mb-4">Categories</h2>
+                <h2 class="mb-4">My Groups</h2>
                 <hr>
-                @if (Model.AllCategories != null && Model.AllCategories.Any())
+                @if (Model.AllGroups != null && Model.AllGroups.Any())
                 {
-                    @foreach (var category in Model.AllCategories)
+                    @foreach (var group in Model.AllGroups)
                     {
                         <form method="get">
-                            <button type="submit" name="selectedCategory" value="@category" class="btn btn-block @(HttpContext.Request.Query["selectedCategory"] == category ? "btn-success" : "btn-primary")">@category</button>
+                            <button type="submit" name="selectedCategory" value="@group" class="btn btn-block @(HttpContext.Request.Query["selectedGroup"] == group ? "btn-success" : "btn-primary")">@group.Title</button>
                             <hr>
                         </form>
                     }
                 }
                 else
                 {
-                    <p>No Categories Found.</p>
+                    <p>No Groups Found.</p>
                 }
             </div>
 
@@ -52,7 +52,106 @@
     </div>
 </div>
 
-<!--Used for interacting with the KnowledgeLibrary Body-->
+
+<!-- Main Body: Report Building Page -->
+<div class="main-body">
+
+    <!-- General Information Section -->
+    <div class="card my-4">
+        <div class="card-header">
+            General Information
+        </div>
+        <div class="card-body">
+            <form method="post" asp-page-handler="SubmitGeneralInfo">
+                <div class="mb-3">
+                    <label for="reportTitle" class="form-label">Report Title</label>
+                    <input type="text" class="form-control" id="reportTitle" name="Title" placeholder="Enter title">
+                </div>
+                <div class="mb-3">
+                    <label for="reportDescription" class="form-label">Description</label>
+                    <textarea class="form-control" id="reportDescription" name="Description" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Save General Information</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SWOT Analysis Section -->
+    <div class="card ">
+        <div class="card-header">
+            SWOT Analysis
+        </div>
+        <div class="card-body">
+            <form method="post" asp-page-handler="AddSWOT" asp-route-action="Add">
+                <input type="hidden" name="action" value="Add" />
+                <div class="mb-3">
+                    <label for="strengths" class="form-label">Strengths</label>
+                    <input type="text" class="form-control" id="strengths" name="Strengths">
+                </div>
+                <div class="mb-3">
+                    <label for="weaknesses" class="form-label">Weaknesses</label>
+                    <input type="text" class="form-control" id="weaknesses" name="Weaknesses">
+                </div>
+                <div class="mb-3">
+                    <label for="opportunities" class="form-label">Opportunities</label>
+                    <input type="text" class="form-control" id="opportunities" name="Opportunities">
+                </div>
+                <div class="mb-3">
+                    <label for="threats" class="form-label">Threats</label>
+                    <input type="text" class="form-control" id="threats" name="Threats">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit SWOT Analysis</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- PEST Analysis Section -->
+    <div class="card">
+        <div class="card-header">
+            PEST Analysis
+        </div>
+        <div class="card-body">
+            <form method="post">
+                <div class="mb-3">
+                    <label for="political" class="form-label">Political</label>
+                    <textarea class="form-control" id="political" name="Political" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="economic" class="form-label">Economic</label>
+                    <textarea class="form-control" id="economic" name="Economic" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="social" class="form-label">Social</label>
+                    <textarea class="form-control" id="social" name="Social" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="technological" class="form-label">Technological</label>
+                    <textarea class="form-control" id="technological" name="Technological" rows="2"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit PEST Analysis</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notes Section -->
+    <div class="card">
+        <div class="card-header">
+            Notes
+        </div>
+        <div class="card-body">
+            <form method="post">
+                <div class="mb-3">
+                    <label for="notes" class="form-label">Additional Notes</label>
+                    <textarea class="form-control" id="notes" name="Notes" rows="4"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Notes</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@* <!--Used for interacting with the KnowledgeLibrary Body-->
 <div class="main-body">
 
     <div class="btn-group btn-group-toggle" data-toggle="buttons" id="form-btn2">
@@ -75,7 +174,7 @@
     </div>
 
     @if (Model.ShowAddForm)
-    {   
+    {
         <div class="card" id="btn-card">
             <div class="card-header">Add New Knowledge Item</div>
             <div class="card-body">
@@ -199,30 +298,6 @@
                 </select>
                 <button type="submit" class="btn btn-primary">Show Details</button>
             </form>
-            <div class="knowledge-box ">
-                @if (!string.IsNullOrEmpty(Model.SelectedTitleInformation))
-                {
-                    <p>
-                        @Model.SelectedTitleInformation
-                    </p>
-                    <br />
-                    @if (Model.SwotAnalysis != null &&
-                    (!string.IsNullOrWhiteSpace(Model.SwotAnalysis.Strengths) ||
-                    !string.IsNullOrWhiteSpace(Model.SwotAnalysis.Weaknesses) ||
-                    !string.IsNullOrWhiteSpace(Model.SwotAnalysis.Opportunities) ||
-                    !string.IsNullOrWhiteSpace(Model.SwotAnalysis.Threats)))
-                    {
-                        <p><strong>Strengths:</strong> @Model.SwotAnalysis.Strengths</p>
-                        <p><strong>Weaknesses:</strong> @Model.SwotAnalysis.Weaknesses</p>
-                        <p><strong>Opportunities:</strong> @Model.SwotAnalysis.Opportunities</p>
-                        <p><strong>Threats:</strong> @Model.SwotAnalysis.Threats</p>
-                    }
-                    else
-                    {
-                        <p>No SWOT analysis available for this item.</p>
-                    }
-                }
-            </div>
         </div>
     </div>
-</div>
+</div> *@

@@ -15,7 +15,7 @@ namespace VisionaryVentures.Pages
        public IActionResult OnGet()
         {
             // Redirect to the home page
-            return RedirectToPage("/Collaboration");
+            return RedirectToPage("/Home");
         }
     }
 }

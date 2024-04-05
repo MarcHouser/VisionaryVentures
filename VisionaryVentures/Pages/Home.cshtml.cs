@@ -17,12 +17,14 @@ using System.Data;
 
 namespace VisionaryVentures.Pages
 {
-    public class DataSetsModel : PageModel
+    public class HomeModel : PageModel
     {
 
         [BindProperty]
         public IFormFile UploadedFile { get; set; }
-       
+
+        [BindProperty]
+        public string Description { get; set; }
 
         public List<dynamic> Data { get; set; } = new List<dynamic>();
         [BindProperty]
@@ -62,37 +64,11 @@ namespace VisionaryVentures.Pages
             }
         }
 
-        //public async Task OnGetReadCsvAsync(string fileName)
-        //{
-        //    SelectedFileName = fileName;
-
-        //    PopulateDataSetFiles();
-
-        //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", fileName);
-        //    using var reader = new StreamReader(filePath);
-        //    using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-
-        //    csv.Read();
-        //    csv.ReadHeader();
-        //    Headers = csv.HeaderRecord.ToList();
-
-        //    Records = new List<List<string>>();
-        //    while (csv.Read())
-        //    {
-        //        var record = new List<string>();
-        //        foreach (var header in Headers)
-        //        {
-        //            record.Add(csv.GetField(header));
-        //        }
-        //        Records.Add(record);
-        //    }
-        //}
-
 
         public async Task OnGetReadFileAsync(string fileName)
         {
-            HttpContext.Session.SetString("fileName", fileName);
-            SelectedFileName = HttpContext.Session.GetString(fileName);
+            
+            SelectedFileName = fileName;
 
             PopulateDataSetFiles();
 
@@ -143,37 +119,10 @@ namespace VisionaryVentures.Pages
             }
         }
 
-        //public async Task<IActionResult> OnGetDeleteAsync(string fileName)
-        //{
-
-        //    var sanitizedFileName = Path.GetFileNameWithoutExtension(fileName); // Remove the extension
-        //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", fileName);
-
-        //    if (System.IO.File.Exists(filePath))
-        //    {
-        //        // Delete the file from the file system
-        //        System.IO.File.Delete(filePath);
-
-        //        // Delete the corresponding table from the database
-        //        string tableName = $"Dataset_{sanitizedFileName}";
-        //        string dropTableSql = $"DROP TABLE IF EXISTS [{tableName}];";
-        //        await ExecuteSqlNonQuery(dropTableSql);
-
-        //        // Optionally, remove any references from a dataset registry if you have one
-        //        // This step depends on how you are tracking datasets in your application.
-
-        //        return RedirectToPage(new { successMessage = "Dataset deleted successfully." });
-        //    }
-        //    else
-        //    {
-        //        return RedirectToPage(new { errorMessage = "File not found." });
-        //    }
-        //}
-
         public IActionResult OnPostDeleteFile(string fileName)
         {
             // Delete table from SQL database
-            string tableName = Path.GetFileNameWithoutExtension(fileName).Replace(" ", "_");
+            string tableName = Path.GetFileNameWithoutExtension(fileName).Replace(" ", "");
             string deleteTableQuery = $"DROP TABLE IF EXISTS [Dataset_{tableName}]";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -199,41 +148,41 @@ namespace VisionaryVentures.Pages
             return RedirectToPage();
         }
 
+        public bool FileExistsInDatabase(string fileName)
+        {
+            bool exists = false;
+            string tableName = SanitizeFileNameForTableName(fileName);
+            string query = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @TableName";
 
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@TableName", tableName);
+                    exists = (int)command.ExecuteScalar() > 0;
+                }
+            }
 
-        //public async Task<IActionResult> OnPostAsync()
-        //{
-        //    var filePaths = new List<string>();
-        //    foreach (var formFile in files)
-        //    {
-        //        if (formFile.Length > 0)
-        //        {
-        //            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", formFile.FileName);
-        //            filePaths.Add(filePath);
-        //            using (var stream = new FileStream(filePath, FileMode.Create))
-        //            {
-        //                formFile.CopyTo(stream);
-        //            }
-
-        //            //await CreateTableFromCSV(filePath, formFile.FileName);
-
-        //            DBClassWriters.AddDataset((int)HttpContext.Session.GetInt32("userid"), formFile.FileName, DateTime.Now);
-
-        //            await ProcessCSVAndCreateTable(filePath, formFile.FileName);
-        //        }
-        //    }
-        //    return RedirectToPage();
-        //}
+            return exists;
+        }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var filePaths = new List<string>();
+            var skippedFiles = new List<string>(); // To keep track of skipped files
             foreach (var formFile in files)
             {
                 if (formFile.Length > 0)
                 {
+                    // Check if the file already exists in the database
+                    if (FileExistsInDatabase(formFile.FileName))
+                    {
+                        // Add the file name to the list of skipped files
+                        skippedFiles.Add(formFile.FileName);
+                        continue; // Skip to the next file
+                    }
+
                     var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "dataset", formFile.FileName);
-                    filePaths.Add(filePath);
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await formFile.CopyToAsync(stream);
@@ -257,6 +206,13 @@ namespace VisionaryVentures.Pages
                     DBClassWriters.AddDataset((int)HttpContext.Session.GetInt32("userid"), formFile.FileName, DateTime.Now, "No Description");
                 }
             }
+
+            // If there are any skipped files, add a message to TempData
+            if (skippedFiles.Any())
+            {
+                TempData["SkippedFiles"] = $"The following files were not uploaded because they already exist in the database: {string.Join(", ", skippedFiles)}";
+            }
+
             return RedirectToPage();
         }
 
@@ -330,34 +286,6 @@ namespace VisionaryVentures.Pages
             }
         }
 
-
-        // Method to read Excel file without treating the first row as headers
-        //private List<List<object>> ReadExcel(string filePath)
-        //{
-        //    using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
-        //    using (var reader = ExcelDataReader.ExcelReaderFactory.CreateReader(stream))
-        //    {
-        //        var result = reader.AsDataSet(new ExcelDataReader.ExcelDataSetConfiguration()
-        //        {
-        //            ConfigureDataTable = (_) => new ExcelDataReader.ExcelDataTableConfiguration()
-        //            {
-        //                UseHeaderRow = false // Do not use the first row as header
-        //            }
-        //        });
-
-        //        DataTable dataTable = result.Tables[0];
-        //        List<List<object>> data = new List<List<object>>();
-
-        //        foreach (DataRow row in dataTable.Rows)
-        //        {
-        //            List<object> rowData = row.ItemArray.ToList();
-        //            data.Add(rowData);
-        //        }
-
-        //        return data;
-        //    }
-        //}
-
         private (List<List<object>> data, Dictionary<string, string> columnTypes) ReadExcelAndInferDataTypes(string filePath)
         {
             using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
@@ -429,7 +357,8 @@ namespace VisionaryVentures.Pages
 
         public IActionResult OnPostAnalyzeDataset(string fileName)
         {
-            return RedirectToPage("./TensorFlowAnalysis", fileName);
+            // Redirect to the Analyze page with the fileName as a parameter
+            return RedirectToPage("./Analyze", new { fileName });
         }
 
         private async Task ProcessCSVAndCreateTable(string filePath, string fileName)
@@ -486,7 +415,7 @@ namespace VisionaryVentures.Pages
                 {
                     await command.ExecuteNonQueryAsync();
                 }
-            connection.Close();
+                connection.Close();
             }
         }
 
@@ -540,6 +469,83 @@ namespace VisionaryVentures.Pages
             }
 
             return columnTypes;
+        }
+
+        public int GetDatasetId(string fileName)
+        {
+            int datasetId = -1; // Default value if not found
+
+            // SQL query to retrieve the DatasetID
+            string query = "SELECT DatasetID FROM Datasets WHERE FileName = @FileName";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    // Ensure the file name is properly parameterized to avoid SQL injection
+                    command.Parameters.AddWithValue("@FileName", fileName);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            datasetId = reader.GetInt32(0); // Get the first column (DatasetID)
+                        }
+                    }
+                }
+            }
+
+            return datasetId;
+        }
+
+        public string GetDatasetDescription(string fileName)
+        {
+            string datasetDescription = "Description not set";
+
+            // SQL query to retrieve the DatasetID
+            string query = "SELECT Description FROM Datasets WHERE FileName = @FileName";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    // Ensure the file name is properly parameterized to avoid SQL injection
+                    command.Parameters.AddWithValue("@FileName", fileName);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            datasetDescription = reader.GetString(0); // Get the first column (DatasetID)
+                        }
+                    }
+                }
+            }
+
+            return datasetDescription;
+        }
+
+        public async Task<IActionResult> OnPostUpdateDatasetDescriptionAsync(int datasetId, string newDescription)
+        {
+
+            var query = "UPDATE Datasets SET Description = @Description WHERE DatasetID = @DatasetID";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Description", newDescription);
+                    command.Parameters.AddWithValue("@DatasetID", datasetId);
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+
+            return RedirectToPage();
         }
 
     }
