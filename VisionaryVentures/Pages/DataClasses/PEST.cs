@@ -9,5 +9,7 @@
         public string PossibleActions { get; set; }
         public DateTime AnalysisDate { get; set; }
         public string Notes { get; set; }
+        public int KnowledgeGroupID { get; set; }
+        public int ReportID { get; set; }
     }
 }

@@ -228,7 +228,7 @@ body {
     text-align: center;
     font-size: 1em;
 }
-
+/*Fix later*/
 .card-body {
     display: flex;
     flex-direction: column;

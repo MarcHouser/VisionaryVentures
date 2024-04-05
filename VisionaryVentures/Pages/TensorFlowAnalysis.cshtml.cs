@@ -226,20 +226,20 @@ namespace VisionaryVentures.Pages
             return File(fileBytes, "text/plain", fileName);
         }
 
-        public async Task<IActionResult> OnPostCreateReportAsync(string swotType, string swotDescription, string swotImplications, string swotStrategies, DateTime swotAnalysisDate, string swotNotes, string pestCategory, string pestFactor, string pestImplications, string pestPossibleActions, DateTime pestAnalysisDate, string pestNotes)
-        {
-            // Insert SWOT Analysis
-            int swotAnalysisId = DBClassWriters.InsertSWOTAnalysis(swotType, swotDescription, swotImplications, swotStrategies, swotAnalysisDate, swotNotes);
+        //public async Task<IActionResult> OnPostCreateReportAsync(string swotType, string swotDescription, string swotImplications, string swotStrategies, DateTime swotAnalysisDate, string swotNotes, 
+        //    string pestCategory, string pestFactor, string pestImplications, string pestPossibleActions, DateTime pestAnalysisDate, string pestNotes, int KnowledgeGroupID, string title, string description)
+        //{
+        //    // Insert SWOT Analysis
+        //    int swotAnalysisId = DBClassWriters.InsertSWOTAnalysis(swotType, swotDescription, swotImplications, swotStrategies, swotAnalysisDate, swotNotes, KnowledgeGroupID);
 
-            // Insert PEST Analysis
-            int pestAnalysisId = DBClassWriters.InsertPESTAnalysis(pestCategory, pestFactor, pestImplications, pestPossibleActions, pestAnalysisDate, pestNotes);
+        //    // Insert PEST Analysis
+        //    int pestAnalysisId = DBClassWriters.InsertPESTAnalysis(pestCategory, pestFactor, pestImplications, pestPossibleActions, pestAnalysisDate, pestNotes, KnowledgeGroupID);
 
-            // Create Report linking SWOT and PEST analyses
-            int reportId = DBClassWriters.CreateReport(swotAnalysisId, pestAnalysisId);
+        //    // Create Report linking SWOT and PEST analyses
+        //    int reportId = DBClassWriters.CreateReport(swotAnalysisId, pestAnalysisId, title, description);
 
-            // Redirect to a confirmation page, the Reports page, or return a success result
-            return RedirectToPage("/SomeConfirmationPage", new { reportId = reportId });
-        }
-
+        //    // Redirect to a confirmation page, the Reports page, or return a success result
+        //    return RedirectToPage("/SomeConfirmationPage", new { reportId = reportId });
+        //}
     }
 }

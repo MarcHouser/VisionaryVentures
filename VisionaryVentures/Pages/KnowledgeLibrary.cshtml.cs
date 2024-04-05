@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data.SqlClient;
 using System.Linq;
 using Tensorflow;
+using VisionaryVentures.Pages.ReportGeneration;
 
 namespace VisionaryVentures.Pages
 {
@@ -13,36 +14,53 @@ namespace VisionaryVentures.Pages
     {
         [BindProperty]
         public int KnowledgeItemID { get; set; }
+
+        // Report Properties
         [BindProperty]
-        public string? Category { get; set; }
+        public string ReportTitle { get; set; }
         [BindProperty]
-        public string? Title { get; set; }
+        public string ReportDescription { get; set; }
+
+        //SWOT Properties
         [BindProperty]
-        public string? Information { get; set; }
+        public string SWOTStrengths { get; set; }
         [BindProperty]
-        public string? Strengths { get; set; }
+        public string SWOTWeaknesses { get; set; }
         [BindProperty]
-        public string? Weaknesses { get; set; }
+        public string SWOTOpportunities { get; set; }
         [BindProperty]
-        public string? Opportunities { get; set; }
+        public string SWOTThreats { get; set; }
         [BindProperty]
-        public string? Threats { get; set; }
+        public string SWOTImplications { get; set; }
         [BindProperty]
-        public int SelectedKnowledgeItemId { get; set; }
-        //[BindProperty(SupportsGet = true)]
-        //public string SearchTerm { get; set; }
+        public string Strategy { get; set; }
+        [BindProperty]
+        public string SWOTNotes { get; set; }
+
+        //PEST Properties
+        [BindProperty]
+        public string Category { get; set; }
+        [BindProperty]
+        public string Factor { get; set; }
+        [BindProperty]
+        public string PESTImplications { get; set; }
+        [BindProperty]
+        public string PossibleActions { get; set; }
+        [BindProperty]
+        public string PESTNotes { get; set; }
+
+
+        [BindProperty]
+        public int SelectedKnowledgeGroupID { get; set; }
 
         // Initialize knowledgeItems lists and form buttons
         public List<KnowledgeItem> knowledgeItems { get; set; } = new List<KnowledgeItem>();
         public SWOT SwotAnalysis { get; set; } = new SWOT();
         public List<KnowledgeGroup> AllGroups { get; set; } = new List<KnowledgeGroup>();
-        public string? SelectedTitleInformation { get; set; } = string.Empty;
-        public bool ShowAddForm { get; set; } = false;
-        public bool ShowEditForm { get; set; } = false;
-        public bool ShowDeleteForm { get; set; } = false;
-        public bool ShowAddSWOTForm { get; set; } = false;
 
-        public async Task OnGetAsync(int? selectedKnowledgeGroup, string? selectedTitle)
+        private readonly PdfGenerator _pdfGenerator;
+
+        public async Task OnGetAsync(int? selectedKnowledgeGroup)
         {
             // Fetch all knowledge groups based on user
             using (var reader = DBClassReaders.KnowledgeGroupReaderByUser(HttpContext.Session.GetInt32("userid")))
@@ -60,128 +78,31 @@ namespace VisionaryVentures.Pages
                 DBClassReaders.LabOneDBConnection.Close();
             }
 
-            // Fetches all knowledge items adds them to list
-            //using (var reader = DBClassReaders.KnowledgeReader())
+            //if (selectedKnowledgeGroup != 0)
             //{
-            //    while (reader.Read())
-            //    {
-            //        var item = new KnowledgeItem
-            //        {
-            //            // Assuming these are the correct column indexes
-            //            KnowledgeItemID = reader.GetInt32(0),
-            //            UserID = reader.GetInt32(1),
-            //            KnowledgeGroupID = reader.GetInt32(2),
-            //            Title = reader.GetString(3),
-            //            Information = reader.GetString(4),
-            //            DateCreated = reader.GetDateTime(5),
-            //            LastDateModified = reader.GetDateTime(6)
-            //        };
-
-            //        knowledgeItems.Add(item);
-            //        if (!AllGroups.Contains(item.KnowledgeGroupID))
-            //        {
-            //            AllGroups.Add(item.KnowledgeGroupID);
-            //        }
-            //    }
-
-            //    DBClassReaders.LabOneDBConnection.Close();
+            //    knowledgeItems = knowledgeItems.Where(item => item.KnowledgeGroupID == selectedKnowledgeGroup).ToList();
             //}
 
-            if (selectedKnowledgeGroup != 0)
+            if (selectedKnowledgeGroup.HasValue)
             {
-                knowledgeItems = knowledgeItems.Where(item => item.KnowledgeGroupID == selectedKnowledgeGroup).ToList();
+                HttpContext.Session.SetInt32("selectedKnowledgeGroup", (int)selectedKnowledgeGroup);
+                TempData["ShowMainBody"] = true; // Ensure this is set whenever you want the main body to be shown
+            }
+            else
+            {
+                TempData["ShowMainBody"] = false; // Or decide based on other conditions
             }
         }
 
-        //Used for adding knowledge items
-        public async Task<IActionResult> OnPostAsync(string action)
+        public async Task<IActionResult> OnPostSaveReportAsync()
         {
+            int SelectedKGID = (int)HttpContext.Session.GetInt32("selectedKnowledgeGroup");
 
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            switch (action)
-            {
-                case "ShowAdd":
-                    ShowAddForm = true;
-                    break;
-                case "Add":
-                    DBClassWriters.AddKnowledgeItem(1, Category, Title, Information, DateTime.Now, DateTime.Now);
-                    ShowAddForm = false;
-                    break;
-                case "CancelAdd":
-                    ShowAddForm = false;
-                    break;
-            }
-
+            DBClassWriters.BuildReport(DateTime.Now, ReportTitle, ReportDescription, SWOTImplications, Strategy, DateTime.Now, SWOTNotes, SelectedKGID, 
+                SWOTStrengths, SWOTWeaknesses, SWOTOpportunities, SWOTThreats, Category, Factor, PESTImplications, PossibleActions, DateTime.Now, PESTNotes);
             DBClassWriters.LabOneDBConnection.Close();
 
-            await OnGetAsync(null, null);
-
-            return Page();
-        }
-        //Used for editing items
-        public async Task<IActionResult> OnPostEditItem(string action)
-        {
-
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            switch (action)
-            {
-                case "ShowEdit":
-                    var itemToEdit = knowledgeItems.FirstOrDefault(item => item.Title == SelectedTitleInformation);
-                    if (itemToEdit != null)
-                    {
-                        Information = itemToEdit.Information;
-                    }
-                    ShowEditForm = true;
-                    break;
-                case "Edit":
-                    DBClassWriters.EditKnowledgeItem(KnowledgeItemID, Information, DateTime.Now);
-                    ShowEditForm = false;
-                    break;
-                case "CancelEdit":
-                    ShowEditForm = false;
-                    break;
-            }
-
-            DBClassWriters.LabOneDBConnection.Close();
-
-            await OnGetAsync(null, null);
-
-            return Page();
-        }
-
-        //Used for adding SWOT
-        public async Task<IActionResult> OnPostAddSWOT(string action)
-        {
-            switch (action)
-            {
-                case "ShowAddSWOT":
-                    ShowAddSWOTForm = true;
-                    break;
-                case "Add":
-                    DBClassWriters.UpsertSwotAnalysis(SelectedKnowledgeItemId, Strengths, Weaknesses, Opportunities, Threats); ;
-                    DBClassWriters.LabOneDBConnection.Close();
-                    ShowAddForm = false;
-                    break;
-                case "CancelAddSWOT":
-                    ShowAddSWOTForm = false;
-                    break;
-                default:
-                    // Handle unexpected action
-                    break;
-            }
-            DBClassWriters.LabOneDBConnection.Close();
-
-            await OnGetAsync(null, null); // Reinitialize the page data
-
-            return Page();
+            return RedirectToPage("/Reports");
         }
     }
 }

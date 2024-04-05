@@ -289,5 +289,22 @@ namespace VisionaryVentures.Pages.DB
             return tempReader;
         }
 
+        // Get reports by knowledge group
+        public static SqlDataReader GetReportsByKnowledgeGroup(int? KnowledgeGroupID)
+        {
+            SqlCommand cmdReportsByKnowledgeGroup = new SqlCommand();
+            cmdReportsByKnowledgeGroup.Connection = LabOneDBConnection;
+            cmdReportsByKnowledgeGroup.Connection.ConnectionString = LabOneDBConnectionString;
+            cmdReportsByKnowledgeGroup.CommandText = @"SELECT * FROM Reports 
+                                                     JOIN SwotAnalysis ON Reports.ReportID = SwotAnalysis.ReportID
+                                                     JOIN PestAnalysis ON Reports.ReportID = PestAnalysis.ReportID       
+                                                     WHERE KnowledgeGroupID = @KnowledgeGroupID";
+            cmdReportsByKnowledgeGroup.Parameters.AddWithValue("@KnowledgeGroupID", KnowledgeGroupID);
+            cmdReportsByKnowledgeGroup.Connection.Open();
+
+            SqlDataReader ReportsByKnowledgeGroup = cmdReportsByKnowledgeGroup.ExecuteReader();
+
+            return ReportsByKnowledgeGroup;
+        }
     }
 }
