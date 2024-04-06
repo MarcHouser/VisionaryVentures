@@ -120,6 +120,24 @@ namespace VisionaryVentures.Pages.DB
             return KnowledgeGroupReader;
         }
 
+        // Get reports by knowledge group
+        public static SqlDataReader GetReportsByKnowledgeGroup(int KnowledgeGroupID)
+        {
+            SqlCommand cmdReportsByKnowledgeGroup = new SqlCommand();
+            cmdReportsByKnowledgeGroup.Connection = LabOneDBConnection;
+            cmdReportsByKnowledgeGroup.Connection.ConnectionString = LabOneDBConnectionString;
+            cmdReportsByKnowledgeGroup.CommandText = @"SELECT * FROM Reports 
+                                                     JOIN SwotAnalysis ON Reports.ReportID = SwotAnalysis.ReportID
+                                                     JOIN PestAnalysis ON Reports.ReportID = PestAnalysis.ReportID       
+                                                     WHERE Reports.KnowledgeGroupID = @KnowledgeGroupID";
+            cmdReportsByKnowledgeGroup.Parameters.AddWithValue("@KnowledgeGroupID", KnowledgeGroupID);
+            cmdReportsByKnowledgeGroup.Connection.Open();
+
+            SqlDataReader ReportsByKnowledgeGroup = cmdReportsByKnowledgeGroup.ExecuteReader();
+
+            return ReportsByKnowledgeGroup;
+        }
+
         public static SqlDataReader KnowledgeReader()
         {
             SqlCommand CmdKnowledgeRead = new SqlCommand();
@@ -302,6 +320,5 @@ namespace VisionaryVentures.Pages.DB
             SqlDataReader tempReader = cmdProductRead.ExecuteReader();
             return tempReader;
         }
-
     }
 }

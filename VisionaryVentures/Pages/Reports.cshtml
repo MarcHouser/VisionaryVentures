@@ -1,0 +1,77 @@
+﻿@page
+@model VisionaryVentures.Pages.ReportsModel
+@{
+    ViewData["Title"] = "Knowledge Group Reports";
+}
+<ul class="nav nav-tabs" id="reportGroupTabs" role="tablist">
+    @for (int i = 0; i < Model.AllGroups.Count; i++)
+    {
+        var group = Model.AllGroups[i];
+        var sanitizedTitle = group.Title.Replace(" ", "-");
+        <li class="nav-item" role="presentation">
+            <a class="nav-link @(i == 0 ? "active" : "")" id="@sanitizedTitle-tab" data-bs-toggle="tab" href="#@sanitizedTitle" role="tab" aria-controls="@sanitizedTitle" aria-selected="@(i == 0 ? "true" : "false")">@group.Title</a>
+        </li>
+    }
+</ul>
+<div class="tab-content" id="reportGroupTabsContent">
+    @for (int i = 0; i < Model.AllGroups.Count; i++)
+    {
+        var group = Model.AllGroups[i];
+        var sanitizedTitle = group.Title.Replace(" ", "-");
+        <div class="tab-pane fade @(i == 0 ? "show active" : "")" id="@sanitizedTitle" role="tabpanel" aria-labelledby="@sanitizedTitle-tab">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Report Title</th>
+                        <th>Report Description</th>
+                        <th>Created By</th>
+                        <th>Created On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var report in Model.Reports.Where(r => r.KnowledgeGroupID == group.KnowledgeGroupID))
+                    {
+                        <tr>
+                            <td>@report.Title</td>
+                            <td>@report.Description</td>
+                            <td>@HttpContext.Session.GetString("username")</td>
+                            <td>@report.DateCreated.ToString("yyyy-MM-dd")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Ensure the Bootstrap JS library is loaded in your layout or this script section
+        // This script ensures that tab functionality works as expected with Bootstrap's components
+        var tabList = document.querySelector('#reportGroupTabs');
+        var tabs = tabList.querySelectorAll('.nav-link');
+        // Activate the first tab on page load
+        var firstTab = tabs[0];
+        firstTab.classList.add('active');
+        // Show the corresponding tab content for the active tab
+        var targetTabId = firstTab.getAttribute('href').substring(1);
+        document.getElementById(targetTabId).classList.add('show', 'active');
+        // Add click event listeners to the tabs
+        tabs.forEach(function (tab) {
+            tab.addEventListener('click', function (event) {
+                event.preventDefault();
+                // Reset active classes
+                tabs.forEach(function (t) { t.classList.remove('active'); });
+                document.querySelectorAll('.tab-pane').forEach(function (tabPane) {
+                    tabPane.classList.remove('show', 'active');
+                });
+                // Set active tab
+                tab.classList.add('active');
+                var targetTabId = tab.getAttribute('href').substring(1);
+                document.getElementById(targetTabId).classList.add('show', 'active');
+            });
+        });
+    });
+</script>
+
+
