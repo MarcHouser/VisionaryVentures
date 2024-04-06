@@ -23,6 +23,7 @@ namespace VisionaryVentures.Pages.DB
         private static readonly String? AuthConnString =
             "Server=tcp:visionaryventures.database.windows.net,1433;" +
             "Initial Catalog=Sprint3;" +
+            "Initial Catalog=AUTH;" +
             "Persist Security Info=False;" +
             "User ID=VisionaryVenturesAdmin;" +
             "Password=COB484Capstone;" +

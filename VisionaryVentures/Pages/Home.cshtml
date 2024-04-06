@@ -25,7 +25,8 @@
             @TempData["SkippedFiles"]
         </div>
     }
-    <div style="display: flex; align-items: center; justify-content: space-between;">
+
+    @* <div style="display: flex; align-items: center; justify-content: space-between;">
         <div>
             <h3>Upload Your Data</h3>
             <form method="post" enctype="multipart/form-data" asp-action="DataSets">
@@ -47,6 +48,25 @@
             </div>
         </div>
 
+    </div> *@
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-12 mb-3 mb-md-0">
+                <h3>Upload Your Data</h3>
+                <form method="post" enctype="multipart/form-data" asp-action="DataSets">
+                    <input asp-for="files" type="file" class="form-control mb-2" multiple>
+                    <input type="submit" value="Upload" class="btn btn-primary">
+                </form>
+            </div>
+            <div class="col-md-4 col-12 mb-3 mb-md-0">
+                <h3>Edit Dataset Description</h3>
+                <button class="btn btn-primary" onclick="toggleEditDescriptionBoxes()">Edit Descriptions</button>
+            </div>
+            <div class="col-md-4 col-12">
+                <h3>Delete Dataset</h3>
+                <button class="btn btn-danger" onclick="toggleConfirmDeleteButtons()">Delete</button>
+            </div>
+        </div>
     </div>
     <hr />
     <div class="input-group" id="search-form">
@@ -82,9 +102,11 @@
                                 Build Report
                             </a>
                             <!-- Form for Delete Confirmation, initially hidden -->
-                            <form method="post" asp-page-handler="DeleteFile" asp-route-fileName="@file.Name" class="confirm-delete-form">
-                                <button type="submit" class="btn btn-success confirm-delete my-1" style="display: none;">Confirm Delete</button>
-                            </form>
+                            <div class="conf-delete">
+                                <form method="post" asp-page-handler="DeleteFile" asp-route-fileName="@file.Name" class="confirm-delete-form">
+                                    <button type="submit" class="btn btn-success confirm-delete" style="display: none;">Confirm Delete</button>
+                                </form>
+                            </div>
 
 
                         </div>

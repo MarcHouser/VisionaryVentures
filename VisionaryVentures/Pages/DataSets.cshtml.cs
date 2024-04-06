@@ -34,7 +34,8 @@ namespace VisionaryVentures.Pages
 
         public string SelectedFileName { get; set; }
 
-        private readonly string _connectionString = "Server=tcp:visionaryventures.database.windows.net,1433;" +
+        private readonly string _connectionString = 
+            "Server=tcp:visionaryventures.database.windows.net,1433;" +
             "Initial Catalog=Sprint3;" +
             "Persist Security Info=False;" +
             "User ID=VisionaryVenturesAdmin;" +
