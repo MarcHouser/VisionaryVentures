@@ -6,6 +6,7 @@ import sys
 file_path = sys.argv[1]
 dependent_var = sys.argv[2]
 independent_vars = sys.argv[3].split(',')
+plot_name = ('')
 
 def load_data(file_path):
     """Load Excel data into a pandas DataFrame."""
@@ -40,7 +41,7 @@ def generate_report_and_chart(model, X, y, output_path):
     ax.plot(X.iloc[:, 0], model.predict(sm.add_constant(X)), color='red')
     
     # Save the plot. Ensure the directory exists or this will fail.
-    plt.savefig('wwwroot/charts/plot.png')
+    plt.savefig('wwwroot/charts/'+plot_name)
 
 def main():
     output_path = 'wwwroot/analysis_output/AnalysisOutput.txt'

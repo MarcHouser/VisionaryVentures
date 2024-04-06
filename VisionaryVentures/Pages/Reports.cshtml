@@ -36,6 +36,9 @@
                             <td>@report.Description</td>
                             <td>@HttpContext.Session.GetString("username")</td>
                             <td>@report.DateCreated.ToString("yyyy-MM-dd")</td>
+                            <td>
+                                <a asp-page="/PrintReport" asp-page-handler="ViewReport" asp-route-SelectedReportID="@report.ReportID" class="btn btn-primary">View Report</a>
+                            </td>
                         </tr>
                     }
                 </tbody>

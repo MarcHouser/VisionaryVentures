@@ -74,5 +74,17 @@ namespace VisionaryVentures.Pages
                 }
             }
         }
+
+        public async Task<IActionResult> OnPostViewReportAsync(int SelectedReportID)
+        {
+            if (SelectedReportID > 0)
+            {
+                HttpContext.Session.SetInt32("selectedReportID", SelectedReportID);
+
+                return RedirectToPage("/PrintReport", new { SelectedReportID });
+            }
+            return Page(); // Handle any error scenarios
+
+        }
     }
 }
