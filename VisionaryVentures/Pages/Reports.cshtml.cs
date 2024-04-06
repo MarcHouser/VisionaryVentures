@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Tensorflow;
 using VisionaryVentures.Pages.DataClasses;
 using VisionaryVentures.Pages.DB;
 
@@ -11,6 +12,10 @@ namespace VisionaryVentures.Pages
         public List<Report> Reports { get; set; } = new List<Report>();
         public List<SWOT> SWOTs { get; set; } = new List<SWOT>();
         public List<PEST> PESTs { get; set; } = new List<PEST>();
+
+        public List<ReportWithAnalysis> ReportsWithAnalysis { get; set; } = new List<ReportWithAnalysis>();
+        public List<SWOTWithDataAnalysis> SWOTWithDataAnalyses { get; set; } = new List<SWOTWithDataAnalysis>();
+        public List<PESTWithDataAnalysis> PESTWithDataAnalyses { get; set; } = new List<PESTWithDataAnalysis>();
 
         public async Task OnGetAsync()
         {
@@ -28,6 +33,8 @@ namespace VisionaryVentures.Pages
 
                 DBClassReaders.LabOneDBConnection.Close();
             }
+
+
 
             foreach (var group in AllGroups)
             {
@@ -68,6 +75,50 @@ namespace VisionaryVentures.Pages
                             Notes = reader.GetString(22),
                             KnowledgeGroupID = reader.GetInt32(23),
                             ReportID = reader.GetInt32(24)
+                        });
+                    }
+                    DBClassReaders.LabOneDBConnection.Close();
+                }
+
+                using (var reader = DBClassReaders.GetReportsWithAnalysisByKnowledgeGroup((int)group.KnowledgeGroupID))
+                {
+                    while (reader.Read())
+                    {
+                        ReportsWithAnalysis.Add(new ReportWithAnalysis
+                        {
+                            ReportID = reader.GetInt32(0),
+                            Description = reader.GetString(1),
+                            AnalysisTextFilePath = reader.GetString(2),
+                            AnalysisImageFilePath = reader.GetString(3),
+                            DateCreated = reader.GetDateTime(4),
+                            KnowledgeGroupID = reader.GetInt32(5),
+                            Title = reader.GetString(6)
+                        });
+                        SWOTWithDataAnalyses.Add(new SWOTWithDataAnalysis
+                        {
+                            SWOTAnalysisID = reader.GetInt32(7),
+                            implications = reader.GetString(8),
+                            strategies = reader.GetString(9),
+                            AnalysisDate = reader.GetDateTime(10),
+                            Notes = reader.GetString(11),
+                            KnowledgeGroupID = reader.GetInt32(12),
+                            Strengths = reader.GetString(13),
+                            Weaknesses = reader.GetString(14),
+                            Opportunities = reader.GetString(15),
+                            Threats = reader.GetString(16),
+                            ReportID = reader.GetInt32(17)
+                        });
+                        PESTWithDataAnalyses.Add(new PESTWithDataAnalysis
+                        {
+                            PESTAnalysisID = reader.GetInt32(18),
+                            Category = reader.GetString(19),
+                            Factor = reader.GetString(20),
+                            Implications = reader.GetString(21),
+                            PossibleActions = reader.GetString(22),
+                            AnalysisDate = reader.GetDateTime(23),
+                            Notes = reader.GetString(24),
+                            KnowledgeGroupID = reader.GetInt32(25),
+                            ReportID = reader.GetInt32(26)
                         });
                     }
                     DBClassReaders.LabOneDBConnection.Close();

@@ -65,6 +65,26 @@ namespace VisionaryVentures.Pages
         [BindProperty]
         public string PESTNotes { get; set; }
 
+        public string NewPlotName { get; set; }
+
+        public async Task OnGetAsync()
+        {
+            using (var reader = DBClassReaders.KnowledgeGroupReaderByUser(HttpContext.Session.GetInt32("userid")))
+            {
+                while (reader.Read())
+                {
+                    AllGroups.Add(new KnowledgeGroup
+                    {
+                        KnowledgeGroupID = reader.GetInt32(0),
+                        Title = reader.GetString(1),
+                        Description = reader.GetString(2)
+                    });
+                }
+
+                DBClassReaders.LabOneDBConnection.Close();
+            }
+        }
+        
         public async Task OnGetReadFileAsync(string fileName)
         {
             SelectedFileName = HttpContext.Session.GetString(fileName);
@@ -113,21 +133,6 @@ namespace VisionaryVentures.Pages
             {
                 // Handle unsupported file types or add logic to deal with other file formats
                 throw new InvalidOperationException("The file format is not supported.");
-            }
-
-            using (var reader = DBClassReaders.KnowledgeGroupReaderByUser(HttpContext.Session.GetInt32("userid")))
-            {
-                while (reader.Read())
-                {
-                    AllGroups.Add(new KnowledgeGroup
-                    {
-                        KnowledgeGroupID = reader.GetInt32(0),
-                        Title = reader.GetString(1),
-                        Description = reader.GetString(2)
-                    });
-                }
-
-                DBClassReaders.LabOneDBConnection.Close();
             }
         }
 
@@ -208,9 +213,13 @@ namespace VisionaryVentures.Pages
             string scriptPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "analysis", "RegressionAnalysis.py");
 
             // Ensure Python executable path is correct. This might vary based on your server setup.
-            string pythonExecutable = @"C:\home\python3111x64\python.exe";
+            //string pythonExecutable = @"C:\home\python3111x64\python.exe";
+            string pythonExecutable = "python.exe";
 
-            string arguments = $"\"{scriptPath}\" \"{filePath}\" \"{DependentVariable}\" \"{IndependentVariables}\"";
+            string plotName = $"analysis_{DateTime.Now.Ticks}.png";
+            NewPlotName = plotName;
+            string analysisText = $"Analysis for {SelectedFileName}_{DateTime.Now.Ticks}";
+            string arguments = $"\"{scriptPath}\" \"{filePath}\" \"{DependentVariable}\" \"{IndependentVariables}\" \"{plotName}\" \"{analysisText}\"";
             Output = RunPythonScript(pythonExecutable, arguments);
         }
 
@@ -252,8 +261,12 @@ namespace VisionaryVentures.Pages
 
         public async Task<IActionResult> OnPostSaveReportAsync()
         {
-            DBClassWriters.BuildReport(DateTime.Now, ReportTitle, ReportDescription, SWOTImplications, Strategy, DateTime.Now, SWOTNotes, SelectedKGID,
-                SWOTStrengths, SWOTWeaknesses, SWOTOpportunities, SWOTThreats, Category, Factor, PESTImplications, PossibleActions, DateTime.Now, PESTNotes);
+            string outputFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "analysis_output", $"Analysis for {SelectedFileName} - {DateTime.Now}");
+            string imageFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "analysis_output", $"analysis_{DateTime.Now.Ticks}.png");
+
+            DBClassWriters.BuildReportWithDataAnalysis(DateTime.Now, ReportTitle, ReportDescription, SWOTImplications, Strategy, DateTime.Now, SWOTNotes, SelectedKGID, SWOTStrengths,
+                SWOTWeaknesses, SWOTOpportunities, SWOTThreats, Category, Factor, PESTImplications, PossibleActions, DateTime.Now, PESTNotes, outputFilePath, imageFilePath);
+            
             DBClassWriters.LabOneDBConnection.Close();
 
             return RedirectToPage("/Reports");

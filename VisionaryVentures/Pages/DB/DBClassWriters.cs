@@ -335,6 +335,81 @@ namespace VisionaryVentures.Pages.DB
             }
         }
 
+        // Build report with Data analysis
+        public static void BuildReportWithDataAnalysis(DateTime ReportDateCreated, string ReportTitle, string ReportDescription, string SwotImplications, string SwotStrategies, DateTime SwotDateCreated,
+            string SwotNotes, int KnowledgeGroupID, string SwotStrengths, string SwotWeaknesses, string SwotOpportunities, string SwotThreats,
+            string PestCategory, string PestFactor, string PestImplications, string PestPossibleActions, DateTime PestDateCreated, string PestNotes, 
+            string outputFilePath, string imageFilePath)
+        {
+            string ReportInsertQuery = "INSERT INTO ReportsWithDataAnalysis (Description, DateCreated, AnalysisTextFilePath, AnalysisImageFilePath, KnowledgeGroupID, Title) " +
+                "OUTPUT INSERTED.ReportID " +
+                "VALUES (@Description, @DateCreated, @AnalysisTextFilePath, @AnalysisImageFilePath, @KnowledgeGroupID, @Title)";
+            string SwotInsertQuery = "INSERT INTO SwotWithDataAnalysis VALUES (@SwotImplications, @SwotStrategies, @SwotDateCreated, @SwotNotes, @KnowledgeGroupID, " +
+                "@SwotStrengths, @SwotWeaknesses, @SwotOpportunities, @SwotThreats, @ReportID)";
+            string PestInsertQuery = "INSERT INTO PestWithDataAnalysis VALUES (@PestCategory, @PestFactor, @PestImplications, @PestPossibleActions, " +
+                "@PestDateCreated, @PestNotes, @KnowledgeGroupID, @ReportID)";
+
+            using (SqlConnection connection = new SqlConnection(LabOneDBConnectionString))
+            {
+                connection.Open();
+                SqlTransaction transaction = connection.BeginTransaction();
+
+                try
+                {
+                    // Insert into Reports and retrieve the new ReportID
+                    using (SqlCommand ReportInsertCommand = new SqlCommand(ReportInsertQuery, connection, transaction))
+                    {
+                        ReportInsertCommand.Parameters.AddWithValue("@Description", ReportDescription);
+                        ReportInsertCommand.Parameters.AddWithValue("@DateCreated", ReportDateCreated);
+                        ReportInsertCommand.Parameters.AddWithValue("@AnalysisTextFilePath", outputFilePath);
+                        ReportInsertCommand.Parameters.AddWithValue("@AnalysisImageFilePath", imageFilePath);
+                        ReportInsertCommand.Parameters.AddWithValue("@KnowledgeGroupID", KnowledgeGroupID);
+                        ReportInsertCommand.Parameters.AddWithValue("@Title", ReportTitle);
+
+                        int reportID = (int)ReportInsertCommand.ExecuteScalar();
+
+                        // Now insert into SwotAnalyses with the captured ReportID
+                        using (SqlCommand SwotInsertCommand = new SqlCommand(SwotInsertQuery, connection, transaction))
+                        {
+                            SwotInsertCommand.Parameters.AddWithValue("@SwotImplications", SwotImplications);
+                            SwotInsertCommand.Parameters.AddWithValue("@SwotStrategies", SwotStrategies);
+                            SwotInsertCommand.Parameters.AddWithValue("@SwotDateCreated", SwotDateCreated);
+                            SwotInsertCommand.Parameters.AddWithValue("@SwotNotes", SwotNotes);
+                            SwotInsertCommand.Parameters.AddWithValue("@KnowledgeGroupID", KnowledgeGroupID);
+                            SwotInsertCommand.Parameters.AddWithValue("@SwotStrengths", SwotStrengths);
+                            SwotInsertCommand.Parameters.AddWithValue("@SwotWeaknesses", SwotWeaknesses);
+                            SwotInsertCommand.Parameters.AddWithValue("@SwotOpportunities", SwotOpportunities);
+                            SwotInsertCommand.Parameters.AddWithValue("@SwotThreats", SwotThreats);
+                            SwotInsertCommand.Parameters.AddWithValue("@ReportID", reportID);
+
+                            SwotInsertCommand.ExecuteNonQuery();
+                        }
+
+                        // Now insert into PestAnalyses with the captured ReportID
+                        using (SqlCommand PestInsertCommand = new SqlCommand(PestInsertQuery, connection, transaction))
+                        {
+                            PestInsertCommand.Parameters.AddWithValue("@PestCategory", PestCategory);
+                            PestInsertCommand.Parameters.AddWithValue("@PestFactor", PestFactor);
+                            PestInsertCommand.Parameters.AddWithValue("@PestImplications", PestImplications);
+                            PestInsertCommand.Parameters.AddWithValue("@PestPossibleActions", PestPossibleActions);
+                            PestInsertCommand.Parameters.AddWithValue("@PestDateCreated", PestDateCreated);
+                            PestInsertCommand.Parameters.AddWithValue("@PestNotes", PestNotes);
+                            PestInsertCommand.Parameters.AddWithValue("@KnowledgeGroupID", KnowledgeGroupID);
+                            PestInsertCommand.Parameters.AddWithValue("@ReportID", reportID);
+
+                            PestInsertCommand.ExecuteNonQuery();
+                        }
+                    }
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw; // Rethrow the exception to handle it outside or log it
+                }
+            }
+        }
+
         // Add Knowledge Item
         public static void AddKnowledgeItem(int UserID, String Category, String Title, String Information, DateTime DateCreated, DateTime LastDateModified)
         {
