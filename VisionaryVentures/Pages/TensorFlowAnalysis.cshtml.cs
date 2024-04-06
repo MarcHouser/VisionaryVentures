@@ -8,6 +8,7 @@ using System.Data;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using VisionaryVentures.Pages.DB;
+using VisionaryVentures.Pages.DataClasses;
 
 namespace VisionaryVentures.Pages
 {
@@ -25,36 +26,44 @@ namespace VisionaryVentures.Pages
 
         public string Output { get; set; }
 
-        [BindProperty]
-        public string Notes { get; set; }
+        public List<KnowledgeGroup> AllGroups { get; set; } = new List<KnowledgeGroup>();
 
-        // Properties for SWOT Analysis
         [BindProperty]
-        public string SwotType { get; set; }
-        [BindProperty]
-        public string SwotDescription { get; set; }
-        [BindProperty]
-        public string SwotImplications { get; set; }
-        [BindProperty]
-        public string SwotStrategies { get; set; }
-        [BindProperty]
-        public DateTime SwotAnalysisDate { get; set; }
-        [BindProperty]
-        public string SwotNotes { get; set; }
+        public int SelectedKGID { get; set; }
 
-        // Properties for PEST Analysis
+        // Report Properties
         [BindProperty]
-        public string PestCategory { get; set; }
+        public string ReportTitle { get; set; }
         [BindProperty]
-        public string PestFactor { get; set; }
+        public string ReportDescription { get; set; }
+
+        //SWOT Properties
         [BindProperty]
-        public string PestImplications { get; set; }
+        public string SWOTStrengths { get; set; }
         [BindProperty]
-        public string PestPossibleActions { get; set; }
+        public string SWOTWeaknesses { get; set; }
         [BindProperty]
-        public DateTime PestAnalysisDate { get; set; }
+        public string SWOTOpportunities { get; set; }
         [BindProperty]
-        public string PestNotes { get; set; }
+        public string SWOTThreats { get; set; }
+        [BindProperty]
+        public string SWOTImplications { get; set; }
+        [BindProperty]
+        public string Strategy { get; set; }
+        [BindProperty]
+        public string SWOTNotes { get; set; }
+
+        //PEST Properties
+        [BindProperty]
+        public string Category { get; set; }
+        [BindProperty]
+        public string Factor { get; set; }
+        [BindProperty]
+        public string PESTImplications { get; set; }
+        [BindProperty]
+        public string PossibleActions { get; set; }
+        [BindProperty]
+        public string PESTNotes { get; set; }
 
         public async Task OnGetReadFileAsync(string fileName)
         {
@@ -104,6 +113,21 @@ namespace VisionaryVentures.Pages
             {
                 // Handle unsupported file types or add logic to deal with other file formats
                 throw new InvalidOperationException("The file format is not supported.");
+            }
+
+            using (var reader = DBClassReaders.KnowledgeGroupReaderByUser(HttpContext.Session.GetInt32("userid")))
+            {
+                while (reader.Read())
+                {
+                    AllGroups.Add(new KnowledgeGroup
+                    {
+                        KnowledgeGroupID = reader.GetInt32(0),
+                        Title = reader.GetString(1),
+                        Description = reader.GetString(2)
+                    });
+                }
+
+                DBClassReaders.LabOneDBConnection.Close();
             }
         }
 
@@ -226,20 +250,13 @@ namespace VisionaryVentures.Pages
             return File(fileBytes, "text/plain", fileName);
         }
 
-        //public async Task<IActionResult> OnPostCreateReportAsync(string swotType, string swotDescription, string swotImplications, string swotStrategies, DateTime swotAnalysisDate, string swotNotes, 
-        //    string pestCategory, string pestFactor, string pestImplications, string pestPossibleActions, DateTime pestAnalysisDate, string pestNotes, int KnowledgeGroupID, string title, string description)
-        //{
-        //    // Insert SWOT Analysis
-        //    int swotAnalysisId = DBClassWriters.InsertSWOTAnalysis(swotType, swotDescription, swotImplications, swotStrategies, swotAnalysisDate, swotNotes, KnowledgeGroupID);
+        public async Task<IActionResult> OnPostSaveReportAsync()
+        {
+            DBClassWriters.BuildReport(DateTime.Now, ReportTitle, ReportDescription, SWOTImplications, Strategy, DateTime.Now, SWOTNotes, SelectedKGID,
+                SWOTStrengths, SWOTWeaknesses, SWOTOpportunities, SWOTThreats, Category, Factor, PESTImplications, PossibleActions, DateTime.Now, PESTNotes);
+            DBClassWriters.LabOneDBConnection.Close();
 
-        //    // Insert PEST Analysis
-        //    int pestAnalysisId = DBClassWriters.InsertPESTAnalysis(pestCategory, pestFactor, pestImplications, pestPossibleActions, pestAnalysisDate, pestNotes, KnowledgeGroupID);
-
-        //    // Create Report linking SWOT and PEST analyses
-        //    int reportId = DBClassWriters.CreateReport(swotAnalysisId, pestAnalysisId, title, description);
-
-        //    // Redirect to a confirmation page, the Reports page, or return a success result
-        //    return RedirectToPage("/SomeConfirmationPage", new { reportId = reportId });
-        //}
+            return RedirectToPage("/Reports");
+        }
     }
 }
