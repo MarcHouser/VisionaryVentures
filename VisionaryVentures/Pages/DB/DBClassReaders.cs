@@ -120,6 +120,78 @@ namespace VisionaryVentures.Pages.DB
             return KnowledgeGroupReader;
         }
 
+        // Get reports by knowledge group
+        public static SqlDataReader GetReportsByKnowledgeGroup(int KnowledgeGroupID)
+        {
+            SqlCommand cmdReportsByKnowledgeGroup = new SqlCommand();
+            cmdReportsByKnowledgeGroup.Connection = LabOneDBConnection;
+            cmdReportsByKnowledgeGroup.Connection.ConnectionString = LabOneDBConnectionString;
+            cmdReportsByKnowledgeGroup.CommandText = @"SELECT * FROM Reports 
+                                                     JOIN SwotAnalysis ON Reports.ReportID = SwotAnalysis.ReportID
+                                                     JOIN PestAnalysis ON Reports.ReportID = PestAnalysis.ReportID       
+                                                     WHERE Reports.KnowledgeGroupID = @KnowledgeGroupID";
+            cmdReportsByKnowledgeGroup.Parameters.AddWithValue("@KnowledgeGroupID", KnowledgeGroupID);
+            cmdReportsByKnowledgeGroup.Connection.Open();
+
+            SqlDataReader ReportsByKnowledgeGroup = cmdReportsByKnowledgeGroup.ExecuteReader();
+
+            return ReportsByKnowledgeGroup;
+        }
+
+        // Get reports with analysis by knowledge group
+        public static SqlDataReader GetReportsWithAnalysisByKnowledgeGroup(int KnowledgeGroupID)
+        {
+            SqlCommand cmdReportsByKnowledgeGroup = new SqlCommand();
+            cmdReportsByKnowledgeGroup.Connection = LabOneDBConnection;
+            cmdReportsByKnowledgeGroup.Connection.ConnectionString = LabOneDBConnectionString;
+            cmdReportsByKnowledgeGroup.CommandText = @"SELECT * FROM ReportsWithDataAnalysis 
+                                                     JOIN SwotWithDataAnalysis ON ReportsWithDataAnalysis.ReportID = SwotWithDataAnalysis.ReportID
+                                                     JOIN PestWithDataAnalysis ON ReportsWithDataAnalysis.ReportID = PestWithDataAnalysis.ReportID
+                                                     WHERE ReportsWithDataAnalysis.KnowledgeGroupID = @KnowledgeGroupID";
+            cmdReportsByKnowledgeGroup.Parameters.AddWithValue("@KnowledgeGroupID", KnowledgeGroupID);
+            cmdReportsByKnowledgeGroup.Connection.Open();
+
+            SqlDataReader ReportsByKnowledgeGroup = cmdReportsByKnowledgeGroup.ExecuteReader();
+
+            return ReportsByKnowledgeGroup;
+        }
+
+        // Get reports by report ID
+        public static SqlDataReader GetReportsByReportID(int ReportID)
+        {
+            SqlCommand cmdReportsByReportID = new SqlCommand();
+            cmdReportsByReportID.Connection = LabOneDBConnection;
+            cmdReportsByReportID.Connection.ConnectionString = LabOneDBConnectionString;
+            cmdReportsByReportID.CommandText = @"SELECT * FROM Reports 
+                                                JOIN SwotAnalysis ON Reports.ReportID = SwotAnalysis.ReportID
+                                                JOIN PestAnalysis ON Reports.ReportID = PestAnalysis.ReportID
+                                                WHERE Reports.ReportID = @ReportID";
+            cmdReportsByReportID.Parameters.AddWithValue("@ReportID", ReportID);
+            cmdReportsByReportID.Connection.Open();
+
+            SqlDataReader ReportsByReportID = cmdReportsByReportID.ExecuteReader();
+
+            return ReportsByReportID;
+        }
+
+        // Get reports with analysis by report id
+        public static SqlDataReader GetReportsWithAnalysisByReportID(int ReportID)
+        {
+            SqlCommand cmdReportsByReportID = new SqlCommand();
+            cmdReportsByReportID.Connection = LabOneDBConnection;
+            cmdReportsByReportID.Connection.ConnectionString = LabOneDBConnectionString;
+            cmdReportsByReportID.CommandText = @"SELECT * FROM ReportsWithDataAnalysis
+                                                JOIN SwotWithDataAnalysis ON ReportsWithDataAnalysis.ReportID = SwotWithDataAnalysis.ReportID
+                                                JOIN PestWithDataAnalysis ON ReportsWithDataAnalysis.ReportID = PestWithDataAnalysis.ReportID
+                                                WHERE ReportsWithDataAnalysis.ReportID = @ReportID";
+            cmdReportsByReportID.Parameters.AddWithValue("@ReportID", ReportID);
+            cmdReportsByReportID.Connection.Open();
+
+            SqlDataReader ReportsByReportID = cmdReportsByReportID.ExecuteReader();
+
+            return ReportsByReportID;
+        }
+
         public static SqlDataReader KnowledgeReader()
         {
             SqlCommand CmdKnowledgeRead = new SqlCommand();
@@ -302,6 +374,5 @@ namespace VisionaryVentures.Pages.DB
             SqlDataReader tempReader = cmdProductRead.ExecuteReader();
             return tempReader;
         }
-
     }
 }

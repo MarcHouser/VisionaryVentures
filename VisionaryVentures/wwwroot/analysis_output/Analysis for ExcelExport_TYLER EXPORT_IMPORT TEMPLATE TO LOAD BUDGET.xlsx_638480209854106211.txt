@@ -1,0 +1,27 @@
+                             OLS Regression Results                             
+================================================================================
+Dep. Variable:     2024 Original Budget   R-squared:                       0.980
+Model:                              OLS   Adj. R-squared:                  0.980
+Method:                   Least Squares   F-statistic:                 5.730e+04
+Date:                  Sat, 06 Apr 2024   Prob (F-statistic):               0.00
+Time:                          17:23:07   Log-Likelihood:                -14563.
+No. Observations:                  1155   AIC:                         2.913e+04
+Df Residuals:                      1153   BIC:                         2.914e+04
+Df Model:                             1                                         
+Covariance Type:              nonrobust                                         
+========================================================================================
+                           coef    std err          t      P>|t|      [0.025      0.975]
+----------------------------------------------------------------------------------------
+const                   17.3301   2132.168      0.008      0.994   -4166.035    4200.695
+2023 Original Budget     1.0021      0.004    239.376      0.000       0.994       1.010
+==============================================================================
+Omnibus:                      699.268   Durbin-Watson:                   2.453
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):          1089591.949
+Skew:                          -1.201   Prob(JB):                         0.00
+Kurtosis:                     153.450   Cond. No.                     5.09e+05
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 5.09e+05. This might indicate that there are
+strong multicollinearity or other numerical problems.

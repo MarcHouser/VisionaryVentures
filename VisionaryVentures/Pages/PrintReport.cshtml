@@ -1,37 +1,53 @@
 ﻿@page
 @model VisionaryVentures.Pages.PrintReportModel
 @{
-}
-<div class="report-container">
-    <h1><strong>Collaboration Report</strong></h1>
-    <h2><strong>@Model.Collaboration.Title - @DateTime.Now.ToString("yyyy-MM-dd")</strong></h2>
-    <hr />
-    <section class="plan-contents">
-        <h3><strong>Plan Details</strong></h3>
-            @foreach (var planContent in Model.PlanContents)
-            {
-                <p><strong>@planContent.PlanStep:</strong> @planContent.ContentDescription</p>  
-            }
-    </section>
-    <hr />
-    <section class="knowledge-items">
-        <h3><strong>Knowledge Items</strong></h3>
-        <ul>
-            @foreach (var item in Model.KnowledgeItems)
-            {
-                <li>@item.Title: @item.Information</li>
-            }
-        </ul>
-    </section>
-    <hr />
-    <section class="users">
-        <h3><strong>Collaborators</strong></h3>
-        <ul>
-            @foreach (var user in Model.users)
-            {
-                <li>@user.FirstName @user.LastName</li>
-            }
-        </ul>
-    </section>
-</div>
+    ViewData["Title"] = "Print Report";
+    ViewData["selectedReportID"] = HttpContext.Session.GetInt32("selectedReportID");
 
+}
+<div class="container">
+    <h1>@Model.Report.Title</h1>
+    <p>Date Created: @Model.Report.DateCreated.ToShortDateString()</p>
+    <p>Description: @Model.Report.Description</p>
+    <h2>SWOT Analysis</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Strengths</th>
+                <th>Weaknesses</th>
+                <th>Opportunities</th>
+                <th>Threats</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.SWOT.Strengths</td>
+                <td>@Model.SWOT.Weaknesses</td>
+                <td>@Model.SWOT.Opportunities</td>
+                <td>@Model.SWOT.Threats</td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>PEST Analysis</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Factor</th>
+                <th>Implications</th>
+                <th>Possible Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.PEST.Category</td>
+                <td>@Model.PEST.Factor</td>
+                <td>@Model.PEST.Implications</td>
+                <td>@Model.PEST.PossibleActions</td>
+            </tr>
+        </tbody>
+    </table>
+    <form asp-page-handler="DownloadPDF" asp-route-reportID="@Model.Report.ReportID">
+        <button type="submit" class="btn btn-primary">Download PDF</button>
+    </form>
+</div>
