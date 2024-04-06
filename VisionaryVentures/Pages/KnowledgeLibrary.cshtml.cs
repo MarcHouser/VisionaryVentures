@@ -96,6 +96,7 @@ namespace VisionaryVentures.Pages
 
         public async Task<IActionResult> OnPostSaveReportAsync()
         {
+
             int SelectedKGID = (int)HttpContext.Session.GetInt32("selectedKnowledgeGroup");
 
             DBClassWriters.BuildReport(DateTime.Now, ReportTitle, ReportDescription, SWOTImplications, Strategy, DateTime.Now, SWOTNotes, SelectedKGID, 

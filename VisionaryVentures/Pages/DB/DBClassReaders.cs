@@ -13,10 +13,26 @@ namespace VisionaryVentures.Pages.DB
 
         // Instantiate connection string
         private static readonly String? LabOneDBConnectionString =
-            "Server=localhost;Database=Sprint2;Trusted_Connection=True";
+            "Server=tcp:visionaryventures.database.windows.net,1433;" +
+            "Initial Catalog=Sprint3;" +
+            "Persist Security Info=False;" +
+            "User ID=VisionaryVenturesAdmin;" +
+            "Password=COB484Capstone;" +
+            "MultipleActiveResultSets=False;" +
+            "Encrypt=True;" +
+            "TrustServerCertificate=False;" +
+            "Connection Timeout=30;";
 
         private static readonly String? AuthConnString =
-            "Server=Localhost;Database=AUTH;Trusted_Connection=True";
+            "Server=tcp:visionaryventures.database.windows.net,1433;" +
+            "Initial Catalog=Sprint3;" +
+            "Persist Security Info=False;" +
+            "User ID=VisionaryVenturesAdmin;" +
+            "Password=COB484Capstone;" +
+            "MultipleActiveResultSets=False;" +
+            "Encrypt=True;" +
+            "TrustServerCertificate=False;" +
+            "Connection Timeout=30;";
 
         // Method to read user information
         public static SqlDataReader UserReader()
@@ -104,6 +120,24 @@ namespace VisionaryVentures.Pages.DB
             SqlDataReader KnowledgeGroupReader = CmdKnowledgeGroupRead.ExecuteReader();
 
             return KnowledgeGroupReader;
+        }
+
+        // Get reports by knowledge group
+        public static SqlDataReader GetReportsByKnowledgeGroup(int KnowledgeGroupID)
+        {
+            SqlCommand cmdReportsByKnowledgeGroup = new SqlCommand();
+            cmdReportsByKnowledgeGroup.Connection = LabOneDBConnection;
+            cmdReportsByKnowledgeGroup.Connection.ConnectionString = LabOneDBConnectionString;
+            cmdReportsByKnowledgeGroup.CommandText = @"SELECT * FROM Reports 
+                                                     JOIN SwotAnalysis ON Reports.ReportID = SwotAnalysis.ReportID
+                                                     JOIN PestAnalysis ON Reports.ReportID = PestAnalysis.ReportID       
+                                                     WHERE Reports.KnowledgeGroupID = @KnowledgeGroupID";
+            cmdReportsByKnowledgeGroup.Parameters.AddWithValue("@KnowledgeGroupID", KnowledgeGroupID);
+            cmdReportsByKnowledgeGroup.Connection.Open();
+
+            SqlDataReader ReportsByKnowledgeGroup = cmdReportsByKnowledgeGroup.ExecuteReader();
+
+            return ReportsByKnowledgeGroup;
         }
 
         public static SqlDataReader KnowledgeReader()
@@ -287,24 +321,6 @@ namespace VisionaryVentures.Pages.DB
             cmdProductRead.Connection.Open();
             SqlDataReader tempReader = cmdProductRead.ExecuteReader();
             return tempReader;
-        }
-
-        // Get reports by knowledge group
-        public static SqlDataReader GetReportsByKnowledgeGroup(int? KnowledgeGroupID)
-        {
-            SqlCommand cmdReportsByKnowledgeGroup = new SqlCommand();
-            cmdReportsByKnowledgeGroup.Connection = LabOneDBConnection;
-            cmdReportsByKnowledgeGroup.Connection.ConnectionString = LabOneDBConnectionString;
-            cmdReportsByKnowledgeGroup.CommandText = @"SELECT * FROM Reports 
-                                                     JOIN SwotAnalysis ON Reports.ReportID = SwotAnalysis.ReportID
-                                                     JOIN PestAnalysis ON Reports.ReportID = PestAnalysis.ReportID       
-                                                     WHERE KnowledgeGroupID = @KnowledgeGroupID";
-            cmdReportsByKnowledgeGroup.Parameters.AddWithValue("@KnowledgeGroupID", KnowledgeGroupID);
-            cmdReportsByKnowledgeGroup.Connection.Open();
-
-            SqlDataReader ReportsByKnowledgeGroup = cmdReportsByKnowledgeGroup.ExecuteReader();
-
-            return ReportsByKnowledgeGroup;
         }
     }
 }
