@@ -47,7 +47,7 @@
             </tr>
         </tbody>
     </table>
-    <form asp-page-handler="DownloadPDF" asp-route-reportID="@Model.Report.ReportID">
+    <form method="post" asp-page-handler="DownloadPDF" asp-route-reportID="@Model.Report.ReportID">
         <button type="submit" class="btn btn-primary">Download PDF</button>
     </form>
 </div>

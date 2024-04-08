@@ -204,8 +204,10 @@ namespace VisionaryVentures.Pages
             }
         }
 
-        public void OnPostStartRegression()
+        public async void OnPostStartRegression()
         {
+            await OnGetAsync();
+
             SelectedFileName = HttpContext.Session.GetString("fileName");
 
             // Assuming filePath is stored in session or determined here

@@ -34,8 +34,6 @@ namespace VisionaryVentures.Pages
                 DBClassReaders.LabOneDBConnection.Close();
             }
 
-
-
             foreach (var group in AllGroups)
             {
                 using (var reader = DBClassReaders.GetReportsByKnowledgeGroup((int)group.KnowledgeGroupID))
@@ -88,9 +86,9 @@ namespace VisionaryVentures.Pages
                         {
                             ReportID = reader.GetInt32(0),
                             Description = reader.GetString(1),
-                            AnalysisTextFilePath = reader.GetString(2),
-                            AnalysisImageFilePath = reader.GetString(3),
-                            DateCreated = reader.GetDateTime(4),
+                            DateCreated = reader.GetDateTime(2),
+                            AnalysisTextFilePath = reader.GetString(3),
+                            AnalysisImageFilePath = reader.GetString(4),
                             KnowledgeGroupID = reader.GetInt32(5),
                             Title = reader.GetString(6)
                         });

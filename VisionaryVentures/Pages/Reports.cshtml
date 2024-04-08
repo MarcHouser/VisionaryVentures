@@ -41,6 +41,18 @@
                             </td>
                         </tr>
                     }
+                    @foreach (var report in Model.ReportsWithAnalysis.Where(r => r.KnowledgeGroupID == group.KnowledgeGroupID))
+                    {
+                        <tr>
+                            <td>@report.Title</td>
+                            <td>@report.Description</td>
+                            <td>@HttpContext.Session.GetString("username")</td>
+                            <td>@report.DateCreated.ToString("yyyy-MM-dd")</td>
+                            <td>
+                                <a asp-page="/PrintReport" asp-page-handler="ViewReport" asp-route-SelectedReportID="@report.ReportID" class="btn btn-primary">View Report</a>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>

@@ -37,7 +37,7 @@
 
                     <div>
                         <label for="knowledgeGroup">Knowledge Group</label>
-                        <select asp-for="SelectedKGID" class="form-control">
+                        <select asp-for="SelectedKGID">
                             @foreach (var group in Model.AllGroups)
                             {
                                 <option value="@group.KnowledgeGroupID">@group.Title</option>

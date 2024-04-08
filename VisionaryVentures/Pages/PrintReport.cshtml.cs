@@ -3,6 +3,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using VisionaryVentures.Pages.DataClasses;
 using VisionaryVentures.Pages.DB;
 using System.Data.SqlClient;
+using Rotativa.AspNetCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+
 namespace VisionaryVentures.Pages
 {
     public class PrintReportModel : PageModel
@@ -10,6 +15,11 @@ namespace VisionaryVentures.Pages
         public Report Report { get; set; } = new Report();
         public SWOT SWOT { get; set; } = new SWOT();
         public PEST PEST { get; set; } = new PEST();
+
+        public ReportWithAnalysis ReportWithAnalysis { get; set; } = new ReportWithAnalysis();
+        public SWOTWithDataAnalysis SWOTWithDataAnalysis { get; set; } = new SWOTWithDataAnalysis();
+        public PESTWithDataAnalysis PESTWithDataAnalysis { get; set; } = new PESTWithDataAnalysis();
+
         public async Task OnGetAsync(int SelectedReportID)
         {
             if (SelectedReportID > 0)
@@ -55,12 +65,67 @@ namespace VisionaryVentures.Pages
                     }
                     DBClassReaders.LabOneDBConnection.Close();
                 }
+
+                //using (var reader = DBClassReaders.GetReportsByReportID(SelectedReportID))
+                //{
+                //    while (reader.Read())
+                //    {
+                //        ReportWithAnalysis = new ReportWithAnalysis
+                //        {
+                //            ReportID = reader.GetInt32(0),
+                //            Description = reader.GetString(1),
+                //            AnalysisTextFilePath = reader.GetString(3),
+                //            AnalysisImageFilePath = reader.GetString(4),
+                //            DateCreated = reader.GetDateTime(2),
+                //            KnowledgeGroupID = reader.GetInt32(5),
+                //            Title = reader.GetString(6)
+                //        };
+                //        SWOTWithDataAnalysis = new SWOTWithDataAnalysis
+                //        {
+                //            SWOTAnalysisID = reader.GetInt32(7),
+                //            implications = reader.GetString(8),
+                //            strategies = reader.GetString(9),
+                //            AnalysisDate = reader.GetDateTime(10),
+                //            Notes = reader.GetString(11),
+                //            KnowledgeGroupID = reader.GetInt32(12),
+                //            Strengths = reader.GetString(13),
+                //            Weaknesses = reader.GetString(14),
+                //            Opportunities = reader.GetString(15),
+                //            Threats = reader.GetString(16),
+                //            ReportID = reader.GetInt32(17)
+                //        };
+                //        PESTWithDataAnalysis = new PESTWithDataAnalysis
+                //        {
+                //            PESTAnalysisID = reader.GetInt32(18),
+                //            Category = reader.GetString(19),
+                //            Factor = reader.GetString(20),
+                //            Implications = reader.GetString(21),
+                //            PossibleActions = reader.GetString(22),
+                //            AnalysisDate = reader.GetDateTime(23),
+                //            Notes = reader.GetString(24),
+                //            KnowledgeGroupID = reader.GetInt32(25),
+                //            ReportID = reader.GetInt32(26)
+                //        };
+                //    }
+                //    DBClassReaders.LabOneDBConnection.Close();
+                //}
             }
         }
+
         public async Task<IActionResult> OnPostDownloadPDFAsync(int reportID)
         {
-            // Logic to generate PDF based on selected report data
-            return Page(); // Placeholder for PDF generation
+            // Fetch the report data by reportID if necessary
+            // Ensure your model is populated with the required data
+
+            // Use ViewAsPdf to generate a PDF from a Razor view/page
+            var pdfResult = new ViewAsPdf("PrintReport", this)
+            {
+                FileName = $"Report_{reportID}.pdf",
+                // Optional: Customize the PDF generation
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+            };
+            return pdfResult;
         }
     }
 }
