@@ -22,6 +22,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\dataset\" />
     <Folder Include="wwwroot\charts\" />
+    <Folder Include="wwwroot\Rotativa\" />
   </ItemGroup>
 
 </Project>
