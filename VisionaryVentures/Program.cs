@@ -1,3 +1,8 @@
+
+
+
+using Rotativa.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -15,6 +20,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+RotativaConfiguration.Setup(app.Environment.WebRootPath, "Rotativa");
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -27,4 +34,3 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 app.Run();
-

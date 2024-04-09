@@ -18,6 +18,9 @@
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="assignment-tab" data-bs-toggle="tab" data-bs-target="#assignments" type="button" role="tab" aria-controls="assignments" aria-selected="false">Assignments</button>
     </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="createUser-tab" data-bs-toggle="tab" data-bs-target="#createUser" type="button" role="tab" aria-controls="createUser" aria-selected="false">Create User</button>
+    </li>
     <!-- Add more tabs as needed -->
 </ul>
 
@@ -167,6 +170,47 @@
         </form>
     </div>
     <!-- Add more tab content panes as needed -->
+    <div class="tab-pane fade" id="createUser" role="tabpanel" aria-labelledby="createUser-tab">
+        <h3>Create User</h3>
+        <form method="post" asp-page-handler="CreateUser">
+            <label>Enter New Username:</label>
+            <input asp-for="Username" class="form-control" placeholder="Enter Username" required />
+            <br />
+            <label>Enter New Password:</label>
+            <input asp-for="Password" class="form-control" type="password" required />
+            <br />
+            <label>Enter First Name:</label>
+            <input asp-for="FirstName" class="form-control" placeholder="Enter First Name" required id="FirstName" />
+            <br />
+            <label>Enter Last Name:</label>
+            <input asp-for="LastName" class="form-control" placeholder="Enter Last Name" required id="LastName" />
+            <br />
+            <label>Enter Email:</label>
+            <input asp-for="EmailAddress" class="form-control" placeholder="Enter Email" required id="EmailAddress" />
+            <br />
+            <label>Enter Phone Number:</label>
+            <input asp-for="PhoneNumber" class="form-control" placeholder="Enter Phone Number" required id="PhoneNumber" />
+            <br />
+            <label>Enter Street Address:</label>
+            <input asp-for="StreetAddress" class="form-control" placeholder="Enter Street Address" required id="StreetAddress" />
+            <br />
+            <label>Enter City:</label>
+            <input asp-for="City" class="form-control" placeholder="Enter City" required id="City" />
+            <br />
+            <label>Enter State:</label>
+            <input asp-for="State" class="form-control" placeholder="Enter State" required id="State" />
+            <br />
+            <label>Enter Postal Code:</label>
+            <input asp-for="PostalCode" class="form-control" placeholder="Enter Postal Code" required id="PostalCode" />
+            <br />
+            <label>Enter Country:</label>
+            <input asp-for="Country" class="form-control" placeholder="Enter Country" required itemid="Country" />
+            <br />
+            <input type="submit" class="btn btn-primary" value="Create User" />
+            <button type="button" class="btn btn-primary" onclick="populateUserFields()">Populate Fields</button>
+            <button type="button" class="btn btn-secondary" onclick="clearUserFields()">Clear Fields</button>
+        </form>
+    </div>
 </div>
 
 

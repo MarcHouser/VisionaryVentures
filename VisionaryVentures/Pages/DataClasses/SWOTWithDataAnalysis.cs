@@ -1,6 +1,6 @@
 ﻿namespace VisionaryVentures.Pages.DataClasses
 {
-    public class SWOT
+    public class SWOTWithDataAnalysis
     {
         public int SWOTAnalysisID { get; set; }
         public string implications { get; set; }

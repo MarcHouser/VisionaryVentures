@@ -24,50 +24,116 @@
                     <div class="result">
                         <h3>Analysis Result</h3>
                         <pre>@Model.Output</pre> <!-- Displaying the textual output from Python script -->
-                        <img src="/charts/plot.png" alt="Regression Analysis Chart" /> <!-- Displaying the generated chart -->
+                        <img src="/charts/@Model.NewPlotName" alt="Regression Analysis Chart" /> <!-- Displaying the generated chart -->
                     </div>
                 }
             </div>
 
             <!-- Input and Button Column -->
             <div class="col-md-6">
-                <div class="d-flex justify-content-around mb-3">
-                    <a href="?handler=DownloadOutput" class="btn btn-primary">Download Output File</a>
-                    <button type="submit" class="btn btn-secondary">Create Report</button>
-                </div>
-
                 <!-- Input Areas for Notes, SWOT, and PEST Analysis -->
-                <form method="post" asp-page-handler="CreateReport">
-                    <!-- Notes -->
-                    <div class="mb-3">
-                        <label for="notes" class="form-label">General Notes</label>
-                        <textarea class="form-control" id="notes" name="Notes" rows="3"></textarea>
+                <form asp-page-handler="SaveReport">
+                    <button type="submit" class="btn btn-primary">Save Report</button>
+
+                    <div>
+                        <label for="knowledgeGroup">Knowledge Group</label>
+                        <select asp-for="SelectedKGID">
+                            @foreach (var group in Model.AllGroups)
+                            {
+                                <option value="@group.KnowledgeGroupID">@group.Title</option>
+                            }
+                        </select>
                     </div>
-                    <!-- SWOT Analysis Inputs -->
-                    <div class="mb-3">
-                        <h4>SWOT Analysis</h4>
-                        <input type="text" class="form-control mb-2" name="SwotType" placeholder="Type (Strength, Weakness, Opportunity, Threat)" />
-                        <textarea class="form-control mb-2" name="SwotDescription" placeholder="Description" rows="2"></textarea>
-                        <textarea class="form-control mb-2" name="SwotImplications" placeholder="Implications" rows="2"></textarea>
-                        <textarea class="form-control mb-2" name="SwotStrategies" placeholder="Strategies" rows="2"></textarea>
-                        <input type="date" class="form-control mb-2" name="SwotAnalysisDate" placeholder="Analysis Date" />
-                        <textarea class="form-control mb-2" name="SwotNotes" placeholder="Notes" rows="2"></textarea>
+
+                    <div class="form-group">
+                        <label for="reportTitle">Report Title</label>
+                        <input type="text" class="form-control" id="reportTitle" asp-for="ReportTitle" required>
                     </div>
-                    <!-- PEST Analysis Inputs -->
-                    <div class="mb-3">
-                        <h4>PEST Analysis</h4>
-                        <input type="text" class="form-control mb-2" name="PestCategory" placeholder="Category (Political, Economic, Social, Technological)" />
-                        <textarea class="form-control mb-2" name="PestFactor" placeholder="Factor" rows="2"></textarea>
-                        <textarea class="form-control mb-2" name="PestImplications" placeholder="Implications" rows="2"></textarea>
-                        <textarea class="form-control mb-2" name="PestPossibleActions" placeholder="Possible Actions" rows="2"></textarea>
-                        <input type="date" class="form-control mb-2" name="PestAnalysisDate" placeholder="Analysis Date" />
-                        <textarea class="form-control mb-2" name="PestNotes" placeholder="Notes" rows="2"></textarea>
+                    <div class="form-group">
+                        <label for="reportDescription">Report Description</label>
+                        <textarea class="form-control" id="reportDescription" asp-for="ReportDescription" rows="3" required></textarea>
+                    </div>
+                    <br />
+
+                    <ul class="nav nav-tabs" id="swotAndPestTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#swot" type="button" role="tab" aria-controls="swot" aria-selected="true">SWOT</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="groups-tab" data-bs-toggle="tab" data-bs-target="#pest" type="button" role="tab" aria-controls="pest" aria-selected="false">PEST</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="analysisTabsContent">
+                        <!-- SWOT -->
+                        <div class="tab-pane fade show active" id="swot" role="tabpanel" aria-labelledby="swot-tab">
+                            <h3>SWOT Analysis</h3>
+                            <div>
+                                <label for="strengths">Strengths</label>
+                                <textarea type="text" class="form-control" id="strengths" asp-for="SWOTStrengths" required></textarea>
+                            </div>
+                            <div>
+                                <label for="weaknesses">Weaknesses</label>
+                                <textarea type="text" class="form-control" id="weaknesses" asp-for="SWOTWeaknesses" required></textarea>
+                            </div>
+                            <div>
+                                <label for="opportunities">Opportunities</label>
+                                <textarea type="text" class="form-control" id="opportunities" asp-for="SWOTOpportunities" required></textarea>
+                            </div>
+                            <div>
+                                <label for="threats">Threats</label>
+                                <textarea type="text" class="form-control" id="threats" asp-for="SWOTThreats" required></textarea>
+                            </div>
+                            <div>
+                                <label for="implications">Implications</label>
+                                <textarea type="text" class="form-control" id="implications" asp-for="SWOTImplications" required></textarea>
+                            </div>
+                            <div>
+                                <label for="strategy">Strategies</label>
+                                <textarea type="text" class="form-control" id="strategy" asp-for="Strategy" required></textarea>
+                            </div>
+                            <div>
+                                <label for="SWOTNotes">Notes to SWOT Analysis</label>
+                                <textarea type="text" class="form-control" id="SWOTNotes" asp-for="SWOTNotes" required></textarea>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="pest" role="tabpanel" aria-labelledby="pest-tab">
+                            <h3>PEST Analysis</h3>
+                            <div class="form-group">
+                                <label for="category">Category</label>
+                                <select asp-for="Category">
+                                    <option value="Political">Political</option>
+                                    <option value="Economic">Economic</option>
+                                    <option value="Social">Social</option>
+                                    <option value="Technological">Technological</option>
+                                    <option value="Legal">Legal</option>
+                                    <option value="Environmental">Environmental</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="Factor">Factor</label>
+                                <textarea type="text" class="form-control" id="description" asp-for="Factor" required></textarea>
+                            </div>
+                            <div>
+                                <label for="implications">Implications</label>
+                                <textarea type="text" class="form-control" id="implications" asp-for="PESTImplications" required></textarea>
+                            </div>
+                            <div>
+                                <label for="PossibleActions">Possible Actions</label>
+                                <textarea type="text" class="form-control" id="strategy" asp-for="PossibleActions" required></textarea>
+                            </div>
+                            <div>
+                                <label for="PESTNotes">Notes to PEST Analysis</label>
+                                <textarea type="text" class="form-control" id="PESTNotes" asp-for="PESTNotes" required></textarea>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-} else
+}
+else
 {
     <form method="post" asp-page-handler="StartRegression">
         <div class="form-group">
@@ -110,5 +176,12 @@
                 }
             }).catch(error => console.error('Error creating report:', error));
         }
+
+        function showForm(formName) {
+            document.getElementById(formName).style.display = 'block';
+        }
+
+        var analysisPanelTab = new bootstrap.Tab(document.querySelector('#swotAndPestTabs .nav-link.active'));
+        analysisPanelTab.show(); // Activate the first tab on page load
     </script>
 }

@@ -1,9 +1,9 @@
 ﻿namespace VisionaryVentures.Pages.DataClasses
 {
-    public class PEST
+    public class PESTWithDataAnalysis
     {
         public int PESTAnalysisID { get; set; }
-        public string Category { get; set;}
+        public string Category { get; set; }
         public string Factor { get; set; }
         public string Implications { get; set; }
         public string PossibleActions { get; set; }

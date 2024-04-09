@@ -11,12 +11,26 @@ namespace VisionaryVentures.Pages.DB
         public static SqlConnection LabOneDBConnection = new SqlConnection();
         public static SqlConnection AuthConn = new SqlConnection();
 
-        // Instantiate connection string
         private static readonly String? LabOneDBConnectionString =
-            "Server=localhost;Database=Sprint2;Trusted_Connection=True";
-
+            "Server=tcp:visionaryventures.database.windows.net,1433;" +
+            "Initial Catalog=Sprint3;" +
+            "Persist Security Info=False;" +
+            "User ID=VisionaryVenturesAdmin;" +
+            "Password=COB484Capstone;" +
+            "MultipleActiveResultSets=False;" +
+            "Encrypt=True;" +
+            "TrustServerCertificate=False;" +
+            "Connection Timeout=30;";
         private static readonly String? AuthConnString =
-            "Server=Localhost;Database=AUTH;Trusted_Connection=True";
+            "Server=tcp:visionaryventures.database.windows.net,1433;" +
+            "Initial Catalog=AUTH;" +
+            "Persist Security Info=False;" +
+            "User ID=VisionaryVenturesAdmin;" +
+            "Password=COB484Capstone;" +
+            "MultipleActiveResultSets=False;" +
+            "Encrypt=True;" +
+            "TrustServerCertificate=False;" +
+            "Connection Timeout=30;";
 
         // Method to read user information
         public static SqlDataReader UserReader()
@@ -104,6 +118,78 @@ namespace VisionaryVentures.Pages.DB
             SqlDataReader KnowledgeGroupReader = CmdKnowledgeGroupRead.ExecuteReader();
 
             return KnowledgeGroupReader;
+        }
+
+        // Get reports by knowledge group
+        public static SqlDataReader GetReportsByKnowledgeGroup(int KnowledgeGroupID)
+        {
+            SqlCommand cmdReportsByKnowledgeGroup = new SqlCommand();
+            cmdReportsByKnowledgeGroup.Connection = LabOneDBConnection;
+            cmdReportsByKnowledgeGroup.Connection.ConnectionString = LabOneDBConnectionString;
+            cmdReportsByKnowledgeGroup.CommandText = @"SELECT * FROM Reports 
+                                                     JOIN SwotAnalysis ON Reports.ReportID = SwotAnalysis.ReportID
+                                                     JOIN PestAnalysis ON Reports.ReportID = PestAnalysis.ReportID       
+                                                     WHERE Reports.KnowledgeGroupID = @KnowledgeGroupID";
+            cmdReportsByKnowledgeGroup.Parameters.AddWithValue("@KnowledgeGroupID", KnowledgeGroupID);
+            cmdReportsByKnowledgeGroup.Connection.Open();
+
+            SqlDataReader ReportsByKnowledgeGroup = cmdReportsByKnowledgeGroup.ExecuteReader();
+
+            return ReportsByKnowledgeGroup;
+        }
+
+        // Get reports with analysis by knowledge group
+        public static SqlDataReader GetReportsWithAnalysisByKnowledgeGroup(int KnowledgeGroupID)
+        {
+            SqlCommand cmdReportsByKnowledgeGroup = new SqlCommand();
+            cmdReportsByKnowledgeGroup.Connection = LabOneDBConnection;
+            cmdReportsByKnowledgeGroup.Connection.ConnectionString = LabOneDBConnectionString;
+            cmdReportsByKnowledgeGroup.CommandText = @"SELECT * FROM ReportsWithDataAnalysis 
+                                                     JOIN SwotWithDataAnalysis ON ReportsWithDataAnalysis.ReportID = SwotWithDataAnalysis.ReportID
+                                                     JOIN PestWithDataAnalysis ON ReportsWithDataAnalysis.ReportID = PestWithDataAnalysis.ReportID
+                                                     WHERE ReportsWithDataAnalysis.KnowledgeGroupID = @KnowledgeGroupID";
+            cmdReportsByKnowledgeGroup.Parameters.AddWithValue("@KnowledgeGroupID", KnowledgeGroupID);
+            cmdReportsByKnowledgeGroup.Connection.Open();
+
+            SqlDataReader ReportsByKnowledgeGroup = cmdReportsByKnowledgeGroup.ExecuteReader();
+
+            return ReportsByKnowledgeGroup;
+        }
+
+        // Get reports by report ID
+        public static SqlDataReader GetReportsByReportID(int ReportID)
+        {
+            SqlCommand cmdReportsByReportID = new SqlCommand();
+            cmdReportsByReportID.Connection = LabOneDBConnection;
+            cmdReportsByReportID.Connection.ConnectionString = LabOneDBConnectionString;
+            cmdReportsByReportID.CommandText = @"SELECT * FROM Reports 
+                                                JOIN SwotAnalysis ON Reports.ReportID = SwotAnalysis.ReportID
+                                                JOIN PestAnalysis ON Reports.ReportID = PestAnalysis.ReportID
+                                                WHERE Reports.ReportID = @ReportID";
+            cmdReportsByReportID.Parameters.AddWithValue("@ReportID", ReportID);
+            cmdReportsByReportID.Connection.Open();
+
+            SqlDataReader ReportsByReportID = cmdReportsByReportID.ExecuteReader();
+
+            return ReportsByReportID;
+        }
+
+        // Get reports with analysis by report id
+        public static SqlDataReader GetReportsWithAnalysisByReportID(int ReportID)
+        {
+            SqlCommand cmdReportsByReportID = new SqlCommand();
+            cmdReportsByReportID.Connection = LabOneDBConnection;
+            cmdReportsByReportID.Connection.ConnectionString = LabOneDBConnectionString;
+            cmdReportsByReportID.CommandText = @"SELECT * FROM ReportsWithDataAnalysis
+                                                JOIN SwotWithDataAnalysis ON ReportsWithDataAnalysis.ReportID = SwotWithDataAnalysis.ReportID
+                                                JOIN PestWithDataAnalysis ON ReportsWithDataAnalysis.ReportID = PestWithDataAnalysis.ReportID
+                                                WHERE ReportsWithDataAnalysis.ReportID = @ReportID";
+            cmdReportsByReportID.Parameters.AddWithValue("@ReportID", ReportID);
+            cmdReportsByReportID.Connection.Open();
+
+            SqlDataReader ReportsByReportID = cmdReportsByReportID.ExecuteReader();
+
+            return ReportsByReportID;
         }
 
         public static SqlDataReader KnowledgeReader()
@@ -234,7 +320,7 @@ namespace VisionaryVentures.Pages.DB
             cmdSPLogin.Connection.ConnectionString = AuthConnString;
             cmdSPLogin.CommandType = System.Data.CommandType.StoredProcedure;
             cmdSPLogin.Parameters.AddWithValue("@Username", Username);
-            cmdSPLogin.CommandText = "sp_Sprint2Login";
+            cmdSPLogin.CommandText = "sp_Sprint3Login";
             cmdSPLogin.Connection.Open();
             if (((int)cmdSPLogin.ExecuteScalar()) > 0)
             {
@@ -288,6 +374,5 @@ namespace VisionaryVentures.Pages.DB
             SqlDataReader tempReader = cmdProductRead.ExecuteReader();
             return tempReader;
         }
-
     }
 }
