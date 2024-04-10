@@ -215,8 +215,8 @@ namespace VisionaryVentures.Pages
             string scriptPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "analysis", "RegressionAnalysis.py");
 
             // Ensure Python executable path is correct. This might vary based on your server setup.
-            //string pythonExecutable = @"C:\home\python3111x64\python.exe";
-            string pythonExecutable = "python.exe";
+            string pythonExecutable = @"C:\home\python3111x64\python.exe";
+            //string pythonExecutable = "python.exe";
 
             string plotName = $"analysis_{DateTime.Now.Ticks}.png";
             NewPlotName = plotName;
