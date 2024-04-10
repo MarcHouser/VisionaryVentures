@@ -31,6 +31,6 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-RotativaConfiguration.Setup(app.Environment.WebRootPath, "Rotativa");
+//RotativaConfiguration.Setup(app.Environment.WebRootPath, "Rotativa");
 
 app.Run();
