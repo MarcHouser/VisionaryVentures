@@ -5,6 +5,63 @@
     ViewData["Title"] = "Home";
 }
 
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* Base styles */
+    body {
+        background-color: #1c3459;
+        font-family: 'Open Sans', sans-serif;
+        margin: 0; /* Ensures no default margin is applied */
+    }
+
+    /* Hero section improvements */
+    .hero-section {
+        padding: 60px 0;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+        background: url('/img/Madison-County.jpg') no-repeat center center; 
+        background-size: cover;
+    }
+    .hero-section .overlay {
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 70%, rgba(0, 0, 0, 0.2) 100%);
+    }
+    #dynamic-greeting {
+        text-shadow: 3px 3px 5px rgba(0,0,0,0.9);
+    }
+
+    /* Card enhancements */
+    .card {
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        transition: transform .2s, box-shadow .2s;
+    }
+
+    .card-title {
+        font-weight: bold; /* This makes the text bold */
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    /* Button enhancements */
+    .btn-primary {
+        border-radius: 20px;
+        padding: 10px 20px;
+        transition: background-color .3s ease, box-shadow .2s;
+        box-shadow: none;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+</style>
+
 <script>
     $(document).ready(function () {
         var username = '@HttpContext.Session.GetString("username")';
@@ -22,42 +79,10 @@
     }
 </script>
 
-<style>
-    .hero-section {
-        padding: 60px 0;
-        color: #fff;
-        position: relative;
-        overflow: hidden;
-    }
-    .hero-section .overlay {
-        position: absolute;
-        top: 0; right: 0; bottom: 0; left: 0;
-        background: rgba(0, 0, 0, 0.5); /* Adjust for text readability */
-    }
-    .card {
-        transition: transform .2s; /* Smooth animation for hover */
-    }
-    .card:hover {
-        transform: scale(1.05); /* Slightly enlarge cards on hover */
-    }
-    .card-title i {
-        margin-right: 10px;
-        color: #04AA6D; /* Theme's primary color */
-    }
-    .btn-primary:hover {
-        background-color: darken(#007bff, 10%);
-    }
-    @@media (max-width: 768px) {
-        .hero-section .overlay {
-            background: rgba(0, 0, 0, 0.7); /* Darker overlay for small devices */
-        }
-    }
-</style>
-
-<div class="hero-section text-white text-center py-5" style="position: relative; background: url('/img/Madison-County.jpg') no-repeat center center; background-size: cover;">
+<div class="hero-section text-white text-center py-5">
     <div class="overlay"></div>
     <h2 id="dynamic-greeting" class="display-4 fw-bold">Welcome!</h2>
-    <p class="lead">Start your journey with us.</p>
+    <p></p>
     <p></p>
 </div>
 

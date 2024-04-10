@@ -377,6 +377,7 @@ body {
 }
 @media print{
     .navbar{display:none;}
+    #printbtn{display:none;}
 }
 @page {
     size: auto;

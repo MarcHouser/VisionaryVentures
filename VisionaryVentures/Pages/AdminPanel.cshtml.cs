@@ -41,7 +41,7 @@ namespace VisionaryVentures.Pages
         [BindProperty]
         public string Country { get; set; }
 
-        public void OnGet()
+        public async void OnGetAsync()
         {
             // Fetch all users from the database
             using (var reader = DBClassReaders.UserReader())
@@ -100,7 +100,8 @@ namespace VisionaryVentures.Pages
 
             DBClassWriters.AddUserToKnowledgeGroup(UserID, KnowledgeGroupID);
             // Optionally, add success message or redirect logic here
-            return RedirectToPage();
+
+            return RedirectToPage("/AdminPanel");
         }
         public IActionResult OnPostCreateUser()
         {
@@ -110,7 +111,7 @@ namespace VisionaryVentures.Pages
             DBClassWriters.AddUserWithAccount(userType, userTypeDescription, FirstName, LastName, EmailAddress, PhoneNumber, StreetAddress, City, State, PostalCode, Country);
             DBClassWriters.LabOneDBConnection.Close();
 
-
+            OnGetAsync();
             return Page();
         }
     }

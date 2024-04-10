@@ -136,26 +136,53 @@
 else
 {
     <form method="post" asp-page-handler="StartRegression">
-        <div class="form-group">
-            <label for="DependentVariable">Dependent Variable</label>
-            <select class="form-control" id="DependentVariable" name="DependentVariable">
-                @foreach (var header in Model.Headers)
-                {
-                    <option value="@header">@header</option>
-                }
-            </select>
+
+        <div class="form-group d-flex justify-content-around">
+
+            <div class="w-45">
+
+                <label for="DependentVariable" class="form-label">Dependent Variable</label>
+
+                <select class="form-control" id="DependentVariable" name="DependentVariable">
+
+                    <option value="">Select Dependent Variable</option>
+
+                    @foreach (var header in Model.Headers)
+
+                    {
+
+                        <option value="@header">@header</option>
+
+                    }
+
+                </select>
+
+            </div>
+
+            <div class="w-45">
+
+                <label for="IndependentVariables" class="form-label">Independent Variables</label>
+
+                <select class="form-control custom-select-height" id="IndependentVariables" name="IndependentVariables" multiple>
+
+                    @foreach (var header in Model.Headers)
+
+                    {
+
+                        <option value="@header">@header</option>
+
+                    }
+
+                </select>
+
+            </div>
+
         </div>
-        <div class="form-group">
-            <label for="IndependentVariables">Independent Variables</label>
-            <select class="form-control custom-select-height" id="IndependentVariables" name="IndependentVariables" multiple>
-                @foreach (var header in Model.Headers)
-                {
-                    <option value="@header">@header</option>
-                }
-            </select>
-        </div>
+
         <small>Select multiple independent variables using Ctrl (Cmd on Mac) + click.</small>
-        <button type="submit" class="btn btn-primary">Start Analysis</button>
+
+        <button type="submit" class="btn btn-primary mt-2">Start Analysis</button>
+
     </form>
 }
 

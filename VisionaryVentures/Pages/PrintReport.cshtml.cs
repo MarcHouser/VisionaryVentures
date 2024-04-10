@@ -7,6 +7,7 @@ using Rotativa.AspNetCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace VisionaryVentures.Pages
 {
@@ -74,9 +75,9 @@ namespace VisionaryVentures.Pages
                 //        {
                 //            ReportID = reader.GetInt32(0),
                 //            Description = reader.GetString(1),
+                //            DateCreated = reader.GetDateTime(2),
                 //            AnalysisTextFilePath = reader.GetString(3),
                 //            AnalysisImageFilePath = reader.GetString(4),
-                //            DateCreated = reader.GetDateTime(2),
                 //            KnowledgeGroupID = reader.GetInt32(5),
                 //            Title = reader.GetString(6)
                 //        };
@@ -110,22 +111,6 @@ namespace VisionaryVentures.Pages
                 //    DBClassReaders.LabOneDBConnection.Close();
                 //}
             }
-        }
-
-        public async Task<IActionResult> OnPostDownloadPDFAsync(int reportID)
-        {
-            // Fetch the report data by reportID if necessary
-            // Ensure your model is populated with the required data
-
-            // Use ViewAsPdf to generate a PDF from a Razor view/page
-            var pdfResult = new ViewAsPdf("PrintReport", this)
-            {
-                FileName = $"Report_{reportID}.pdf",
-                // Optional: Customize the PDF generation
-                PageSize = Rotativa.AspNetCore.Options.Size.A4,
-                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
-            };
-            return pdfResult;
         }
     }
 }

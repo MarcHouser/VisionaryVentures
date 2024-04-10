@@ -1,10 +1,18 @@
 ﻿@page
 @model VisionaryVentures.Pages.PrintReportModel
 @{
-    ViewData["Title"] = "Print Report";
+    ViewData["Title"] = "PrintReport";
     ViewData["selectedReportID"] = HttpContext.Session.GetInt32("selectedReportID");
 }
+
+<script>
+    function generatePDF() {
+        // document.getElementById("printbtn").style.display = "none";
+        print();
+    }
+</script>
 <div class="container">
+    <p></p>
     <h1>@Model.Report.Title</h1>
     <p>Date Created: @Model.Report.DateCreated.ToShortDateString()</p>
     <p>Description: @Model.Report.Description</p>
@@ -46,7 +54,7 @@
             </tr>
         </tbody>
     </table>
-    <form method="post" asp-page-handler="DownloadPDF" asp-route-reportID="@Model.Report.ReportID">
-        <button type="submit" class="btn btn-primary">Download PDF</button>
-    </form>
+@*     <form method="post" asp-route-reportID="@Model.Report.ReportID"> *@
+        <button id="printbtn" onclick="generatePDF();" type="submit" class="btn btn-primary">Download PDF</button>
+@*     </form> *@
 </div>

@@ -20,8 +20,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-RotativaConfiguration.Setup(app.Environment.WebRootPath, "Rotativa");
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -32,5 +30,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+RotativaConfiguration.Setup(app.Environment.WebRootPath, "Rotativa");
 
 app.Run();

@@ -1,0 +1,27 @@
+                             OLS Regression Results                             
+================================================================================
+Dep. Variable:     2024 Original Budget   R-squared:                       0.989
+Model:                              OLS   Adj. R-squared:                  0.989
+Method:                   Least Squares   F-statistic:                 9.960e+04
+Date:                  Mon, 08 Apr 2024   Prob (F-statistic):               0.00
+Time:                          19:31:19   Log-Likelihood:                -14249.
+No. Observations:                  1155   AIC:                         2.850e+04
+Df Residuals:                      1153   BIC:                         2.851e+04
+Df Model:                             1                                         
+Covariance Type:              nonrobust                                         
+=======================================================================================
+                          coef    std err          t      P>|t|      [0.025      0.975]
+---------------------------------------------------------------------------------------
+const                  62.4453   1624.075      0.038      0.969   -3124.028    3248.918
+2023 Revised Budget     1.0027      0.003    315.590      0.000       0.996       1.009
+==============================================================================
+Omnibus:                     1193.835   Durbin-Watson:                   1.215
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):          1363991.365
+Skew:                          -3.837   Prob(JB):                         0.00
+Kurtosis:                     171.178   Cond. No.                     5.11e+05
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 5.11e+05. This might indicate that there are
+strong multicollinearity or other numerical problems.
