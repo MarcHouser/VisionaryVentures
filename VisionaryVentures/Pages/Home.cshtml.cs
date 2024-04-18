@@ -36,16 +36,7 @@ namespace VisionaryVentures.Pages
 
         public string SelectedFileName { get; set; }
 
-        private readonly string _connectionString = 
-            "Server=tcp:visionaryventures.database.windows.net,1433;" +
-            "Initial Catalog=Sprint3;" +
-            "Persist Security Info=False;" +
-            "User ID=VisionaryVenturesAdmin;" +
-            "Password=COB484Capstone;" +
-            "MultipleActiveResultSets=False;" +
-            "Encrypt=True;" +
-            "TrustServerCertificate=False;" +
-            "Connection Timeout=30;";
+        private static readonly String? LabOneDBConnectionString = "Server=localhost;Database=Sprint3;Trusted_Connection=True";
 
 
 

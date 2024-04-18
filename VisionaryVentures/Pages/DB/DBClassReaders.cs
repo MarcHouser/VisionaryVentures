@@ -11,26 +11,26 @@ namespace VisionaryVentures.Pages.DB
         public static SqlConnection LabOneDBConnection = new SqlConnection();
         public static SqlConnection AuthConn = new SqlConnection();
 
-        private static readonly String? LabOneDBConnectionString =
-            "Server=tcp:visionaryventures.database.windows.net,1433;" +
-            "Initial Catalog=Sprint3;" +
-            "Persist Security Info=False;" +
-            "User ID=VisionaryVenturesAdmin;" +
-            "Password=COB484Capstone;" +
-            "MultipleActiveResultSets=False;" +
-            "Encrypt=True;" +
-            "TrustServerCertificate=False;" +
-            "Connection Timeout=30;";
-        private static readonly String? AuthConnString =
-            "Server=tcp:visionaryventures.database.windows.net,1433;" +
-            "Initial Catalog=AUTH;" +
-            "Persist Security Info=False;" +
-            "User ID=VisionaryVenturesAdmin;" +
-            "Password=COB484Capstone;" +
-            "MultipleActiveResultSets=False;" +
-            "Encrypt=True;" +
-            "TrustServerCertificate=False;" +
-            "Connection Timeout=30;";
+        private static readonly String? LabOneDBConnectionString = "Server=localhost;Database=Sprint3;Trusted_Connection=True";
+        //"Server=tcp:visionaryventures.database.windows.net,1433;" +
+        //"Initial Catalog=Sprint3;" +
+        //"Persist Security Info=False;" +
+        //"User ID=VisionaryVenturesAdmin;" +
+        //"Password=COB484Capstone;" +
+        //"MultipleActiveResultSets=False;" +
+        //"Encrypt=True;" +
+        //"TrustServerCertificate=False;" +
+        //"Connection Timeout=30;";
+        private static readonly String? AuthConnString = "Server=localhost;Database=AUTH;Trusted_Connection=True";
+            //"Server=tcp:visionaryventures.database.windows.net,1433;" +
+            //"Initial Catalog=AUTH;" +
+            //"Persist Security Info=False;" +
+            //"User ID=VisionaryVenturesAdmin;" +
+            //"Password=COB484Capstone;" +
+            //"MultipleActiveResultSets=False;" +
+            //"Encrypt=True;" +
+            //"TrustServerCertificate=False;" +
+            //"Connection Timeout=30;";
 
         // Method to read user information
         public static SqlDataReader UserReader()
